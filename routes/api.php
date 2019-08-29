@@ -73,6 +73,9 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->get('/', 'App\Http\Controllers\RoleController@getAll');
         });
 
+        /**
+         * Clients
+         */
         $api->group(['prefix' => 'clients'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\ClientController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\ClientController@get');
@@ -81,6 +84,9 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{uuid}', 'App\Http\Controllers\ClientController@delete');
         });
 
+        /**
+         * Halls
+         */
         $api->group(['prefix' => 'halls'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\HallController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\HallController@get');

@@ -46,9 +46,9 @@ class Client extends BaseModel
     /**
      * Return the validation rules for this model
      *
+     * @return array Rules
      * @todo: regexp for phone
      *
-     * @return array Rules
      */
     public function getValidationRules()
     {
@@ -59,6 +59,11 @@ class Client extends BaseModel
             'phone_number' => 'required|unique:clients,phone_number',
             'email' => 'sometimes|nullable|email|unique:clients,phone_number',
         ];
+    }
+
+    public function hall()
+    {
+        return $this->belongsTo(Hall::class, 'hall_id');
     }
 
 }

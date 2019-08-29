@@ -43,9 +43,9 @@ class Hall extends BaseModel
     /**
      * Return the validation rules for this model
      *
+     * @return array Rules
      * @todo
      *
-     * @return array Rules
      */
     public function getValidationRules()
     {
@@ -53,6 +53,11 @@ class Hall extends BaseModel
             'title' => 'required',
             'address' => 'required',
         ];
+    }
+
+    public function clients()
+    {
+        return $this->hasMany(Client::class, 'hall_id');
     }
 
 }
