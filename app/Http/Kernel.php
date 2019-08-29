@@ -41,6 +41,7 @@ class Kernel extends HttpKernel
             'snake_case',
             'throttle:60,1',
             'bindings',
+            \Barryvdh\Cors\HandleCors::class,
         ],
     ];
 

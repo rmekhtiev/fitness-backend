@@ -8,7 +8,7 @@ class UserStorySeeder extends BaseSeeder
     /**
      * Credentials
      */
-    const ADMIN_CREDENTIALS = ['admin@admin.com', 'secret'];
+    const ADMIN_CREDENTIALS = ['admin@example.com', 'secret'];
 
     public function runFake()
     {
@@ -26,7 +26,7 @@ class UserStorySeeder extends BaseSeeder
         factory(App\Models\User::class)->create([
             'name'         => 'Bob',
             'email'        => 'bob@bob.com',
-            'primary_role' => $roles->where('name', 'regular')->first()->role_id,
+            'primary_role' => $roles->where('name', 'hall_admin')->first()->role_id,
         ]);
 
         // Get some random roles to assign to users
