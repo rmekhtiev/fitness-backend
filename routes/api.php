@@ -94,5 +94,16 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->patch('/{uuid}', 'App\Http\Controllers\HallController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\HallController@delete');
         });
+
+        /*
+         * Employees
+         */
+        $api->group(['prefix' => 'employees'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\EmployeeController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\EmployeeController@get');
+            $api->post('/', 'App\Http\Controllers\EmployeeController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\EmployeeController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\EmployeeController@delete');
+        });
     });
 });
