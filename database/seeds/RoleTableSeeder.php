@@ -15,16 +15,11 @@ class RoleTableSeeder extends BaseSeeder
             'name' => 'hall_admin',
             'description' => 'Hall Administrators',
         ]);
-    }
 
-    public function runFake()
-    {
-        for ($i = 0; $i < 10; ++$i) {
-            Role::firstOrCreate([
-                'name' => $this->faker->unique()->word(),
-                'description' => $this->faker->sentence(),
-            ]);
-        }
+        Role::firstOrCreate([
+            'name' => 'concierge',
+            'description' => 'Concierge',
+        ]);
     }
 
     /**

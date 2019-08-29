@@ -81,5 +81,12 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{uuid}', 'App\Http\Controllers\ClientController@delete');
         });
 
+        $api->group(['prefix' => 'halls'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\HallController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\HallController@get');
+            $api->post('/', 'App\Http\Controllers\HallController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\HallController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\HallController@delete');
+        });
     });
 });
