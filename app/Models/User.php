@@ -73,7 +73,7 @@ class User extends BaseModel implements
     {
         return [
             'email' => 'email|max:255|unique:users',
-            'name'  => 'required|min:3',
+            'name' => 'required|min:3',
             'password' => 'required|min:6',
         ];
     }
@@ -88,7 +88,8 @@ class User extends BaseModel implements
         return $this->belongsTo(Role::class, 'primary_role');
     }
 
-    public function associatedEmployee() {
+    public function associatedEmployee()
+    {
         return $this->hasOne(Employee::class, 'associated_user_id');
     }
 
@@ -121,10 +122,21 @@ class User extends BaseModel implements
      * Is this user an admin?
      *
      * @return bool
+     * @deprecated
      */
     public function isAdmin()
     {
-        return $this->primaryRole->name == Role::ROLE_ADMIN;
+        return $this->isOwner();
+    }
+
+    public function isOwner()
+    {
+        return $this->primaryRole->name == Role::ROLE_OWNER;
+    }
+
+    public function isHallAdmin()
+    {
+        return in_array(Role::ROLE_HALL_ADMIN, $this->getRoles());
     }
 
     /**

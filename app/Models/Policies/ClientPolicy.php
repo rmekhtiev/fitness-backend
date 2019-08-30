@@ -15,8 +15,7 @@ class ClientPolicy extends BasePolicy
      */
     public function create(User $user)
     {
-        //@todo
-        return $user->isAdmin();
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
@@ -28,7 +27,7 @@ class ClientPolicy extends BasePolicy
      */
     public function view(User $user, Client $client)
     {
-        return $this->own($user, $client);
+        return true;
     }
 
     /**
@@ -39,8 +38,7 @@ class ClientPolicy extends BasePolicy
      */
     public function viewAll(User $user)
     {
-        // @todo
-        return $user->isAdmin();
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
@@ -64,7 +62,7 @@ class ClientPolicy extends BasePolicy
      */
     public function delete(User $user, Client $client)
     {
-        return $this->own($user, $client);
+        return $user->isOwner();
     }
 
     /**
@@ -75,8 +73,7 @@ class ClientPolicy extends BasePolicy
      * @return mixed
      */
     public function own(User $user, Client $client) {
-        // @todo
-        return true;
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
