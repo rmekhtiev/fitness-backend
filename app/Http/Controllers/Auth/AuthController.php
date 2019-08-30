@@ -30,6 +30,6 @@ class AuthController extends Controller
 
     public function getUser()
     {
-        return $this->response->item($this->auth->user(), User::$transformer ?? BaseTransformer::class);
+        return $this->response->item($this->auth->user()->loadMissing(User::getItemWith()), User::$transformer ?? BaseTransformer::class);
     }
 }
