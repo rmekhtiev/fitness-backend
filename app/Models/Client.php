@@ -11,6 +11,8 @@ class Client extends BaseModel
      */
     public $primaryKey = 'client_id';
 
+    protected $perPage = 100;
+
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
