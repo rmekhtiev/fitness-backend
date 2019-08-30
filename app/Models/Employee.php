@@ -54,4 +54,9 @@ class Employee extends BaseModel
             'last_name' => 'required',
         ];
     }
+
+    public function hall()
+    {
+        return $this->belongsTo(Hall::class);
+    }
 }

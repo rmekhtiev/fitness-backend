@@ -60,4 +60,10 @@ class Hall extends BaseModel
         return $this->hasMany(Client::class, 'hall_id');
     }
 
+    public function employees()
+    {
+        return $this->hasMany(Employee::class, 'hall_id');
+    }
+
+
 }
