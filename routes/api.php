@@ -28,12 +28,12 @@ Route::get('/', function () {
  * @var $api \Dingo\Api\Routing\Router
  */
 $api = app('Dingo\Api\Routing\Router');
-$api->version('v1', ['middleware' => ['api']], function ($api) {
+$api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Router $api) {
     /*
      * Authentication
      */
-    $api->group(['prefix' => 'auth'], function ($api) {
-        $api->group(['prefix' => 'jwt'], function ($api) {
+    $api->group(['prefix' => 'auth'], function (Dingo\Api\Routing\Router $api) {
+        $api->group(['prefix' => 'jwt'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/token', 'App\Http\Controllers\Auth\AuthController@token');
         });
     });
@@ -41,7 +41,7 @@ $api->version('v1', ['middleware' => ['api']], function ($api) {
     /*
      * Authenticated routes
      */
-    $api->group(['middleware' => ['api.auth']], function ($api) {
+    $api->group(['middleware' => ['api.auth']], function (Dingo\Api\Routing\Router $api) {
         /*
          * Authentication
          */
@@ -69,8 +69,41 @@ $api->version('v1', ['middleware' => ['api']], function ($api) {
         /*
          * Roles
          */
-        $api->group(['prefix' => 'roles'], function ($api) {
+        $api->group(['prefix' => 'roles'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\RoleController@getAll');
+        });
+
+        /**
+         * Clients
+         */
+        $api->group(['prefix' => 'clients'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\ClientController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\ClientController@get');
+            $api->post('/', 'App\Http\Controllers\ClientController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\ClientController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\ClientController@delete');
+        });
+
+        /**
+         * Halls
+         */
+        $api->group(['prefix' => 'halls'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\HallController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\HallController@get');
+            $api->post('/', 'App\Http\Controllers\HallController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\HallController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\HallController@delete');
+        });
+
+        /*
+         * Employees
+         */
+        $api->group(['prefix' => 'employees'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\EmployeeController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\EmployeeController@get');
+            $api->post('/', 'App\Http\Controllers\EmployeeController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\EmployeeController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\EmployeeController@delete');
         });
     });
 });
