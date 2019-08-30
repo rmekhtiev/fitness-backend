@@ -57,7 +57,7 @@ class Hall extends BaseModel
 
     public function clients()
     {
-        return $this->hasMany(Client::class, 'hall_id');
+        return $this->hasMany(Client::class, 'primary_hall_id');
     }
 
     public function employees()

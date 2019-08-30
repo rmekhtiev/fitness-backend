@@ -36,6 +36,8 @@ class Client extends BaseModel
         'last_name',
         'phone_number',
         'email',
+
+        'primary_hall_id',
     ];
 
     /**
@@ -58,12 +60,14 @@ class Client extends BaseModel
             'last_name' => 'required',
             'phone_number' => 'required|unique:clients,phone_number',
             'email' => 'sometimes|nullable|email|unique:clients,phone_number',
+
+            'primary_hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
         ];
     }
 
-    public function hall()
+    public function primaryHall()
     {
-        return $this->belongsTo(Hall::class, 'hall_id');
+        return $this->belongsTo(Hall::class, 'primary_hall_id');
     }
 
 }
