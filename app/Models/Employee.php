@@ -59,4 +59,9 @@ class Employee extends BaseModel
     {
         return $this->belongsTo(Hall::class);
     }
+
+    public function associatedUser()
+    {
+        return $this->belongsTo(User::class, 'associated_user_id');
+    }
 }

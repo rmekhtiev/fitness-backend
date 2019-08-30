@@ -88,6 +88,10 @@ class User extends BaseModel implements
         return $this->belongsTo(Role::class, 'primary_role');
     }
 
+    public function associatedEmployee() {
+        return $this->hasOne(Employee::class, 'associated_user_id');
+    }
+
     /**
      * User's secondary roles
      *
