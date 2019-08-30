@@ -34,6 +34,8 @@ class Employee extends BaseModel
         'first_name',
         'middle_name',
         'last_name',
+
+        'hall_id',
     ];
 
     /**
@@ -52,6 +54,8 @@ class Employee extends BaseModel
             'first_name' => 'required',
             'second_name' => 'sometimes|nullable',
             'last_name' => 'required',
+
+            'hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id'
         ];
     }
 
