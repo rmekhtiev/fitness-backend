@@ -22,6 +22,11 @@ class Hall extends BaseModel
      */
     public static $collectionWith = null;
 
+    public static $itemWithCount = [
+        'clients',
+        'employees',
+    ];
+
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
      */
