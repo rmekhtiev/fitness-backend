@@ -35,6 +35,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
     $api->group(['prefix' => 'auth'], function (Dingo\Api\Routing\Router $api) {
         $api->group(['prefix' => 'jwt'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/token', 'App\Http\Controllers\Auth\AuthController@token');
+            $api->post('/login', 'App\Http\Controllers\Auth\AuthController@login');
         });
     });
 
