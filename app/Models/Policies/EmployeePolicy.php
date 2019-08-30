@@ -15,8 +15,7 @@ class EmployeePolicy extends BasePolicy
      */
     public function create(User $user)
     {
-        //@todo
-        return true;
+        return $user->isOwner();
     }
 
     /**
@@ -28,7 +27,7 @@ class EmployeePolicy extends BasePolicy
      */
     public function view(User $user, Employee $employee)
     {
-        return $this->own($user, $employee);
+        return $user->isOwner() || $this->own($user, $employee);
     }
 
     /**
@@ -39,8 +38,7 @@ class EmployeePolicy extends BasePolicy
      */
     public function viewAll(User $user)
     {
-        // @todo
-        return true;
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
@@ -64,7 +62,7 @@ class EmployeePolicy extends BasePolicy
      */
     public function delete(User $user, Employee $employee)
     {
-        return $this->own($user, $employee);
+        return $user->isOwner();
     }
 
     /**
@@ -76,7 +74,7 @@ class EmployeePolicy extends BasePolicy
      */
     public function own(User $user, Employee $employee) {
         // @todo
-        return true;
+        return $user->isHallAdmin() && !empty($user->associatedEmployee) && $user->associatedEmployee->hall_id == $employee->hall_id;
     }
 
     /**
