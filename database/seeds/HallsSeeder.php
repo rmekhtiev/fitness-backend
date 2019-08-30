@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Hall;
+
 class HallsSeeder extends BaseSeeder
 {
     /**
@@ -8,7 +10,9 @@ class HallsSeeder extends BaseSeeder
      * @return mixed
      */
     public function runFake() {
-
+        for ($i = 0; $i < 3; $i++) {
+            factory(Hall::class)->create();
+        }
     }
 
     /**
