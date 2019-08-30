@@ -50,7 +50,7 @@ abstract class ApiTestCase extends TestCase
      */
     public function actingAsAdmin()
     {
-        $user = User::where('email', UserStorySeeder::ADMIN_CREDENTIALS[0])->firstOrFail();
+        $user = User::where('email', UserStorySeeder::OWNER_CREDENTIALS[0])->firstOrFail();
 
         return $this->actingAs($user);
     }

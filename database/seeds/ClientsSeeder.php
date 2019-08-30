@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Client;
+use App\Models\Hall;
+
 class ClientsSeeder extends BaseSeeder
 {
     /**
@@ -8,7 +11,13 @@ class ClientsSeeder extends BaseSeeder
      * @return mixed
      */
     public function runFake() {
+        $halls = Hall::all();
 
+        for ($i = 0; $i < 200; $i++) {
+            factory(Client::class)->create([
+                'primary_hall_id' => $halls->random()->hall_id,
+            ]);
+        }
     }
 
     /**
