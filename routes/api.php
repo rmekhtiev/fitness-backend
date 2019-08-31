@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 /*
@@ -58,7 +59,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Users
          */
-        $api->group(['prefix' => 'users', 'middleware' => 'check_role:admin'], function ($api) {
+        $api->group(['prefix' => 'users', 'middleware' => 'check_role:'.Role::ROLE_OWNER.','.Role::ROLE_HALL_ADMIN], function ($api) {
             $api->get('/', 'App\Http\Controllers\UserController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\UserController@get');
             $api->post('/', 'App\Http\Controllers\UserController@post');

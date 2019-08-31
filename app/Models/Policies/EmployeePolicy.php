@@ -4,6 +4,7 @@ namespace App\Models\Policies;
 
 use App\Models\User;
 use App\Models\Employee;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmployeePolicy extends BasePolicy
 {
@@ -87,6 +88,8 @@ class EmployeePolicy extends BasePolicy
      */
     public function qualifyCollectionQueryWithUser(User $user, $query)
     {
-        return $query;
+        return $query->when($user->isHallAdmin() && !empty($user->associatedEmployee), function (Builder $query) use ($user) {
+            return $query->whereHas('hall', $user->associatedEmployee->hall);
+        });
     }
 }
