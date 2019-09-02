@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Hall;
+use App\Models\Locker;
+
 class LockersSeeder extends BaseSeeder
 {
     /**
@@ -7,8 +10,17 @@ class LockersSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runFake() {
+    public function runFake()
+    {
+        $halls = Hall::all();
 
+        foreach ($halls as $hall) {
+            for ($i = 0; $i < $this->faker->numberBetween(0, 50); $i++) {
+                factory(Locker::class)->create([
+                    'hall_id' => $hall->hall_id,
+                ]);
+            }
+        }
     }
 
     /**
@@ -16,7 +28,8 @@ class LockersSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runProduction() {
+    public function runProduction()
+    {
 
     }
 
@@ -25,7 +38,8 @@ class LockersSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runAlways() {
+    public function runAlways()
+    {
 
     }
 }
