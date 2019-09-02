@@ -4,6 +4,7 @@ namespace App\Models\Policies;
 
 use App\Models\User;
 use App\Models\Locker;
+use Illuminate\Database\Eloquent\Builder;
 
 class LockerPolicy extends BasePolicy
 {
@@ -15,8 +16,7 @@ class LockerPolicy extends BasePolicy
      */
     public function create(User $user)
     {
-        //@todo
-        return true;
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
@@ -39,8 +39,7 @@ class LockerPolicy extends BasePolicy
      */
     public function viewAll(User $user)
     {
-        // @todo
-        return true;
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
@@ -75,8 +74,8 @@ class LockerPolicy extends BasePolicy
      * @return mixed
      */
     public function own(User $user, Locker $locker) {
-        // @todo
-        return true;
+        return $user->isOwner()
+            || ($user->isHallAdmin() && !empty($user->associatedEmployee) && $locker->hall_id == $user->associatedEmployee->hall_id);
     }
 
     /**
@@ -89,6 +88,8 @@ class LockerPolicy extends BasePolicy
      */
     public function qualifyCollectionQueryWithUser(User $user, $query)
     {
-        return $query;
+        return $query->when($user->isHallAdmin() && !empty($user->associatedEmployee), function (Builder $query) use ($user) {
+            return $query->where('hall_id', $user->associatedEmployee->hall_id);
+        });
     }
 }
