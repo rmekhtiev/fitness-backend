@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 
-class Hall extends BaseModel
+class Locker extends BaseModel
 {
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'hall_id';
+    public $primaryKey = 'locker_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -22,11 +22,6 @@ class Hall extends BaseModel
      */
     public static $collectionWith = null;
 
-    public static $itemWithCount = [
-        'clients',
-        'employees',
-    ];
-
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
      */
@@ -35,10 +30,7 @@ class Hall extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = [
-        'title',
-        'address',
-    ];
+    protected $fillable = [];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -49,29 +41,18 @@ class Hall extends BaseModel
      * Return the validation rules for this model
      *
      * @return array Rules
-     * @todo
-     *
      */
     public function getValidationRules()
     {
         return [
-            'title' => 'required',
-            'address' => 'required',
+            'number' => 'sometimes|required|numeric',
+
+            'hall_id' => 'required|uuid|exists:halls,hall_id',
         ];
     }
 
-    public function clients()
+    public function hall()
     {
-        return $this->hasMany(Client::class, 'primary_hall_id');
-    }
-
-    public function employees()
-    {
-        return $this->hasMany(Employee::class, 'hall_id');
-    }
-
-    public function lockers()
-    {
-        return $this->hasMany(Locker::class, 'hall_id');
+        return $this->belongsTo(Hall::class, 'hall_id');
     }
 }
