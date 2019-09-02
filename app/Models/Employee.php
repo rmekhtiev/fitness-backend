@@ -70,7 +70,7 @@ class Employee extends BaseModel
 
     public function hall()
     {
-        return $this->belongsTo(Hall::class);
+        return $this->belongsTo(Hall::class, 'hall_id');
     }
 
     public function associatedUser()

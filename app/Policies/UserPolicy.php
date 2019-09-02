@@ -92,7 +92,7 @@ class UserPolicy extends BasePolicy
     {
         return $query->when($user->isHallAdmin() && !empty($user->associatedEmployee), function (Builder $query) use ($user) {
             return $query->whereHas('associatedEmployee', function (Builder $query) use ($user) {
-                return $query->whereHas('hall', $user->associatedEmployee->hall);
+                return $query->where('hall_id', $user->associatedEmployee->hall_id);
             });
         });
     }
