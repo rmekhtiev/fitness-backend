@@ -11,7 +11,9 @@ class HallsSeeder extends BaseSeeder
      */
     public function runFake() {
         for ($i = 0; $i < 3; $i++) {
-            factory(Hall::class)->create();
+            factory(Hall::class)->create([
+                'title' => 'Hall #' . $i,
+            ]);
         }
     }
 

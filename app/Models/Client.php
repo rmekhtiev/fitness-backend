@@ -11,6 +11,8 @@ class Client extends BaseModel
      */
     public $primaryKey = 'client_id';
 
+    protected $perPage = 100;
+
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
@@ -45,6 +47,11 @@ class Client extends BaseModel
      */
     protected $hidden = [];
 
+    protected $appends = [
+        'name',
+        'full_name',
+    ];
+
     /**
      * Return the validation rules for this model
      *
@@ -68,6 +75,24 @@ class Client extends BaseModel
     public function primaryHall()
     {
         return $this->belongsTo(Hall::class, 'primary_hall_id');
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getNameAttribute()
+    {
+        // phpcs:ignore
+        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . mb_substr($this->first_name, 0, 1) . '.') : '') . ($this->middle_name ? (' ' . mb_substr($this->middle_name, 0, 1) . '.') : '') : $this->first_name;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getFullNameAttribute()
+    {
+        // phpcs:ignore
+        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
     }
 
 }

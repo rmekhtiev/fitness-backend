@@ -11,6 +11,8 @@ class Employee extends BaseModel
      */
     public $primaryKey = 'employee_id';
 
+    protected $perPage = 50;
+
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
@@ -39,6 +41,11 @@ class Employee extends BaseModel
         'associated_user_id',
     ];
 
+    protected $appends = [
+        'name',
+        'full_name',
+    ];
+
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
@@ -63,11 +70,29 @@ class Employee extends BaseModel
 
     public function hall()
     {
-        return $this->belongsTo(Hall::class);
+        return $this->belongsTo(Hall::class, 'hall_id');
     }
 
     public function associatedUser()
     {
         return $this->belongsTo(User::class, 'associated_user_id');
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getNameAttribute()
+    {
+        // phpcs:ignore
+        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . mb_substr($this->first_name, 0, 1) . '.') : '') . ($this->middle_name ? (' ' . mb_substr($this->middle_name, 0, 1) . '.') : '') : $this->first_name;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getFullNameAttribute()
+    {
+        // phpcs:ignore
+        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
     }
 }

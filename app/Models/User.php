@@ -49,6 +49,10 @@ class User extends BaseModel implements
         'password', 'remember_token', 'primary_role',
     ];
 
+    public static $itemWith = [
+        'roles',
+    ];
+
     /**
      * Model's boot function
      */
@@ -136,7 +140,7 @@ class User extends BaseModel implements
 
     public function isHallAdmin()
     {
-        return in_array(Role::ROLE_HALL_ADMIN, $this->getRoles());
+        return $this->primaryRole->name == Role::ROLE_HALL_ADMIN;
     }
 
     /**
