@@ -13,10 +13,14 @@ class Locker extends BaseModel
      */
     public $primaryKey = 'locker_id';
 
+    protected $perPage = 50;
+
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = [
+        'booking',
+    ];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -81,6 +85,13 @@ class Locker extends BaseModel
     public function bookings()
     {
         return $this->hasMany(LockerBooking::class, 'locker_id');
+    }
+
+    public function booking()
+    {
+        return $this->hasOne(LockerBooking::class, 'locker_id')
+            ->whereDate('book_start', '<=', Carbon::today())
+            ->whereDate('book_end', '>=', Carbon::today());
     }
 
     public function getFreeAttribute()
