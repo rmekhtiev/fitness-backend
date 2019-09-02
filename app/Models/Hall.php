@@ -46,6 +46,10 @@ class Hall extends BaseModel
      */
     protected $hidden = [];
 
+    protected $appends = [
+        'lockers_count_free',
+    ];
+
     /**
      * Return the validation rules for this model
      *
@@ -74,5 +78,14 @@ class Hall extends BaseModel
     public function lockers()
     {
         return $this->hasMany(Locker::class, 'hall_id');
+    }
+
+    public function getLockersCountFreeAttribute()
+    {
+        $this->loadMissing('lockers');
+
+        return $this->lockers->filter(function (Locker $locker) {
+            return $locker->free;
+        })->count();
     }
 }

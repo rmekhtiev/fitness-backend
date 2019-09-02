@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 
 class Locker extends BaseModel
@@ -34,6 +35,10 @@ class Locker extends BaseModel
     protected $fillable = [
         'number',
         'hall_id',
+    ];
+
+    protected $appends = [
+        'free',
     ];
 
     /**
@@ -76,5 +81,12 @@ class Locker extends BaseModel
     public function bookings()
     {
         return $this->hasMany(LockerBooking::class, 'locker_id');
+    }
+
+    public function getFreeAttribute()
+    {
+        $this->loadMissing('bookings');
+
+        return $this->bookings->isEmpty() || Carbon::today()->isAfter($this->bookings->sortBy('book_end')->last()->book_end);
     }
 }
