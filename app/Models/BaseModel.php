@@ -16,6 +16,17 @@ class BaseModel extends RestfulModel
      */
     public static $localWithCount = null;
 
+
+    public static $allowedSorts = [];
+
+    public static $allowedAppends = [];
+
+    public static $allowedIncludes = [];
+
+    public static $allowedFilters = [];
+
+    public static $allowedFields = [];
+
     /**
      * What count of relations should one model of this entity be returned with, from a relevant controller
      *
