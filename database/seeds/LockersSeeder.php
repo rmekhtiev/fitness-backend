@@ -15,8 +15,9 @@ class LockersSeeder extends BaseSeeder
         $halls = Hall::all();
 
         foreach ($halls as $hall) {
-            for ($i = 0; $i < $this->faker->numberBetween(0, 50); $i++) {
+            for ($i = 1; $i <= $this->faker->numberBetween(0, 50); $i++) {
                 factory(Locker::class)->create([
+                    'number' => $i,
                     'hall_id' => $hall->hall_id,
                 ]);
             }
