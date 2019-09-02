@@ -72,4 +72,9 @@ class Locker extends BaseModel
     {
         return $this->belongsTo(Hall::class, 'hall_id');
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(LockerBooking::class, 'locker_id');
+    }
 }

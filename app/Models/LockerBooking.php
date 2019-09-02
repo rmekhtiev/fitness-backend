@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 
-class Hall extends BaseModel
+class LockerBooking extends BaseModel
 {
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'hall_id';
+    public $primaryKey = 'booking_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -22,12 +22,6 @@ class Hall extends BaseModel
      */
     public static $collectionWith = null;
 
-    public static $itemWithCount = [
-        'clients',
-        'employees',
-        'lockers',
-    ];
-
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
      */
@@ -37,8 +31,11 @@ class Hall extends BaseModel
      * @var array The attributes that are mass assignable.
      */
     protected $fillable = [
-        'title',
-        'address',
+        'locker_id',
+        'client_id',
+
+        'book_start',
+        'book_end',
     ];
 
     /**
@@ -50,29 +47,21 @@ class Hall extends BaseModel
      * Return the validation rules for this model
      *
      * @return array Rules
-     * @todo
-     *
      */
     public function getValidationRules()
     {
         return [
-            'title' => 'required',
-            'address' => 'required',
+            'locker_id' => 'required|uuid|exists:lockers,locker_id',
+            'client_id' => 'required|uuid|exists:clients,client_id',
+
+            'book_start' => 'required|date',
+            'book_end' => 'required|date|gte:book_start',
         ];
     }
 
-    public function clients()
+    public function locker()
     {
-        return $this->hasMany(Client::class, 'primary_hall_id');
+        return $this->belongsTo(Locker::class, 'locker_id');
     }
 
-    public function employees()
-    {
-        return $this->hasMany(Employee::class, 'hall_id');
-    }
-
-    public function lockers()
-    {
-        return $this->hasMany(Locker::class, 'hall_id');
-    }
 }

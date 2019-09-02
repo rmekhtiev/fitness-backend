@@ -117,6 +117,17 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\LockerController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\LockerController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\LockerController@delete');
+
+            /*
+             * Locker Bookings
+             */
+            $api->group(['prefix' => '{uuid}/bookings'], function (Dingo\Api\Routing\Router $api) {
+                $api->get('/', 'App\Http\Controllers\LockerBookingController@getAll');
+                $api->get('/{uuid}', 'App\Http\Controllers\LockerBookingController@get');
+                $api->post('/', 'App\Http\Controllers\LockerBookingController@post');
+                $api->patch('/{uuid}', 'App\Http\Controllers\LockerBookingController@patch');
+                $api->delete('/{uuid}', 'App\Http\Controllers\LockerBookingController@delete');
+            });
         });
 
     });
