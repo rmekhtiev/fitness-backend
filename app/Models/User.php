@@ -27,11 +27,6 @@ class User extends BaseModel implements
     public $primaryKey = 'user_id';
 
     /**
-     * @var array Relations to load implicitly by Restful controllers
-     */
-    public static $localWith = ['primaryRole', 'roles'];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -50,7 +45,9 @@ class User extends BaseModel implements
     ];
 
     public static $itemWith = [
+        'primaryRole',
         'roles',
+        'associatedEmployee'
     ];
 
     /**
@@ -179,5 +176,9 @@ class User extends BaseModel implements
     public function getAuthIdentifierName()
     {
         return $this->getKeyName();
+    }
+
+    public function getNameAttribute() {
+        return $this->associatedEmployee ? $this->associatedEmployee->name : $this->name;
     }
 }

@@ -13,10 +13,11 @@ npm-debug.log
 yarn-error.log
 
 .env
-composer.lock
+# composer.lock
 
 .phpstorm*
 _ide_helper.php
+_ide_helper_**.php
 
 # mac os
 .DS_Store
