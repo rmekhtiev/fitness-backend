@@ -33,6 +33,7 @@ class Client extends BaseModel
     public static $itemWith = [
         'activeSubscription',
         'groups'
+        'visit-histories',
     ];
 
     /**
@@ -150,6 +151,11 @@ class Client extends BaseModel
     public function primaryHall()
     {
         return $this->belongsTo(Hall::class, 'primary_hall_id');
+    }
+
+    public function visitHistories()
+    {
+        return $this->hasMany( VisitHistory::class, 'client_id');
     }
 
     public function subscriptions()

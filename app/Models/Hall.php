@@ -30,6 +30,7 @@ class Hall extends BaseModel
         'employees',
         'lockers',
         'issues',
+        'visit-histories',
     ];
 
     /**
@@ -73,6 +74,11 @@ class Hall extends BaseModel
     public function clients()
     {
         return $this->hasMany(Client::class, 'primary_hall_id');
+    }
+
+    public function visitHistories()
+    {
+        return $this->hasMany( VisitHistory::class, 'hall_id');
     }
 
     public function employees()
