@@ -28,13 +28,14 @@ class Controller extends BaseController
         $model = new static::$model;
 
         $query = $model::with($model::getCollectionWith())->withCount($model::getCollectionWithCount());
+
         $query = QueryBuilder::for($query)
             ->allowedSorts($model::$allowedSorts)
             ->allowedAppends($model::$allowedAppends)
             ->allowedFields($model::$allowedFields)
             ->allowedIncludes($model::$allowedIncludes)
-            ->allowedFilters($model::$allowedFilters)
-            ->get();
+            ->allowedFilters($model::$allowedFilters);
+
         $this->qualifyCollectionQuery($query);
 
         // Handle pagination, if applicable
