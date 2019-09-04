@@ -29,6 +29,8 @@ class Controller extends BaseController
 
         $query = $model::with($model::getCollectionWith())->withCount($model::getCollectionWithCount());
 
+        $this->qualifyCollectionQuery($query);
+
         $query = QueryBuilder::for($query)
             ->allowedSorts($model::$allowedSorts)
             ->allowedAppends($model::$allowedAppends)
@@ -36,7 +38,6 @@ class Controller extends BaseController
             ->allowedIncludes($model::$allowedIncludes)
             ->allowedFilters($model::$allowedFilters);
 
-        $this->qualifyCollectionQuery($query);
 
         // Handle pagination, if applicable
         $perPage = $model->getPerPage();
