@@ -3,12 +3,12 @@
 namespace App\Models\Policies;
 
 use App\Models\User;
-use App\Models\LockerBooking;
+use App\Models\LockerClaim;
 
-class LockerBookingPolicy extends BasePolicy
+class LockerClaimPolicy extends BasePolicy
 {
     /**
-     * Determine whether the user can create LockerBooking.
+     * Determine whether the user can create LockerClaim.
      *
      * @param  \App\Models\User  $user
      * @return mixed
@@ -20,19 +20,19 @@ class LockerBookingPolicy extends BasePolicy
     }
 
     /**
-     * Determine whether the user can view the LockerBooking.
+     * Determine whether the user can view the LockerClaim.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\LockerBooking  $lockerBooking
+     * @param  \App\Models\LockerClaim  $lockerBooking
      * @return mixed
      */
-    public function view(User $user, LockerBooking $lockerBooking)
+    public function view(User $user, LockerClaim $lockerBooking)
     {
         return $this->own($user, $lockerBooking);
     }
 
     /**
-     * Determine whether the user can view the collection of LockerBooking.
+     * Determine whether the user can view the collection of LockerClaim.
      *
      * @param  \App\Models\User  $user
      * @return mixed
@@ -44,37 +44,37 @@ class LockerBookingPolicy extends BasePolicy
     }
 
     /**
-     * Determine whether the user can update the LockerBooking.
+     * Determine whether the user can update the LockerClaim.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\LockerBooking  $lockerBooking
+     * @param  \App\Models\LockerClaim  $lockerBooking
      * @return mixed
      */
-    public function update(User $user, LockerBooking $lockerBooking)
+    public function update(User $user, LockerClaim $lockerBooking)
     {
         return $this->own($user, $lockerBooking);
     }
 
     /**
-     * Determine whether the user can delete the LockerBooking.
+     * Determine whether the user can delete the LockerClaim.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\LockerBooking  $lockerBooking
+     * @param  \App\Models\LockerClaim  $lockerBooking
      * @return mixed
      */
-    public function delete(User $user, LockerBooking $lockerBooking)
+    public function delete(User $user, LockerClaim $lockerBooking)
     {
         return $this->own($user, $lockerBooking);
     }
 
     /**
-     * Determine whether the user owns the LockerBooking.
+     * Determine whether the user owns the LockerClaim.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\LockerBooking  $lockerBooking
+     * @param  \App\Models\LockerClaim  $lockerBooking
      * @return mixed
      */
-    public function own(User $user, LockerBooking $lockerBooking) {
+    public function own(User $user, LockerClaim $lockerBooking) {
         // @todo
         return true;
     }

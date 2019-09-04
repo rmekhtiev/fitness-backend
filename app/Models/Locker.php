@@ -19,7 +19,7 @@ class Locker extends BaseModel
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
     public static $itemWith = [
-        'booking',
+        'claim',
     ];
 
     /**
@@ -82,22 +82,22 @@ class Locker extends BaseModel
         return $this->belongsTo(Hall::class, 'hall_id');
     }
 
-    public function bookings()
+    public function claims()
     {
-        return $this->hasMany(LockerBooking::class, 'locker_id');
+        return $this->hasMany(LockerClaim::class, 'locker_id');
     }
 
-    public function booking()
+    public function claim()
     {
-        return $this->hasOne(LockerBooking::class, 'locker_id')
-            ->whereDate('book_start', '<=', Carbon::today())
-            ->whereDate('book_end', '>=', Carbon::today());
+        return $this->hasOne(LockerClaim::class, 'locker_id')
+            ->whereDate('claim_start', '<=', Carbon::today())
+            ->whereDate('claim_end', '>=', Carbon::today());
     }
 
     public function getFreeAttribute()
     {
-        $this->loadMissing('bookings');
+        $this->loadMissing('claim');
 
-        return $this->bookings->isEmpty() || Carbon::today()->isAfter($this->bookings->sortBy('book_end')->last()->book_end);
+        return empty($this->claim);
     }
 }

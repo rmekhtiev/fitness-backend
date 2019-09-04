@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 
-class LockerBooking extends BaseModel
+class LockerClaim extends BaseModel
 {
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'booking_id';
+    public $primaryKey = 'claim_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -34,8 +34,8 @@ class LockerBooking extends BaseModel
         'locker_id',
         'client_id',
 
-        'book_start',
-        'book_end',
+        'claim_start',
+        'claim_end',
     ];
 
     /**
@@ -54,8 +54,8 @@ class LockerBooking extends BaseModel
             'locker_id' => 'required|uuid|exists:lockers,locker_id',
             'client_id' => 'required|uuid|exists:clients,client_id',
 
-            'book_start' => 'required|date',
-            'book_end' => 'required|date|gte:book_start',
+            'claim_start' => 'required|date',
+            'claim_end' => 'required|date|gte:claim_start',
         ];
     }
 
