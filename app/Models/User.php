@@ -26,6 +26,8 @@ class User extends BaseModel implements
      */
     public $primaryKey = 'user_id';
 
+    protected $perPage = null;
+
     /**
      * The attributes that are mass assignable.
      *

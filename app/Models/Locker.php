@@ -13,7 +13,7 @@ class Locker extends BaseModel
      */
     public $primaryKey = 'locker_id';
 
-    protected $perPage = 50;
+    protected $perPage = null;
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller

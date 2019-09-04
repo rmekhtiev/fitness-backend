@@ -11,6 +11,8 @@ class LockerClaim extends BaseModel
      */
     public $primaryKey = 'claim_id';
 
+    protected $perPage = null;
+
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
