@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Spatie\QueryBuilder\QueryBuilder;
 use Specialtactics\L5Api\Http\Controllers\RestfulController as BaseController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,7 +28,15 @@ class Controller extends BaseController
         $model = new static::$model;
 
         $query = $model::with($model::getCollectionWith())->withCount($model::getCollectionWithCount());
+
         $this->qualifyCollectionQuery($query);
+
+        $query = QueryBuilder::for($query)
+            ->allowedSorts($model::getAllowedSorts())
+            ->allowedAppends($model::getAllowedAppends())
+            ->allowedFields($model::getAllowedFields())
+            ->allowedIncludes($model::getAllowedIncludes())
+            ->allowedFilters($model::getAllowedFilters());
 
         // Handle pagination, if applicable
         $perPage = $model->getPerPage();
@@ -65,4 +74,6 @@ class Controller extends BaseController
 
         return $this->response->item($resource, $this->getTransformer());
     }
+
+
 }
