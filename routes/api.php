@@ -149,5 +149,17 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{uuid}', 'App\Http\Controllers\IssueController@delete');
         });
 
+        /*
+         * Subscriptions
+        */
+        $api->group(['prefix' => 'subscriptions'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\SubscriptionController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\SubscriptionController@get');
+            $api->post('/', 'App\Http\Controllers\SubscriptionController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\SubscriptionController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\SubscriptionController@delete');
+        });
+
+
     });
 });

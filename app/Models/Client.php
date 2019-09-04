@@ -120,6 +120,10 @@ class Client extends BaseModel
         return $this->belongsTo(Hall::class, 'primary_hall_id');
     }
 
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'subscription_id');
+    }
     /**
      * @return mixed|string
      */
