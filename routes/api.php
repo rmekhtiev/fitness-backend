@@ -31,6 +31,18 @@ Route::get('/', function () {
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Router $api) {
     /*
+    * Trainers
+    */
+    $api->group(['prefix' => 'trainers'], function ($api) {
+        $api->get('/', 'App\Http\Controllers\TrainerController@getAll');
+        $api->get('/{uuid}', 'App\Http\Controllers\TrainerController@get');
+        $api->post('/', 'App\Http\Controllers\TrainerController@post');
+        $api->patch('/{uuid}', 'App\Http\Controllers\TrainerController@patch');
+        $api->delete('/{uuid}', 'App\Http\Controllers\TrainerController@delete');
+    });
+
+
+    /*
      * Authentication
      */
     $api->group(['prefix' => 'auth'], function (Dingo\Api\Routing\Router $api) {
