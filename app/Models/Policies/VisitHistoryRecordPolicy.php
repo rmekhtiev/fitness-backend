@@ -3,12 +3,12 @@
 namespace App\Models\Policies;
 
 use App\Models\User;
-use App\Models\VisitHistory;
+use App\Models\VisitHistoryRecord;
 
-class VisitHistoryPolicy extends BasePolicy
+class VisitHistoryRecordPolicy extends BasePolicy
 {
     /**
-     * Determine whether the user can create VisitHistory.
+     * Determine whether the user can create VisitHistoryRecord.
      *
      * @param  \App\Models\User  $user
      * @return mixed
@@ -19,19 +19,20 @@ class VisitHistoryPolicy extends BasePolicy
     }
 
     /**
-     * Determine whether the user can view the VisitHistory.
+     * Determine whether the user can view the VisitHistoryRecord.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\VisitHistory  $visitHistory
+     * @param  \App\Models\VisitHistoryRecord  $visitHistory
      * @return mixed
      */
-    public function view(User $user, VisitHistory $visitHistory)
+    public function view(User $user, VisitHistoryRecord $visitHistory)
     {
-        return $this->own($user, $visitHistory);
+        //todo
+        return true;
     }
 
     /**
-     * Determine whether the user can view the collection of VisitHistory.
+     * Determine whether the user can view the collection of VisitHistoryRecord.
      *
      * @param  \App\Models\User  $user
      * @return mixed
@@ -43,37 +44,37 @@ class VisitHistoryPolicy extends BasePolicy
     }
 
     /**
-     * Determine whether the user can update the VisitHistory.
+     * Determine whether the user can update the VisitHistoryRecord.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\VisitHistory  $visitHistory
+     * @param  \App\Models\VisitHistoryRecord  $visitHistory
      * @return mixed
      */
-    public function update(User $user, VisitHistory $visitHistory)
+    public function update(User $user, VisitHistoryRecord $visitHistory)
     {
         return $this->own($user, $visitHistory);
     }
 
     /**
-     * Determine whether the user can delete the VisitHistory.
+     * Determine whether the user can delete the VisitHistoryRecord.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\VisitHistory  $visitHistory
+     * @param  \App\Models\VisitHistoryRecord  $visitHistory
      * @return mixed
      */
-    public function delete(User $user, VisitHistory $visitHistory)
+    public function delete(User $user, VisitHistoryRecord $visitHistory)
     {
         return $this->own($user, $visitHistory);
     }
 
     /**
-     * Determine whether the user owns the VisitHistory.
+     * Determine whether the user owns the VisitHistoryRecord.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\VisitHistory  $visitHistory
+     * @param  \App\Models\VisitHistoryRecord  $visitHistory
      * @return mixed
      */
-    public function own(User $user, VisitHistory $visitHistory) {
+    public function own(User $user, VisitHistoryRecord $visitHistory) {
         // @todo
         return true;
     }

@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 
-class VisitHistory extends BaseModel
+class VisitHistoryRecord extends BaseModel
 {
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'visit_history_id';
+    public $primaryKey = 'record_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -64,7 +64,7 @@ class VisitHistory extends BaseModel
 
     public function client()
     {
-        return $this->belongsTo(Hall::class, 'hall_id');
+        return $this->belongsTo(Client::class, 'client_id');
     }
 
 }

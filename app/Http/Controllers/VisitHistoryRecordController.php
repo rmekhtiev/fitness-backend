@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\VisitHistory;
+use App\Models\VisitHistoryRecord;
 
-class VisitHistoryController extends Controller
+class VisitHistoryRecordController extends Controller
 {
     /**
      * @var BaseModel The primary model associated with this controller
      */
-    public static $model = VisitHistory::class;
+    public static $model = VisitHistoryRecord::class;
 
     /**
      * @var BaseModel The parent model of the model, in the case of a child rest controller

@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVisitHistoriesTable extends Migration
+class CreateVisitHistoryRecordsTable extends Migration
 {
 
-    const TABLE_NAME = 'visit_histories';
+    const TABLE_NAME = 'visit_history_records';
 
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ class CreateVisitHistoriesTable extends Migration
     public function up()
     {
         Schema::create(static::TABLE_NAME, function (Blueprint $table) {
-            $table->uuid('visit_history_id');
+            $table->uuid('record_id');
             $table->date('datetime');
 
             $table->uuid('client_id');

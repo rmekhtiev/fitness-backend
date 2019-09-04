@@ -153,9 +153,9 @@ class Client extends BaseModel
         return $this->belongsTo(Hall::class, 'primary_hall_id');
     }
 
-    public function visitHistories()
+    public function visitHistoryRecords()
     {
-        return $this->hasMany( VisitHistory::class, 'client_id');
+        return $this->hasMany( VisitHistoryRecord::class, 'client_id');
     }
 
     public function subscriptions()
