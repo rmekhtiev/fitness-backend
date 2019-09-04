@@ -32,12 +32,11 @@ class Controller extends BaseController
         $this->qualifyCollectionQuery($query);
 
         $query = QueryBuilder::for($query)
-            ->allowedSorts($model::$allowedSorts)
-            ->allowedAppends($model::$allowedAppends)
-            ->allowedFields($model::$allowedFields)
-            ->allowedIncludes($model::$allowedIncludes)
-            ->allowedFilters($model::$allowedFilters);
-
+            ->allowedSorts($model::getAllowedSorts())
+            ->allowedAppends($model::getAllowedAppends())
+            ->allowedFields($model::getAllowedFields())
+            ->allowedIncludes($model::getAllowedIncludes())
+            ->allowedFilters($model::getAllowedFilters());
 
         // Handle pagination, if applicable
         $perPage = $model->getPerPage();

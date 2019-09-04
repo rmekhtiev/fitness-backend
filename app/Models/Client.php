@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Client extends BaseModel
 {
@@ -69,6 +70,13 @@ class Client extends BaseModel
             'email' => 'sometimes|nullable|email|unique:clients,phone_number',
 
             'primary_hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('primary_hall_id'),
         ];
     }
 

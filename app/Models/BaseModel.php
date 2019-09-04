@@ -16,7 +16,6 @@ class BaseModel extends RestfulModel
      */
     public static $localWithCount = null;
 
-
     public static $allowedSorts = [];
 
     public static $allowedAppends = [];
@@ -67,7 +66,7 @@ class BaseModel extends RestfulModel
     public static function getCollectionWithCount()
     {
         if (is_null(static::$localWithCount)) {
-            if (! is_null(static::$collectionWithCount)) {
+            if (!is_null(static::$collectionWithCount)) {
                 return static::$collectionWithCount;
             } else {
                 return static::$itemWithCount;
@@ -75,5 +74,30 @@ class BaseModel extends RestfulModel
         } else {
             return static::$localWithCount;
         }
+    }
+
+    public static function getAllowedSorts()
+    {
+        return static::$allowedSorts;
+    }
+
+    public static function getAllowedAppends()
+    {
+        return static::$allowedAppends;
+    }
+
+    public static function getAllowedIncludes()
+    {
+        return static::$allowedIncludes;
+    }
+
+    public static function getAllowedFilters()
+    {
+        return static::$allowedFilters;
+    }
+
+    public static function getAllowedFields()
+    {
+        return static::$allowedFields;
     }
 }
