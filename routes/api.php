@@ -141,6 +141,13 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->patch('/{uuid}', 'App\Http\Controllers\LockerClaimController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\LockerClaimController@delete');
         });
+        $api->group(['prefix' => 'issues'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\IssueController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\IssueController@get');
+            $api->post('/', 'App\Http\Controllers\IssueController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\IssueController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\IssueController@delete');
+        });
 
     });
 });

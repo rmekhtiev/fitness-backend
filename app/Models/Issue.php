@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\IssueType;
 use App\Transformers\BaseTransformer;
+use BenSampo\Enum\Rules\EnumValue;
 
 class Issue extends BaseModel
 {

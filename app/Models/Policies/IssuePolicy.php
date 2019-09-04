@@ -4,6 +4,7 @@ namespace App\Models\Policies;
 
 use App\Models\User;
 use App\Models\Issue;
+use Illuminate\Database\Eloquent\Builder;
 
 class IssuePolicy extends BasePolicy
 {
@@ -73,8 +74,7 @@ class IssuePolicy extends BasePolicy
      * @return mixed
      */
     public function own(User $user, Issue $issue) {
-        //todo
-        return true;
+        return $user->isHallAdmin() && !empty($user->associatedEmployee) && $user->associatedEmployee->hall_id == $issue->hall_id;
     }
 
     /**
@@ -87,6 +87,8 @@ class IssuePolicy extends BasePolicy
      */
     public function qualifyCollectionQueryWithUser(User $user, $query)
     {
-        return $query;
+        return $query->when($user->isHallAdmin() && !empty($user->associatedEmployee), function (Builder $query) use ($user) {
+            return $query->where('hall_id', $user->associatedEmployee->hall_id);
+        });
     }
 }

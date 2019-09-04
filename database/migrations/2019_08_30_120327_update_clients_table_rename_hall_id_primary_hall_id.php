@@ -26,7 +26,7 @@ class UpdateClientsTableRenameHallIdPrimaryHallId extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            //
+            $table->renameColumn('primary_hall_id', 'hall_id');
         });
     }
 }

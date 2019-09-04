@@ -29,6 +29,7 @@ class Hall extends BaseModel
         'clients',
         'employees',
         'lockers',
+        'issues',
     ];
 
     /**

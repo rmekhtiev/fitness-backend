@@ -27,7 +27,7 @@ class CreateIssuesTable extends Migration
             $table->foreign('hall_id')->references('hall_id')->on('halls');
             $table->foreign('user_id')->references('user_id')->on('users');
 
-            $table->primary('');
+            $table->primary('issue_id');
 
             $table->timestamps();
             // $table->softDeletes();
