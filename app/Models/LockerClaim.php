@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class LockerClaim extends BaseModel
 {
@@ -58,6 +59,14 @@ class LockerClaim extends BaseModel
 
             'claim_start' => 'required|date',
             'claim_end' => 'required|date|gte:claim_start',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('client_id'),
+            AllowedFilter::exact('hall_id'),
         ];
     }
 
