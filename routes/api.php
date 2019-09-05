@@ -117,17 +117,21 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\LockerController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\LockerController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\LockerController@delete');
+        });
 
-            /*
-             * Locker Bookings
-             */
-            $api->group(['prefix' => '{uuid}/claims'], function (Dingo\Api\Routing\Router $api) {
-                $api->get('/', 'App\Http\Controllers\LockerClaimController@getAll');
-                $api->get('/{uuid}', 'App\Http\Controllers\LockerClaimController@get');
-                $api->post('/', 'App\Http\Controllers\LockerClaimController@post');
-                $api->patch('/{uuid}', 'App\Http\Controllers\LockerClaimController@patch');
-                $api->delete('/{uuid}', 'App\Http\Controllers\LockerClaimController@delete');
-            });
+        # /clients/{uuid}/claims and /lockers/{uuid}/claims
+        # VS
+        # /locker-claims?filter[locker_id]={uuid} and /locker-claims?filter[client_id]={uuid}
+
+        /*
+         * Locker Bookings
+         */
+        $api->group(['prefix' => 'locker-claims'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\LockerClaimController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\LockerClaimController@get');
+            $api->post('/', 'App\Http\Controllers\LockerClaimController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\LockerClaimController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\LockerClaimController@delete');
         });
 
     });
