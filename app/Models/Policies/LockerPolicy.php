@@ -28,7 +28,7 @@ class LockerPolicy extends BasePolicy
      */
     public function view(User $user, Locker $locker)
     {
-        return $this->own($user, $locker);
+        return true;
     }
 
     /**

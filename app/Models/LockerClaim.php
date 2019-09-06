@@ -66,7 +66,7 @@ class LockerClaim extends BaseModel
     {
         return [
             AllowedFilter::exact('client_id'),
-            AllowedFilter::exact('hall_id'),
+            AllowedFilter::exact('locker_id'),
         ];
     }
 
