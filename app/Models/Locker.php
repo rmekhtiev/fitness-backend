@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Ramsey\Uuid\Uuid;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Locker extends BaseModel
 {
@@ -63,6 +65,15 @@ class Locker extends BaseModel
         });
     }
 
+    public function scopeFree(Builder $query, $free = true)
+    {
+        return $query->when($free, function (Builder $query) {
+            return $query->whereDoesntHave('claim');
+        }, function (Builder $query) {
+            return $query->whereHas('claim');
+        });
+    }
+
     /**
      * Return the validation rules for this model
      *
@@ -74,6 +85,13 @@ class Locker extends BaseModel
             'number' => 'sometimes|required|numeric', // todo: add unique within same hall
 
             'hall_id' => 'required|uuid|exists:halls,hall_id',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::scope('free'),
         ];
     }
 
