@@ -6,19 +6,19 @@ use App\Models\BaseModel;
 use App\Models\Locker;
 use App\Transformers\BaseTransformer;
 use Illuminate\Http\Request;
-use App\Models\LockerBooking;
+use App\Models\LockerClaim;
 
-class LockerBookingController extends Controller
+class LockerClaimController extends Controller
 {
     /**
      * @var BaseModel The primary model associated with this controller
      */
-    public static $model = LockerBooking::class;
+    public static $model = LockerClaim::class;
 
     /**
      * @var BaseModel The parent model of the model, in the case of a child rest controller
      */
-    public static $parentModel = Locker::class;
+    public static $parentModel = null;
 
     /**
      * @var null|BaseTransformer The transformer this controller should use, if overriding the model & default

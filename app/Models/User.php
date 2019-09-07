@@ -26,6 +26,8 @@ class User extends BaseModel implements
      */
     public $primaryKey = 'user_id';
 
+    protected $perPage = null;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -179,6 +181,6 @@ class User extends BaseModel implements
     }
 
     public function getNameAttribute() {
-        return $this->associatedEmployee ? $this->associatedEmployee->name : $this->name;
+        return $this->associatedEmployee ? $this->associatedEmployee->name : $this->attributes['name'];
     }
 }

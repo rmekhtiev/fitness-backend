@@ -27,8 +27,8 @@ class CreateLockerBookingsTable extends Migration
 
             $table->primary('booking_id');
 
-            $table->foreign('locker_id')->references('locker_id')->on('lockers');
-            $table->foreign('client_id')->references('client_id')->on('clients');
+            $table->foreign('locker_id')->references('locker_id')->on('lockers')->onDelete('cascade');
+            $table->foreign('client_id')->references('client_id')->on('clients')->onDelete('cascade');
 
             $table->timestamps();
             // $table->softDeletes();
