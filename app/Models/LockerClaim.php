@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class LockerClaim extends BaseModel
@@ -46,6 +48,15 @@ class LockerClaim extends BaseModel
      */
     protected $hidden = [];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::addGlobalScope('order', function (Builder $query) {
+            return $query->orderByDesc('claim_end');
+        });
+    }
+
     /**
      * Return the validation rules for this model
      *
@@ -67,7 +78,39 @@ class LockerClaim extends BaseModel
         return [
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('locker_id'),
+            AllowedFilter::scope('active'),
+            AllowedFilter::scope('after'),
+            AllowedFilter::scope('before'),
         ];
+    }
+
+    public function scopeActive(Builder $query, $active = true)
+    {
+        return $query->when($active, function (Builder $query) {
+            $query->whereDate('claim_start', '<=', Carbon::today())
+                ->whereDate('claim_end', '>=', Carbon::today());
+        }, function (Builder $query) {
+            $query->whereDate('claim_start', '>=', Carbon::today())
+                ->whereDate('claim_end', '<=', Carbon::today());
+        });
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeAfter(Builder $query, $value)
+    {
+        $query->whereDate('claim_start', '>=', $value);
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeBefore(Builder $query, $value)
+    {
+        $query->whereDate('claim_end', '<=', $value);
     }
 
     public function locker()

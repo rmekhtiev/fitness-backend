@@ -2,7 +2,9 @@
 
 use App\Models\Employee;
 use App\Models\Hall;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmployeesSeeder extends BaseSeeder
 {
@@ -11,9 +13,12 @@ class EmployeesSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runFake() {
+    public function runFake()
+    {
         $halls = Hall::all();
-        $users = User::all()->shuffle();
+        $users = User::query()->whereDoesntHave('primaryRole', function (Builder $query) {
+            $query->where('name', Role::ROLE_OWNER);
+        })->get()->shuffle();
 
         for ($i = 0; $i < 20; $i++) {
             factory(Employee::class)->create([
@@ -28,7 +33,8 @@ class EmployeesSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runProduction() {
+    public function runProduction()
+    {
 
     }
 
@@ -37,7 +43,8 @@ class EmployeesSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runAlways() {
+    public function runAlways()
+    {
 
     }
 }
