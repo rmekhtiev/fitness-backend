@@ -35,13 +35,22 @@ return [
     ],
 
     'stripe' => [
-        'model' => App\User::class,
+        'model' => App\Models\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook' => [
             'secret' => env('STRIPE_WEBHOOK_SECRET'),
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
         ],
+    ],
+
+    'sigmasms' => [
+        'username' => env('SIGMASMS_USERNAME'),
+        'password' => env('SIGMASMS_PASSWORD'),
+
+        'jwt_filename' => storage_path('app/sigmasms/token.jwt'),
+
+        'sms_from' => env('SIGMASMS_FROM'),
     ],
 
 ];
