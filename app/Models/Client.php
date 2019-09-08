@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\Gender;
 use App\Transformers\BaseTransformer;
+use BenSampo\Enum\Rules\EnumValue;
+use Illuminate\Validation\Rule;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Client extends BaseModel
@@ -64,10 +67,24 @@ class Client extends BaseModel
     {
         return [
             'first_name' => 'required',
-            'second_name' => 'sometimes|nullable',
+            'middle_name' => 'sometimes|nullable',
             'last_name' => 'required',
-            'phone_number' => 'required|unique:clients,phone_number',
-            'email' => 'sometimes|nullable|email|unique:clients,phone_number',
+            'phone_number' => [
+                'required',
+                Rule::unique('clients', 'phone_number')->ignoreModel($this),
+            ],
+            'email' => [
+                'sometimes',
+                'nullable',
+                'email',
+                Rule::unique('clients', 'email')->ignoreModel($this),
+            ],
+
+            'gender' => [
+                'sometimes',
+                'nullable',
+                new EnumValue(Gender::class, true),
+            ],
 
             'primary_hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
         ];
