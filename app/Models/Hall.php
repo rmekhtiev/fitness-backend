@@ -96,10 +96,10 @@ class Hall extends BaseModel
     public function getClientsCountNewAttribute()
     {
         if(!$this->relationLoaded('clients')) {
-            return $this->clients()->whereDate('created_at', '>=', now()->subWeek())->count();
+            return $this->clients()->whereDate('created_at', '>=', now()->subMonth())->count();
         } else {
             return $this->clients->filter(function (Client $client) {
-                return $client->created_at->isAfter(now()->subWeek());
+                return $client->created_at->isAfter(now()->subMonth());
             })->count();
         }
     }

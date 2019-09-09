@@ -13,9 +13,10 @@ class ClientsSeeder extends BaseSeeder
     public function runFake() {
         $halls = Hall::all();
 
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             factory(Client::class)->create([
                 'primary_hall_id' => $halls->random()->hall_id,
+                'created_at' => $this->faker->dateTimeBetween('-1 year')
             ]);
         }
     }
