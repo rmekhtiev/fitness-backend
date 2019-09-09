@@ -6,10 +6,13 @@ use App\Enums\Gender;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Validation\Rule;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Client extends BaseModel
 {
+    use LogsActivity;
+
     /**
      * @var string UUID key of the resource
      */
@@ -55,6 +58,17 @@ class Client extends BaseModel
         'name',
         'full_name',
     ];
+
+    protected static $recordEvents = [
+        'created'
+    ];
+
+    protected static $logName = 'events';
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->hall_id = $this->primary_hall_id;
+    }
 
     /**
      * Return the validation rules for this model
