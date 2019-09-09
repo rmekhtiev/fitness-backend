@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Carbon\Carbon;
 
 class Hall extends BaseModel
 {
@@ -50,6 +51,7 @@ class Hall extends BaseModel
 
     protected $appends = [
         'lockers_count_free',
+        'clients_count_new',
     ];
 
     /**
@@ -89,5 +91,16 @@ class Hall extends BaseModel
         return $this->lockers->filter(function (Locker $locker) {
             return $locker->free;
         })->count();
+    }
+
+    public function getClientsCountNewAttribute()
+    {
+        if(!$this->relationLoaded('clients')) {
+            return $this->clients()->whereDate('created_at', '>=', now()->subMonth())->count();
+        } else {
+            return $this->clients->filter(function (Client $client) {
+                return $client->created_at->isAfter(now()->subMonth());
+            })->count();
+        }
     }
 }
