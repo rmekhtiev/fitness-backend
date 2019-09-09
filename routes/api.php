@@ -75,6 +75,14 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->get('/', 'App\Http\Controllers\RoleController@getAll');
         });
 
+        /*
+         * Roles
+         */
+        $api->group(['prefix' => 'activity'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\ActivityController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\ActivityController@get');
+        });
+
         /**
          * Clients
          */
