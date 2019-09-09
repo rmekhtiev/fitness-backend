@@ -37,6 +37,7 @@ class Issue extends BaseModel
         'status',
         'hall_id',
         'user_id',
+        'employee_id'
     ];
 
     /**
@@ -56,7 +57,7 @@ class Issue extends BaseModel
             'status' => ['required', new EnumValue(IssueType::class)],
 
             'hall_id' => 'required|nullable|uuid|exists:halls,hall_id',
-            'user_id' => 'required|nullable|uuid|exists:users,user_id',
+            'employee_id' => 'required|nullable|uuid|exists:employees,employee_id',
         ];
     }
 
@@ -71,4 +72,18 @@ class Issue extends BaseModel
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function(self $issue) {
+            $issue->user()->associate(auth()->user()) ;
+        });
+    }
 }
