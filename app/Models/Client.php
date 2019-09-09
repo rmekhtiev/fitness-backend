@@ -93,6 +93,7 @@ class Client extends BaseModel
     public static function getAllowedFilters()
     {
         return [
+            AllowedFilter::exact('client_id'),
             AllowedFilter::exact('primary_hall_id'),
         ];
     }

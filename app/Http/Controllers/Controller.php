@@ -32,6 +32,7 @@ class Controller extends BaseController
         $this->qualifyCollectionQuery($query);
 
         $query = QueryBuilder::for($query)
+            ->defaultSort($model::getDefaultSorts())
             ->allowedSorts($model::getAllowedSorts())
             ->allowedAppends($model::getAllowedAppends())
             ->allowedFields($model::getAllowedFields())
