@@ -68,10 +68,6 @@ class User extends BaseModel implements
                 $user->password = Hash::make($user->password);
             }
         });
-
-        static::addGlobalScope('sortBySubscription', function (Builder $builder) {
-            return $builder->orderBy('subscription_id');
-        });
     }
 
     /**

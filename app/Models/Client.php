@@ -86,7 +86,7 @@ class Client extends BaseModel
         parent::boot();
 
         static::addGlobalScope('sortBySubscription', function (Builder $builder) {
-            return $builder->whereHas('subsriptions', function (Builder $builder) {
+            return $builder->whereHas('latestSubscriptions', function (Builder $builder) {
                 return $builder->orderBy('valid_till');
             });
         });

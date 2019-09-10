@@ -24,12 +24,4 @@ class ClientController extends Controller
      */
     public static $transformer = null;
 
-    public function getAll()
-    {
-        $clients = Client::with('latestSubscription')->get()->sortByDesc('latestSubscription.valid_till');
-        $futureSubscription = Client::with('latestSubscription')->get()->whereDate('valid_till', '>', Carbon::now());
-        $pastSubscription = Client::with('latestSubscription')->get()->whereDate('valid_till', '<', Carbon::now());
-        $clients = $futureSubscription-> merge($pastSubscription);
-        return new ClientsResourceCollection(ClientsResource::collection($clients));
-    }
 }

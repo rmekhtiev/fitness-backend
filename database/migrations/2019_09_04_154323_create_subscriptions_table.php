@@ -21,10 +21,7 @@ class CreateSubscriptionsTable extends Migration
 
             $table->primary('subscription_id');
 
-            $table->timestamps();
-
             $table->uuid('client_id');
-
 
             $table->date('issue_date');
             $table->date('valid_till');
