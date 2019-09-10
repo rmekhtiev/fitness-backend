@@ -62,4 +62,15 @@ class Trainer extends BaseModel
         ];
     }
 
+    public function hall()
+    {
+        return $this->belongsTo(Hall::class, 'hall_id');
+    }
+
+    public function associatedEmployee()
+    {
+        return $this->belongsTo(Employee::class, 'associated_employee_id');
+    }
+
+
 }

@@ -78,6 +78,11 @@ class Employee extends BaseModel
         return $this->belongsTo(User::class, 'associated_user_id');
     }
 
+    public function associatedTrainer()
+    {
+        return $this->hasOne(Trainer::class, 'associated_employee_id');
+    }
+
     public function issues()
     {
         return $this->hasMany(Issue::class, 'employee_id');
