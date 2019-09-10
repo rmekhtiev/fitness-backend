@@ -81,7 +81,7 @@ class Client extends BaseModel
      *
      */
 
-    protected static function boot()
+    public static function boot()
     {
         parent::boot();
 
