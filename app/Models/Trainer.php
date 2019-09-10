@@ -9,7 +9,7 @@ class Trainer extends BaseModel
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'user_id';
+    public $primaryKey = 'trainer_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -31,7 +31,11 @@ class Trainer extends BaseModel
      * @var array The attributes that are mass assignable.
      */
     protected $fillable = [
-        'first_name', 'last_name', 'middle_name', 'phone_number',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'phone_number',
+        'hall_id',
     ];
 
     /**
@@ -49,8 +53,12 @@ class Trainer extends BaseModel
         return [
             'phone_number' => 'max:255|unique:trainers',
             'name' => 'required|min:3|max:255',
-            'last_name' => 'required|min:3|max:255',
-            'middle_name' => 'sometimes|nullable|max:255'
+
+            'first_name' => 'required',
+            'middle_name' => 'sometimes|nullable',
+            'last_name' => 'required',
+
+            'hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
         ];
     }
 
