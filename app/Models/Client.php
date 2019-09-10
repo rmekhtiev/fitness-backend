@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -79,6 +80,18 @@ class Client extends BaseModel
      * @todo: regexp for phone
      *
      */
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('sortBySubscription', function (Builder $builder) {
+            return $builder->whereHas('subsriptions', function (Builder $builder) {
+                return $builder->orderBy('valid_till');
+            });
+        });
+    }
+
     public function getValidationRules()
     {
         return [
