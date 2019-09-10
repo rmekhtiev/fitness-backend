@@ -124,6 +124,12 @@ class Client extends BaseModel
     {
         return $this->hasMany(Subscription::class, 'subscription_id');
     }
+
+    public function latestSubscription()
+    {
+        return $this->hasOne(Subscription::class)->latest();
+    }
+
     /**
      * @return mixed|string
      */
