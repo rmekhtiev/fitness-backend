@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Hall;
+use App\Models\Issue;
 use App\Models\Locker;
 use App\Models\LockerClaim;
 use App\Models\User;
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'clients' => Client::class,
             'halls' => Hall::class,
+            'issues' => Issue::class,
             'employees' => Employee::class,
             'locker-claims' => LockerClaim::class,
             'lockers' => Locker::class,

@@ -5,9 +5,13 @@ namespace App\Models;
 use App\Enums\IssueType;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Issue extends BaseModel
 {
+    use LogsActivity;
+
     /**
      * @var string UUID key of the resource
      */
@@ -45,6 +49,27 @@ class Issue extends BaseModel
      */
     protected $hidden = [];
 
+    protected static $recordEvents = [
+        'created'
+    ];
+
+    protected static $logName = 'events';
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->hall_id = $this->hall_id;
+    }
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function(self $issue) {
+            $issue->user()->associate(auth()->user()) ;
+        });
+    }
+
     /**
      * Return the validation rules for this model
      *
@@ -58,6 +83,14 @@ class Issue extends BaseModel
 
             'hall_id' => 'required|nullable|uuid|exists:halls,hall_id',
             'employee_id' => 'required|nullable|uuid|exists:employees,employee_id',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+          AllowedFilter::exact('id', 'issue_id'),
+          AllowedFilter::exact('issue_id'),
         ];
     }
 
@@ -75,15 +108,5 @@ class Issue extends BaseModel
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');
-    }
-
-
-    public static function boot()
-    {
-        parent::boot();
-
-        self::creating(function(self $issue) {
-            $issue->user()->associate(auth()->user()) ;
-        });
     }
 }
