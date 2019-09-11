@@ -19,7 +19,9 @@ class Activity extends BaseModel implements ActivityContract
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = [
+        'subject',
+    ];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
