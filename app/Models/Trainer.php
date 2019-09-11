@@ -38,6 +38,11 @@ class Trainer extends BaseModel
         'hall_id',
     ];
 
+
+    protected $appends = [
+        'name',
+        'full_name',
+    ];
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
@@ -70,6 +75,24 @@ class Trainer extends BaseModel
     public function associatedEmployee()
     {
         return $this->belongsTo(Employee::class, 'associated_employee_id');
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getNameAttribute()
+    {
+        // phpcs:ignore
+        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . mb_substr($this->first_name, 0, 1) . '.') : '') . ($this->middle_name ? (' ' . mb_substr($this->middle_name, 0, 1) . '.') : '') : $this->first_name;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getFullNameAttribute()
+    {
+        // phpcs:ignore
+        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
     }
 
 

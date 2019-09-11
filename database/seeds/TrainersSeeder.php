@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\Hall;
+use App\Models\Role;
 use App\Models\Trainer;
+use App\Models\User;
 
 class TrainersSeeder extends BaseSeeder
 {
@@ -9,8 +13,18 @@ class TrainersSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runFake() {
-
+    public function runFake()
+    {
+        $associatedEmployees = Employee::all()->random(10);
+        for ($i = 0; $i < 10; $i++) {
+            $employee=$associatedEmployees->shift();
+            factory(Trainer::class)->create([
+                'first_name' => $employee->first_name,
+                'last_name' =>$employee->last_name,
+                'hall_id' => $employee->hall_id,
+                'associated_employee_id' => $employee->employee_id,
+            ]);
+        }
     }
 
     /**
