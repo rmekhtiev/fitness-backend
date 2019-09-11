@@ -131,6 +131,11 @@ class Client extends BaseModel
         return $this->belongsTo(Hall::class, 'primary_hall_id');
     }
 
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'client_group', 'group_id','client_id');
+    }
+
     /**
      * @return mixed|string
      */
