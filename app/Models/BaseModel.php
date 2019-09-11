@@ -16,6 +16,8 @@ class BaseModel extends RestfulModel
      */
     public static $localWithCount = null;
 
+    public static $defaultSorts = '-created_at';
+
     public static $allowedSorts = [];
 
     public static $allowedAppends = [];
@@ -74,6 +76,11 @@ class BaseModel extends RestfulModel
         } else {
             return static::$localWithCount;
         }
+    }
+
+    public static function getDefaultSorts()
+    {
+        return static::$defaultSorts;
     }
 
     public static function getAllowedSorts()

@@ -11,7 +11,7 @@ use Specialtactics\L5Api\Http\Controllers\RestfulController as BaseController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class Controller extends BaseController
+abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -32,6 +32,7 @@ class Controller extends BaseController
         $this->qualifyCollectionQuery($query);
 
         $query = QueryBuilder::for($query)
+            ->defaultSort($model::getDefaultSorts())
             ->allowedSorts($model::getAllowedSorts())
             ->allowedAppends($model::getAllowedAppends())
             ->allowedFields($model::getAllowedFields())

@@ -2,6 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Client;
+use App\Models\Employee;
+use App\Models\Hall;
+use App\Models\Locker;
+use App\Models\LockerClaim;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use App\Exceptions\ApiExceptionHandler;
 use Config;
@@ -15,7 +22,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Relation::morphMap([
+            'clients' => Client::class,
+            'halls' => Hall::class,
+            'employees' => Employee::class,
+            'locker-claims' => LockerClaim::class,
+            'lockers' => Locker::class,
+            'users' => User::class,
+        ]);
     }
 
     /**

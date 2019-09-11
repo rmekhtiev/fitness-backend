@@ -91,6 +91,8 @@ class Locker extends BaseModel
     public static function getAllowedFilters()
     {
         return [
+            AllowedFilter::exact('id', 'locker_id'),
+            AllowedFilter::exact('locker_id'),
             AllowedFilter::exact('hall_id'),
             AllowedFilter::exact('number'),
             AllowedFilter::scope('free'),
