@@ -172,5 +172,18 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{uuid}', 'App\Http\Controllers\TrainerController@delete');
         });
 
+        /*
+         * Groups
+         */
+        $api->group(['prefix' => 'groups'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\GroupController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\GroupController@get');
+            $api->post('/', 'App\Http\Controllers\GroupController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\GroupController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\GroupController@delete');
+
+            $api->get('/{uuid}/clients', 'App\Http\Controllers\GroupClientController@getAll');
+        });
+
     });
 });

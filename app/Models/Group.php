@@ -66,4 +66,5 @@ class Group extends BaseModel
         return $this->belongsToMany(Client::class, 'client_group', 'group_id', 'client_id');
     }
 
+
 }
