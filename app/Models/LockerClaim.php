@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Transformers\BaseTransformer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class LockerClaim extends BaseModel
 {
+    use LogsActivity;
+
     /**
      * @var string UUID key of the resource
      */
@@ -43,10 +46,25 @@ class LockerClaim extends BaseModel
         'claim_end',
     ];
 
+    protected $dates = [
+        'claim_start',
+        'claim_end',
+    ];
+
+    protected $appends = [
+        'duration'
+    ];
+
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
+
+    protected static $recordEvents = [
+        'created'
+    ];
+
+    protected static $logName = 'events';
 
     public static function boot()
     {
@@ -76,6 +94,8 @@ class LockerClaim extends BaseModel
     public static function getAllowedFilters()
     {
         return [
+            AllowedFilter::exact('id', 'claim_id'),
+            AllowedFilter::exact('claim_id'),
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('locker_id'),
             AllowedFilter::scope('active'),
@@ -118,4 +138,7 @@ class LockerClaim extends BaseModel
         return $this->belongsTo(Locker::class, 'locker_id');
     }
 
+    public function getDurationAttribute() {
+        return $this->claim_end->diffInDays($this->claim_start);
+    }
 }

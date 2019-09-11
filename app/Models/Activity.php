@@ -16,6 +16,8 @@ class Activity extends BaseModel implements ActivityContract
      */
     public $primaryKey = 'id';
 
+    protected $perPage = 100;
+
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
