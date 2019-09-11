@@ -140,7 +140,9 @@ class Client extends BaseModel
 
     public function latestSubscription()
     {
-        return $this->hasOne(Subscription::class)->latest();
+        return $this->hasOne(Subscription::class)->whereDate('valid_till', '>=', Carbon::today())
+            ->whereDate('issue_date', '<=', Carbon::today());
+        ;
     }
 
     /**
