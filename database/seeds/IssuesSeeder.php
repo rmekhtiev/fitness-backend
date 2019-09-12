@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\Issue;
+use App\Models\Role;
+use App\Models\User;
+
 class IssuesSeeder extends BaseSeeder
 {
     /**
@@ -8,7 +13,17 @@ class IssuesSeeder extends BaseSeeder
      * @return mixed
      */
     public function runFake() {
-
+        $employees = Employee::all()->random(10);
+        $user = User::query()->where('name', 'Owner')->first();
+        for ($i = 0; $i < 10; $i++) {
+            $employee=$employees->shift();
+            factory(Issue::class)->create([
+                'hall_id' => $employee->hall_id,
+                'employee_id' => $employee->employee_id,
+                'user_id' => $user->user_id,
+                'status' => 'pending',
+            ]);
+        }
     }
 
     /**
