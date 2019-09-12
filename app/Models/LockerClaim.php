@@ -66,6 +66,11 @@ class LockerClaim extends BaseModel
 
     protected static $logName = 'events';
 
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->hall_id = $this->locker->hall_id;
+    }
+
     public static function boot()
     {
         parent::boot();

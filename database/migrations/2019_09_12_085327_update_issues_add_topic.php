@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateClientsTableRenameHallIdPrimaryHallId extends Migration
+class UpdateIssuesAddTopic extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateClientsTableRenameHallIdPrimaryHallId extends Migration
      */
     public function up()
     {
-        Schema::table('clients', function (Blueprint $table) {
-            $table->renameColumn('hall_id', 'primary_hall_id');
+        Schema::table('issues', function (Blueprint $table) {
+            $table->string('topic');
         });
     }
 
@@ -25,8 +25,8 @@ class UpdateClientsTableRenameHallIdPrimaryHallId extends Migration
      */
     public function down()
     {
-        Schema::table('clients', function (Blueprint $table) {
-            $table->renameColumn('primary_hall_id', 'hall_id');
+        Schema::table('issues', function (Blueprint $table) {
+            $table->dropColumn(['topic']);
         });
     }
 }

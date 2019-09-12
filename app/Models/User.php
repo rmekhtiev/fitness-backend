@@ -96,6 +96,11 @@ class User extends BaseModel implements
         return $this->hasOne(Employee::class, 'associated_user_id');
     }
 
+    public function issues()
+    {
+        return $this->hasMany(Issue::class, 'user_id');
+    }
+
     /**
      * User's secondary roles
      *

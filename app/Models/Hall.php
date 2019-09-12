@@ -29,6 +29,7 @@ class Hall extends BaseModel
         'clients',
         'employees',
         'lockers',
+        'issues',
     ];
 
     /**
@@ -82,6 +83,11 @@ class Hall extends BaseModel
     public function lockers()
     {
         return $this->hasMany(Locker::class, 'hall_id');
+    }
+
+    public function issues()
+    {
+        return $this->hasMany(Issue::class, 'hall_id');
     }
 
     public function getLockersCountFreeAttribute()
