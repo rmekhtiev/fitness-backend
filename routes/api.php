@@ -39,6 +39,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/login', 'App\Http\Controllers\Auth\AuthController@login');
         });
     });
+    $api->get('clients/{uuid}/print', 'App\Http\Controllers\ClientController@printCard');
 
     /*
      * Authenticated routes
@@ -89,6 +90,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         $api->group(['prefix' => 'clients'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\ClientController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\ClientController@get');
+            $api->get('/{uuid}/qrcode', 'App\Http\Controllers\ClientController@qrcode');
             $api->post('/', 'App\Http\Controllers\ClientController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\ClientController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\ClientController@delete');

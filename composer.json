@@ -22,6 +22,7 @@
         "laravel/nexmo-notification-channel": "^2.1",
         "laravel/tinker": "^1.0",
         "predis/predis": "^1.1",
+        "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-activitylog": "^3.8",
         "spatie/laravel-query-builder": "^2.0",
         "specialtactics/l5-api": "~1",

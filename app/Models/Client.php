@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
+use QrCode;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -166,4 +167,7 @@ class Client extends BaseModel
         return $this->phone_number;
     }
 
+    public function getQrCode($size = 200, $format = 'png') {
+        return QrCode::format($format)->size($size)->generate(json_encode(['client_id' => $this->client_id]));
+    }
 }
