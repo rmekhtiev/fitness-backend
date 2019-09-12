@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Gender;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Validation\Rule;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -112,7 +113,17 @@ class Client extends BaseModel
             AllowedFilter::exact('id', 'client_id'),
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('primary_hall_id'),
+            AllowedFilter::scope('search'),
         ];
+    }
+
+    public function scopeSearch(Builder $query, $search)
+    {
+        return $query->where('first_name', 'LIKE', "%{$search}%")
+            ->orWhere('middle_name', 'LIKE', "%{$search}%")
+            ->orWhere('last_name', 'LIKE', "%{$search}%")
+            ->orWhere('phone_number', 'LIKE', "%{$search}%")
+            ->orWhere('email', 'LIKE', "%{$search}%");
     }
 
     public function primaryHall()
