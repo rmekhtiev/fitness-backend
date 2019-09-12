@@ -80,7 +80,7 @@ class Issue extends BaseModel
     {
         return [
             'description' => 'required',
-            'topic' => 'required|max:255',
+            'topic' => 'required|string|max:255',
             'status' => ['required', new EnumValue(IssueType::class)],
 
             'hall_id' => 'required|nullable|uuid|exists:halls,hall_id',
