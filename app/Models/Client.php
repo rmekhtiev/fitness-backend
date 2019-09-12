@@ -134,12 +134,12 @@ class Client extends BaseModel
 
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class, 'subscription_id', 'client_id');
+        return $this->hasMany(Subscription::class, 'client_id', 'client_id');
     }
 
     public function activeSubscription()
     {
-        return $this->hasOne(Subscription::class, 'subscription_id', 'client_id')
+        return $this->hasOne(Subscription::class, 'client_id', 'client_id')
             ->whereDate('issue_date', '<=', today())
             ->whereDate('valid_till', '>=', today());
     }
