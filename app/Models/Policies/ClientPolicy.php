@@ -87,8 +87,9 @@ class ClientPolicy extends BasePolicy
      */
     public function qualifyCollectionQueryWithUser(User $user, $query)
     {
-        return $query->when($user->isHallAdmin(), function (Builder $builder) use ($user) {
-            return $builder->where('primary_hall_id', $user->associatedEmployee->hall_id);
-        });
+        return $query;
+//        return $query->when($user->isHallAdmin(), function (Builder $builder) use ($user) {
+//            return $builder->where('primary_hall_id', $user->associatedEmployee->hall_id);
+//        });
     }
 }

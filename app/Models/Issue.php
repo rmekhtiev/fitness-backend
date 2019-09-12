@@ -93,6 +93,11 @@ class Issue extends BaseModel
         return [
           AllowedFilter::exact('id', 'issue_id'),
           AllowedFilter::exact('issue_id'),
+          AllowedFilter::exact('status'),
+          AllowedFilter::partial('topic'),
+          AllowedFilter::exact('employee_id'),
+          AllowedFilter::exact('user_id'),
+          AllowedFilter::exact('hall_id'),
         ];
     }
 
