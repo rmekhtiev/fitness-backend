@@ -35,7 +35,6 @@ class Trainer extends BaseModel
         'last_name',
         'middle_name',
         'phone_number',
-        'hall_id',
     ];
 
 
@@ -67,10 +66,6 @@ class Trainer extends BaseModel
         ];
     }
 
-    public function hall()
-    {
-        return $this->belongsTo(Hall::class, 'hall_id');
-    }
 
     public function associatedEmployee()
     {
