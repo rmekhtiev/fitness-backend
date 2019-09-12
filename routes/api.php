@@ -59,7 +59,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Users
          */
-        $api->group(['prefix' => 'users', 'middleware' => 'check_role:'.Role::ROLE_OWNER.','.Role::ROLE_HALL_ADMIN], function ($api) {
+        $api->group(['prefix' => 'users', 'middleware' => 'check_role:' . Role::ROLE_OWNER . ',' . Role::ROLE_HALL_ADMIN], function ($api) {
             $api->get('/', 'App\Http\Controllers\UserController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\UserController@get');
             $api->post('/', 'App\Http\Controllers\UserController@post');
@@ -152,14 +152,12 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Subscriptions
         */
-        $api->group(['prefix' => 'subscriptions'], function ($api) {
+        $api->group(['prefix' => 'subscriptions'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\SubscriptionController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\SubscriptionController@get');
             $api->post('/', 'App\Http\Controllers\SubscriptionController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\SubscriptionController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\SubscriptionController@delete');
         });
-
-
     });
 });

@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Notifications\Notifiable;
+use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -14,6 +15,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 class Client extends BaseModel
 {
     use Notifiable;
+    use EloquentJoin;
     use LogsActivity;
 
     /**
@@ -26,7 +28,9 @@ class Client extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = [
+        'activeSubscription',
+    ];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -73,6 +77,12 @@ class Client extends BaseModel
         $activity->hall_id = $this->primary_hall_id;
     }
 
+    public static function boot()
+    {
+        parent::boot();
+    }
+
+
     /**
      * Return the validation rules for this model
      *
@@ -80,18 +90,6 @@ class Client extends BaseModel
      * @todo: regexp for phone
      *
      */
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('sortBySubscription', function (Builder $builder) {
-            return $builder->whereHas('latestSubscriptions', function (Builder $builder) {
-                return $builder->orderBy('valid_till');
-            });
-        });
-    }
-
     public function getValidationRules()
     {
         return [
@@ -135,14 +133,14 @@ class Client extends BaseModel
 
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class, 'subscription_id');
+        return $this->hasMany(Subscription::class, 'subscription_id', 'client_id');
     }
 
-    public function latestSubscription()
+    public function activeSubscription()
     {
-        return $this->hasOne(Subscription::class)->whereDate('valid_till', '>=', Carbon::today())
-            ->whereDate('issue_date', '<=', Carbon::today());
-        ;
+        return $this->hasOne(Subscription::class, 'subscription_id', 'client_id')
+            ->whereDate('issue_date', '<=', today())
+            ->whereDate('valid_till', '>=', today());
     }
 
     /**
