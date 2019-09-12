@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Enums\Gender;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Validation\Rule;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Client extends BaseModel
 {
+    use Notifiable;
     use LogsActivity;
 
     /**
@@ -134,6 +136,11 @@ class Client extends BaseModel
     {
         // phpcs:ignore
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
+    }
+
+    public function routeNotificationForSigmaSms()
+    {
+        return $this->phone_number;
     }
 
 }
