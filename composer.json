@@ -45,7 +45,8 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "laravel/telescope"
+                "laravel/telescope",
+                "specialtactics/l5-api"
             ]
         }
     },
