@@ -37,6 +37,7 @@ class Issue extends BaseModel
      * @var array The attributes that are mass assignable.
      */
     protected $fillable = [
+        'topic',
         'description',
         'status',
         'hall_id',
@@ -78,7 +79,8 @@ class Issue extends BaseModel
     public function getValidationRules()
     {
         return [
-            'description' => 'required|max:255',
+            'description' => 'required',
+            'topic' => 'required|max:255',
             'status' => ['required', new EnumValue(IssueType::class)],
 
             'hall_id' => 'required|nullable|uuid|exists:halls,hall_id',
