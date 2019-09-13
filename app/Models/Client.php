@@ -39,6 +39,10 @@ class Client extends BaseModel
      */
     public static $collectionWith = null;
 
+    public static $itemWithCount = [
+    'subscriptions'
+];
+
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
      */
@@ -81,6 +85,8 @@ class Client extends BaseModel
     public static function boot()
     {
         parent::boot();
+
+
     }
 
 
