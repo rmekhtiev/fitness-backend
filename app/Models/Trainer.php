@@ -40,6 +40,7 @@ class Trainer extends BaseModel
     protected $appends = [
         'name',
         'full_name',
+        'hall_id',
     ];
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -55,8 +56,7 @@ class Trainer extends BaseModel
     {
         return [
             'phone_number' => [
-                'required',
-                Rule::unique('clients', 'phone_number')->ignoreModel($this),
+                'required'
             ],
 
 
@@ -73,6 +73,14 @@ class Trainer extends BaseModel
     /**
      * @return mixed|string
      */
+
+    public function getHallIdAttribute()
+    {
+        // phpcs:ignore
+        $associatedEmployee = $this->hasOne(Employee::class, 'employee_id', 'associated_employee_id')->first();
+        return $associatedEmployee->hall_id;
+    }
+
     public function getNameAttribute()
     {
         // phpcs:ignore
