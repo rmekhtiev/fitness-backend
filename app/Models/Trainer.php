@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Illuminate\Contracts\Validation\Rule;
 
 class Trainer extends BaseModel
 {
@@ -31,10 +32,8 @@ class Trainer extends BaseModel
      * @var array The attributes that are mass assignable.
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'middle_name',
         'phone_number',
+        'associated_employee_id'
     ];
 
 
@@ -55,14 +54,13 @@ class Trainer extends BaseModel
     public function getValidationRules()
     {
         return [
-            'phone_number' => 'max:255|unique:trainers',
-            'name' => 'required|min:3|max:255',
+            'phone_number' => [
+                'required',
+                Rule::unique('clients', 'phone_number')->ignoreModel($this),
+            ],
 
-            'first_name' => 'required',
-            'middle_name' => 'sometimes|nullable',
-            'last_name' => 'required',
 
-            'hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
+            'associated_employee_id' => 'sometimes|nullable|uuid|unique:trainers|exists:employees,employee_id',
         ];
     }
 
@@ -78,7 +76,8 @@ class Trainer extends BaseModel
     public function getNameAttribute()
     {
         // phpcs:ignore
-        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . mb_substr($this->first_name, 0, 1) . '.') : '') . ($this->middle_name ? (' ' . mb_substr($this->middle_name, 0, 1) . '.') : '') : $this->first_name;
+        $associatedEmployee = $this->hasOne(Employee::class, 'employee_id', 'associated_employee_id')->first();
+        return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . mb_substr($associatedEmployee->first_name, 0, 1) . '.') : '') . ($associatedEmployee->middle_name ? (' ' . mb_substr($associatedEmployee->middle_name, 0, 1) . '.') : '') : $associatedEmployee->first_name;
     }
 
     /**
@@ -87,7 +86,8 @@ class Trainer extends BaseModel
     public function getFullNameAttribute()
     {
         // phpcs:ignore
-        return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
+        $associatedEmployee = $this->hasOne(Employee::class, 'employee_id', 'associated_employee_id')->first();
+        return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . $associatedEmployee->first_name) : '') . ($associatedEmployee->middle_name ? (' ' . $associatedEmployee->middle_name) : '') : $associatedEmployee->first_name;
     }
 
 

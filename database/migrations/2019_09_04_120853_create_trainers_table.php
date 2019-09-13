@@ -19,9 +19,9 @@ class CreateTrainersTable extends Migration
         Schema::create(static::TABLE_NAME, function (Blueprint $table) {
             $table->uuid('trainer_id');
 
-            $table->string('first_name');
+            $table->string('first_name')->nullable();;
             $table->string('middle_name')->nullable();
-            $table->string('last_name');
+            $table->string('last_name')->nullable();;
 
             $table->string('phone_number')->nullable()->unique();
 
