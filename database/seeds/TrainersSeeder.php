@@ -13,11 +13,9 @@ class TrainersSeeder extends BaseSeeder
     public function runFake()
     {
         $associatedEmployees = Employee::all()->random(10);
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $employee=$associatedEmployees->shift();
             factory(Trainer::class)->create([
-                'first_name' => $employee->first_name,
-                'last_name' =>$employee->last_name,
                 'associated_employee_id' => $employee->employee_id,
             ]);
         }
