@@ -1,10 +1,7 @@
 <?php
 
 use App\Models\Employee;
-use App\Models\Hall;
-use App\Models\Role;
 use App\Models\Trainer;
-use App\Models\User;
 
 class TrainersSeeder extends BaseSeeder
 {
@@ -21,7 +18,6 @@ class TrainersSeeder extends BaseSeeder
             factory(Trainer::class)->create([
                 'first_name' => $employee->first_name,
                 'last_name' =>$employee->last_name,
-                'hall_id' => $employee->hall_id,
                 'associated_employee_id' => $employee->employee_id,
             ]);
         }
