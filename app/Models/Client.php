@@ -119,11 +119,11 @@ class Client extends BaseModel
 
     public function scopeSearch(Builder $query, $search)
     {
-        return $query->where('first_name', 'LIKE', "%{$search}%")
-            ->orWhere('middle_name', 'LIKE', "%{$search}%")
-            ->orWhere('last_name', 'LIKE', "%{$search}%")
-            ->orWhere('phone_number', 'LIKE', "%{$search}%")
-            ->orWhere('email', 'LIKE', "%{$search}%");
+        return $query->where('first_name', 'ILIKE', "%{$search}%")
+            ->orWhere('middle_name', 'ILIKE', "%{$search}%")
+            ->orWhere('last_name', 'ILIKE', "%{$search}%")
+            ->orWhere('phone_number', 'ILIKE', "%{$search}%")
+            ->orWhere('email', 'ILIKE', "%{$search}%");
     }
 
     public function primaryHall()
