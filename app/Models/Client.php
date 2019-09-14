@@ -149,6 +149,11 @@ class Client extends BaseModel
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
     }
 
+    public function setPhoneNumberAttribute($number)
+    {
+        $this->attributes['phone_number'] = preg_replace('/[^0-9,+]/', '', $number);
+    }
+
     public function routeNotificationForSigmaSms()
     {
         return $this->phone_number;
