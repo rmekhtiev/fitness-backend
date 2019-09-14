@@ -41,6 +41,9 @@ class Subscription extends BaseModel
      */
     protected $hidden = [];
 
+    protected $appends = [
+        'frozen',
+    ];
     /**
      * Return the validation rules for this model
      *
@@ -60,5 +63,9 @@ class Subscription extends BaseModel
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
+    }
+
+    public function getFrozenAttribute() {
+        return $this->frozen_till >= today();
     }
 }
