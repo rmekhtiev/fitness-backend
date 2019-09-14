@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        App\Providers\L5ApiServiceProvider::class,
         App\Providers\SigmaSmsChannelServiceProvider::class,
 
     ],

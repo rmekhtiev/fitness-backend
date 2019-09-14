@@ -119,11 +119,11 @@ class Client extends BaseModel
 
     public function scopeSearch(Builder $query, $search)
     {
-        return $query->where('first_name', 'LIKE', "%{$search}%")
-            ->orWhere('middle_name', 'LIKE', "%{$search}%")
-            ->orWhere('last_name', 'LIKE', "%{$search}%")
-            ->orWhere('phone_number', 'LIKE', "%{$search}%")
-            ->orWhere('email', 'LIKE', "%{$search}%");
+        return $query->where('first_name', 'ILIKE', "%{$search}%")
+            ->orWhere('middle_name', 'ILIKE', "%{$search}%")
+            ->orWhere('last_name', 'ILIKE', "%{$search}%")
+            ->orWhere('phone_number', 'ILIKE', "%{$search}%")
+            ->orWhere('email', 'ILIKE', "%{$search}%");
     }
 
     public function primaryHall()
@@ -147,6 +147,11 @@ class Client extends BaseModel
     {
         // phpcs:ignore
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
+    }
+
+    public function setPhoneNumberAttribute($number)
+    {
+        $this->attributes['phone_number'] = preg_replace('/[^0-9,+]/', '', $number);
     }
 
     public function routeNotificationForSigmaSms()

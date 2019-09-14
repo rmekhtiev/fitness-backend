@@ -14,7 +14,7 @@ class Activity extends BaseModel implements ActivityContract
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'id';
+    public $primaryKey = 'activity_id';
 
     protected $perPage = 100;
 
