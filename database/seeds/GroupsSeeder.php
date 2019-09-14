@@ -10,12 +10,13 @@ class GroupsSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runFake() {
+    public function runFake()
+    {
         $halls = Hall::all();
-        for ($i = 0; $i < 5; $i++){
+        for ($i = 0; $i < 5; $i++) {
             factory(Group::class)->create([
                 'hall_id' => $halls->random()->hall_id,
-                    ]);
+            ]);
         }
     }
 
@@ -24,7 +25,8 @@ class GroupsSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runProduction() {
+    public function runProduction()
+    {
 
     }
 
@@ -33,7 +35,8 @@ class GroupsSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runAlways() {
+    public function runAlways()
+    {
 
     }
 }

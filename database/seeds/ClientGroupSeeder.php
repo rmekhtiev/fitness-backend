@@ -14,7 +14,7 @@ class ClientGroupSeeder extends BaseSeeder
         $groups = Group::all();
         $clients = Client::all();
         foreach ($groups as $group){
-            foreach ($this->faker->randomElements($clients, $this->faker->randomNumber(2)) as $client){
+            foreach ($this->faker->randomElements($clients, $group->max_members) as $client){
                 $group->clients()->attach($client);
             }
         }
