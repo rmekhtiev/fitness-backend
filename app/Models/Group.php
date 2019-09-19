@@ -51,7 +51,8 @@ class Group extends BaseModel
         return [
             'title' => 'required',
             'max_members' => 'requierd',
-            'hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
+            'hall_id' => 'required|uuid|exists:halls,hall_id',
+            'trainer_id' => 'sometimes|nullable|uuid|exists:trainers,trainer_id',
 
         ];
     }
@@ -64,6 +65,11 @@ class Group extends BaseModel
     public function clients()
     {
         return $this->belongsToMany(Client::class, 'client_group', 'group_id', 'client_id');
+    }
+
+    public function trainer()
+    {
+        return $this->belongsTo(Trainer::class, 'trainer_id');
     }
 
 

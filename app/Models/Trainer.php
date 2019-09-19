@@ -77,6 +77,11 @@ class Trainer extends BaseModel
         return $this->belongsTo(Employee::class, 'associated_employee_id');
     }
 
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
+
     /**
      * @return mixed|string
      */
