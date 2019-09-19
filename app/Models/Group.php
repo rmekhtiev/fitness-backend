@@ -34,7 +34,12 @@ class Group extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'title',
+        'hall_id',
+        'max_members',
+        'trainer_id',
+    ];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -50,8 +55,8 @@ class Group extends BaseModel
     {
         return [
             'title' => 'required',
-            'max_members' => 'requierd',
             'hall_id' => 'required|uuid|exists:halls,hall_id',
+            'max_members' => 'required|numeric|integer',
             'trainer_id' => 'sometimes|nullable|uuid|exists:trainers,trainer_id',
 
         ];
