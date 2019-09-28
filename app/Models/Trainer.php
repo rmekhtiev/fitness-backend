@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Trainer extends BaseModel
 {
@@ -67,6 +68,16 @@ class Trainer extends BaseModel
                 'exists:employees,employee_id',
                 Rule::unique('trainers', 'associated_employee_id')->ignoreModel($this),
             ],
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('id', 'trainer_id'),
+            AllowedFilter::exact('trainer_id'),
+            AllowedFilter::exact('phone_number'),
+            AllowedFilter::exact('associated_employee_id'),
         ];
     }
 
