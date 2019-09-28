@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Validation\Rule;
 
 class Trainer extends BaseModel
 {
@@ -56,11 +56,17 @@ class Trainer extends BaseModel
     {
         return [
             'phone_number' => [
-                'required'
+                'required',
+                Rule::unique('trainers', 'phone_number')->ignoreModel($this),
             ],
 
-
-            'associated_employee_id' => 'sometimes|nullable|uuid|unique:trainers|exists:employees,employee_id',
+            'associated_employee_id' => [
+                'sometimes',
+                'nullable',
+                'uuid',
+                'exists:employees,employee_id',
+                Rule::unique('trainers', 'associated_employee_id')->ignoreModel($this),
+            ],
         ];
     }
 
