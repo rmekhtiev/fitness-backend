@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BaseModel;
 use App\Models\Client;
 use App\Models\Group;
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class GroupClientController extends Controller
@@ -26,7 +27,7 @@ class GroupClientController extends Controller
 
     public function getAll()
     {
-        $uuid = request()->segment(3);
+        $uuid = request()->segment(3); // todo: дикий костыль
 
         $this->authorizeUserAction('viewAll');
 
@@ -53,6 +54,34 @@ class GroupClientController extends Controller
             $resources = $query->get();
 
             return $this->response->collection($resources, $this->getTransformer());
+        }
+    }
+
+    public function post(Request $request)
+    {
+        $uuid = request()->segment(3); // todo: дикий костыль
+
+        $this->authorizeUserAction('viewAll');
+
+        /** @var BaseModel|Client $model */
+        $model = new static::$model;
+
+        /** @var BaseModel|Group $parentModel */
+        $parentModel = new static::$parentModel;
+
+        /** @var Group $group */
+        $group = $parentModel->where($parentModel->getKeyName(), '=', $uuid)->firstOrFail();
+
+        if ($request->client_id) {
+            $client_ids = collect($request->client_id);
+
+            $clients = $model->whereIn($model->getKeyName(), $client_ids)->get();
+
+            $group->clients()->attach($clients);
+
+            return $this->response->collection($group->clients, $this->getTransformer());
+        } else {
+            throw new \Exception('ID Required');
         }
     }
 }

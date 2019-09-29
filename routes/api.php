@@ -183,6 +183,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{uuid}', 'App\Http\Controllers\GroupController@delete');
 
             $api->get('/{uuid}/clients', 'App\Http\Controllers\GroupClientController@getAll');
+            $api->post('/{uuid}/clients', 'App\Http\Controllers\GroupClientController@post');
         });
 
     });
