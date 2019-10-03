@@ -79,6 +79,29 @@ class GroupClientController extends Controller
         $group->clients()->attach($client);
 
         return $this->response->collection($group->clients, $this->getTransformer());
-        }
+    }
+
+    public function delete($parentUuid)
+    {
+        $args = func_get_args();
+
+        $uuid = $args[1]; // todo: лучше, чем было, но все равно костыль
+
+        /** @var BaseModel|Client $model */
+        $model = new static::$model;
+
+        /** @var BaseModel|Group $parentModel */
+        $parentModel = new static::$parentModel;
+
+        /** @var Group $group */
+        $group = $parentModel->where($parentModel->getKeyName(), '=', $parentUuid)->firstOrFail();
+
+        $this->authorizeUserAction('update', $group);
+
+        $client = $model->findOrFail($uuid);
+
+        $group->clients()->detach($client);
+
+        return $this->response->collection($group->clients, $this->getTransformer());
     }
 }
