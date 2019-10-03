@@ -182,8 +182,8 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->patch('/{uuid}', 'App\Http\Controllers\GroupController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\GroupController@delete');
 
-            $api->get('/{uuid}/clients', 'App\Http\Controllers\GroupClientController@getAll');
-            $api->post('/{uuid}/clients', 'App\Http\Controllers\GroupClientController@post');
+            $api->get('/{parentUuid}/clients', 'App\Http\Controllers\GroupClientController@getAll');
+            $api->put('/{parentUuid}/clients/{uuid}', 'App\Http\Controllers\GroupClientController@put');
         });
 
     });

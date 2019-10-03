@@ -57,11 +57,11 @@ class GroupClientController extends Controller
         }
     }
 
-    public function post(Request $request)
+    public function put(Request $request, $parentUuid)
     {
-        $uuid = request()->segment(3); // todo: дикий костыль
+        $args = func_get_args();
 
-        $this->authorizeUserAction('viewAll');
+        $uuid = $args[2]; // todo: лучше, чем было, но все равно костыль
 
         /** @var BaseModel|Client $model */
         $model = new static::$model;
@@ -70,18 +70,15 @@ class GroupClientController extends Controller
         $parentModel = new static::$parentModel;
 
         /** @var Group $group */
-        $group = $parentModel->where($parentModel->getKeyName(), '=', $uuid)->firstOrFail();
+        $group = $parentModel->where($parentModel->getKeyName(), '=', $parentUuid)->firstOrFail();
 
-        if ($request->client_id) {
-            $client_ids = collect($request->client_id);
+        $this->authorizeUserAction('update', $group);
 
-            $clients = $model->whereIn($model->getKeyName(), $client_ids)->get();
+        $client = $model->findOrFail($uuid);
 
-            $group->clients()->attach($clients);
+        $group->clients()->attach($client);
 
-            return $this->response->collection($group->clients, $this->getTransformer());
-        } else {
-            throw new \Exception('ID Required');
+        return $this->response->collection($group->clients, $this->getTransformer());
         }
     }
 }
