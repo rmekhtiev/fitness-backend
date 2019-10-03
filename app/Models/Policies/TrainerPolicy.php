@@ -88,7 +88,7 @@ class TrainerPolicy extends BasePolicy
     public function qualifyCollectionQueryWithUser(User $user, $query)
     {
         return $query->when($user->isHallAdmin() && !empty($user->associatedEmployee), function (Builder $query) use ($user) {
-            return $query->where('hall_id', $user->associatedEmployee->hall_id);
+            return $query->whereHallId($user->associatedEmployee->hall_id);
         });
     }
 }

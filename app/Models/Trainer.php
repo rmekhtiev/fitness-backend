@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Database\Eloquent\Builder;
 
 class Trainer extends BaseModel
 {
@@ -64,16 +65,26 @@ class Trainer extends BaseModel
         ];
     }
 
+    public function scopeWhereHallId(Builder $builder, $hall_id)
+    {
+        return $this->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id) {
+            return $builder->where('id', $hall_id);
+        });
+    }
 
     public function associatedEmployee()
     {
         return $this->belongsTo(Employee::class, 'associated_employee_id');
     }
 
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
+
     /**
      * @return mixed|string
      */
-
     public function getHallIdAttribute()
     {
         // phpcs:ignore
@@ -81,6 +92,9 @@ class Trainer extends BaseModel
         return $associatedEmployee->hall_id;
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getNameAttribute()
     {
         // phpcs:ignore

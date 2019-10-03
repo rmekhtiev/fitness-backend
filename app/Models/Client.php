@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Gender;
+use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,13 +27,17 @@ class Client extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = [
+        'groups'
+    ];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
      * If left null, then $itemWith will be used
      */
-    public static $collectionWith = null;
+    public static $collectionWith = [
+
+    ];
 
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
@@ -129,6 +134,13 @@ class Client extends BaseModel
     public function primaryHall()
     {
         return $this->belongsTo(Hall::class, 'primary_hall_id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'client_group','client_id', 'group_id')
+            ->using(ClientGroup::class)
+            ->withTimestamps();
     }
 
     /**
