@@ -21,8 +21,8 @@ class CreateClientGroupTable extends Migration
             $table->uuid('client_id');
             $table->uuid('group_id');
 
-            $table->foreign('client_id')->references('client_id')->on('clients');
-            $table->foreign('group_id')->references('group_id')->on('groups');
+            $table->foreign('client_id')->references('client_id')->on('clients')->onDelete('cascade');
+            $table->foreign('group_id')->references('group_id')->on('groups')->onDelete('cascade');
 
             $table->primary([
                 'client_id',

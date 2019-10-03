@@ -8,6 +8,7 @@ use App\Models\Hall;
 use App\Models\Issue;
 use App\Models\Locker;
 use App\Models\LockerClaim;
+use App\Models\Pivot\ClientGroup;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
             'locker-claims' => LockerClaim::class,
             'lockers' => Locker::class,
             'users' => User::class,
+            'client-group' => ClientGroup::class,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Gender;
+use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Database\Eloquent\Builder;
@@ -133,7 +134,9 @@ class Client extends BaseModel
 
     public function groups()
     {
-        return $this->belongsToMany(Group::class, 'client_group', 'group_id','client_id');
+        return $this->belongsToMany(Group::class, 'client_group', 'group_id','client_id')
+            ->using(ClientGroup::class)
+            ->withTimestamps();
     }
 
     /**

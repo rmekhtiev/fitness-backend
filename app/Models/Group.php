@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Group extends BaseModel
 {
@@ -62,6 +64,17 @@ class Group extends BaseModel
         ];
     }
 
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('group_id'),
+            AllowedFilter::exact('id', 'group_id'),
+            AllowedFilter::exact('hall_id'),
+            AllowedFilter::exact('trainer_id'),
+            AllowedFilter::partial('name'),
+        ];
+    }
+
     public function hall()
     {
         return $this->belongsTo(Hall::class, 'hall_id');
@@ -69,7 +82,9 @@ class Group extends BaseModel
 
     public function clients()
     {
-        return $this->belongsToMany(Client::class, 'client_group', 'group_id', 'client_id');
+        return $this->belongsToMany(Client::class, 'client_group', 'group_id', 'client_id')
+            ->using(ClientGroup::class)
+            ->withTimestamps();
     }
 
     public function trainer()
