@@ -8,13 +8,16 @@ use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
+use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Illuminate\Validation\Rule;
+use QrCode;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Client extends BaseModel
 {
     use Notifiable;
+    use EloquentJoin;
     use LogsActivity;
 
     /**
@@ -28,6 +31,7 @@ class Client extends BaseModel
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
     public static $itemWith = [
+        'activeSubscription',
         'groups'
     ];
 
@@ -36,8 +40,12 @@ class Client extends BaseModel
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = [
-
+        'activeSubscription',
     ];
+
+    public static $itemWithCount = [
+    'subscriptions'
+];
 
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
@@ -78,6 +86,14 @@ class Client extends BaseModel
         $activity->hall_id = $this->primary_hall_id;
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+
+    }
+
+
     /**
      * Return the validation rules for this model
      *
@@ -115,9 +131,9 @@ class Client extends BaseModel
     public static function getAllowedFilters()
     {
         return [
-            AllowedFilter::exact('id', 'client_id'),
-            AllowedFilter::exact('client_id'),
-            AllowedFilter::exact('primary_hall_id'),
+            AllowedFilter::exact('id', 'clients.client_id'),
+            AllowedFilter::exact('client_id', 'clients.client_id'),
+            AllowedFilter::exact('primary_hall_id', 'clients.primary_hall_id'),
             AllowedFilter::scope('search'),
         ];
     }
@@ -134,6 +150,18 @@ class Client extends BaseModel
     public function primaryHall()
     {
         return $this->belongsTo(Hall::class, 'primary_hall_id');
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'client_id', 'client_id');
+    }
+
+    public function activeSubscription()
+    {
+        return $this->hasOne(Subscription::class, 'client_id', 'client_id')
+            ->whereDate('issue_date', '<=', today())
+            ->whereDate('valid_till', '>=', today());
     }
 
     public function groups()
@@ -171,4 +199,7 @@ class Client extends BaseModel
         return $this->phone_number;
     }
 
+    public function getQrCode($size = 200, $format = 'png') {
+        return QrCode::format($format)->size($size)->generate(json_encode(['client_id' => $this->client_id]));
+    }
 }

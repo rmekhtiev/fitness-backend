@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -20,6 +21,8 @@ class User extends BaseModel implements
     JWTSubject
 {
     use Authenticatable, Authorizable, CanResetPassword, Notifiable;
+
+
 
     /**
      * @var int Auto increments integer key

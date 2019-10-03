@@ -51,6 +51,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/login', 'App\Http\Controllers\Auth\AuthController@login');
         });
     });
+    $api->get('clients/{uuid}/print', 'App\Http\Controllers\ClientController@printCard');
 
     /*
      * Authenticated routes
@@ -71,7 +72,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Users
          */
-        $api->group(['prefix' => 'users', 'middleware' => 'check_role:'.Role::ROLE_OWNER.','.Role::ROLE_HALL_ADMIN], function ($api) {
+        $api->group(['prefix' => 'users', 'middleware' => 'check_role:' . Role::ROLE_OWNER . ',' . Role::ROLE_HALL_ADMIN], function ($api) {
             $api->get('/', 'App\Http\Controllers\UserController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\UserController@get');
             $api->post('/', 'App\Http\Controllers\UserController@post');
@@ -101,6 +102,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         $api->group(['prefix' => 'clients'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\ClientController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\ClientController@get');
+            $api->get('/{uuid}/qrcode', 'App\Http\Controllers\ClientController@qrcode');
             $api->post('/', 'App\Http\Controllers\ClientController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\ClientController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\ClientController@delete');
@@ -187,5 +189,15 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{parentUuid}/clients/{uuid}', 'App\Http\Controllers\GroupClientController@delete');
         });
 
+        /*
+         * Subscriptions
+        */
+        $api->group(['prefix' => 'subscriptions'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\SubscriptionController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\SubscriptionController@get');
+            $api->post('/', 'App\Http\Controllers\SubscriptionController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\SubscriptionController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\SubscriptionController@delete');
+        });
     });
 });
