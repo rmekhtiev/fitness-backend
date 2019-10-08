@@ -43,6 +43,8 @@ class BaseModel extends RestfulModel
      */
     public static $collectionWithCount = null;
 
+    protected $perPage = 15;
+
     /**
      * If using deprecated $localWith then use that
      * Otherwise, use $itemWith

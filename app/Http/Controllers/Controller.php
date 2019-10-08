@@ -40,7 +40,7 @@ abstract class Controller extends BaseController
             ->allowedFilters($model::getAllowedFilters());
 
         // Handle pagination, if applicable
-        $perPage = $model->getPerPage();
+        $perPage = request('per_page') ?? $model->getPerPage();
         if ($perPage) {
             $paginator = $query->paginate($perPage);
 

@@ -14,7 +14,7 @@ $factory->define(Client::class, function (Faker $faker) {
         'last_name' => $faker->lastName,
         'gender' => $gender,
 
-        'phone_number' => $faker->phoneNumber,
+        'phone_number' => $faker->unique()->phoneNumber,
         'email' => $faker->boolean ? $faker->unique()->safeEmail : null,
     ];
 });
