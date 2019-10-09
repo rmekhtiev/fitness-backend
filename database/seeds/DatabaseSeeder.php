@@ -22,6 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientGroupSeeder::class);
         $this->call(TrainersSeeder::class);
         $this->call(SubscriptionsSeeder::class);
-
+        $this->call(BarItemsSeeder::class);
     }
 }
