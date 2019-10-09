@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Transformers\BaseTransformer;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Trainer extends BaseModel
 {
@@ -57,11 +58,27 @@ class Trainer extends BaseModel
     {
         return [
             'phone_number' => [
-                'required'
+                'required',
+                Rule::unique('trainers', 'phone_number')->ignoreModel($this),
             ],
 
+            'associated_employee_id' => [
+                'sometimes',
+                'nullable',
+                'uuid',
+                'exists:employees,employee_id',
+                Rule::unique('trainers', 'associated_employee_id')->ignoreModel($this),
+            ],
+        ];
+    }
 
-            'associated_employee_id' => 'sometimes|nullable|uuid|unique:trainers|exists:employees,employee_id',
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('id', 'trainer_id'),
+            AllowedFilter::exact('trainer_id'),
+            AllowedFilter::exact('phone_number'),
+            AllowedFilter::exact('associated_employee_id'),
         ];
     }
 
