@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Spatie\QueryBuilder\AllowedFilter;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Hash;
 use App\Models\Role;
@@ -22,14 +23,10 @@ class User extends BaseModel implements
 {
     use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
-
-
     /**
      * @var int Auto increments integer key
      */
     public $primaryKey = 'user_id';
-
-    protected $perPage = null;
 
     /**
      * The attributes that are mass assignable.
@@ -81,6 +78,14 @@ class User extends BaseModel implements
             'email' => 'email|max:255|unique:users',
             'name' => 'required|min:3',
             'password' => 'required|min:6',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('id', 'user_id'),
+            AllowedFilter::exact('user_id'),
         ];
     }
 

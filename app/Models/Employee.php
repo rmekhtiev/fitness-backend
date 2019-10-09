@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Employee extends BaseModel
 {
@@ -10,8 +11,6 @@ class Employee extends BaseModel
      * @var string UUID key of the resource
      */
     public $primaryKey = 'employee_id';
-
-    protected $perPage = null;
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -65,6 +64,15 @@ class Employee extends BaseModel
 
             'hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
             'associated_user_id' => 'sometimes|nullable|uuid|exists:users,user_id'
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('id', 'employee_id'),
+            AllowedFilter::exact('employee_id'),
+            AllowedFilter::exact('hall_id'),
         ];
     }
 

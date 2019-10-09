@@ -25,7 +25,7 @@ class Client extends BaseModel
      */
     public $primaryKey = 'client_id';
 
-    protected $perPage = null;
+    protected $perPage = 15;
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -44,8 +44,8 @@ class Client extends BaseModel
     ];
 
     public static $itemWithCount = [
-    'subscriptions'
-];
+        'subscriptions'
+    ];
 
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
@@ -166,7 +166,7 @@ class Client extends BaseModel
 
     public function groups()
     {
-        return $this->belongsToMany(Group::class, 'client_group','client_id', 'group_id')
+        return $this->belongsToMany(Group::class, 'client_group', 'client_id', 'group_id')
             ->using(ClientGroup::class)
             ->withTimestamps();
     }
@@ -199,7 +199,8 @@ class Client extends BaseModel
         return $this->phone_number;
     }
 
-    public function getQrCode($size = 200, $format = 'png') {
+    public function getQrCode($size = 200, $format = 'png')
+    {
         return QrCode::format($format)->size($size)->generate(json_encode(['client_id' => $this->client_id]));
     }
 }

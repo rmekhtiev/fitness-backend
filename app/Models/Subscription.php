@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Subscription extends BaseModel
 {
@@ -57,6 +58,13 @@ class Subscription extends BaseModel
 
             'issue_date' => 'required|date',
             'valid_till' => 'required|date',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('client_id'),
         ];
     }
 
