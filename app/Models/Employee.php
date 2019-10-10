@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\SoftDeletes; //add this line
 
 class Employee extends BaseModel
 {
+
+    use SoftDeletes;
     /**
      * @var string UUID key of the resource
      */
