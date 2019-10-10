@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -42,6 +43,12 @@ class BarItem extends BaseModel
     protected $hidden = [];
 
     public static $defaultSorts = 'amount';
+
+    public static function boot()
+    {
+        parent::boot();
+    }
+
     /**
      * Return the validation rules for this model
      *
@@ -52,7 +59,6 @@ class BarItem extends BaseModel
         return [
             'title' => 'required',
             'amount' => 'required|numeric',
-
         ];
     }
 
@@ -64,4 +70,31 @@ class BarItem extends BaseModel
         ];
     }
 
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'sellable');
+    }
+
+    public function sell($paymentMethod = PaymentMethod::CASH, $quantity = 1)
+    {
+        if ($quantity > $this->amount) {
+            throw new \InvalidArgumentException('Unable to sell more items, than in stock');
+        }
+
+        $payment = $this->payments()->create([
+            'cost' => $this->cost,
+            'quantity' => $quantity,
+            'method' => $paymentMethod,
+        ]);
+
+        if ($this->update([
+            'amount' => $this->amount - $quantity,
+        ])) {
+            return $payment->resolve();
+        } else {
+            $payment->fail();
+        }
+
+        return false;
+    }
 }

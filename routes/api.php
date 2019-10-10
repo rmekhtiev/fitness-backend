@@ -199,7 +199,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->patch('/{uuid}', 'App\Http\Controllers\SubscriptionController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\SubscriptionController@delete');
         });
-        
+
         /*
          * BarItems
          */
@@ -209,6 +209,16 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\BarItemController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\BarItemController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\BarItemController@delete');
+
+            $api->post('/{uuid}/sell', 'App\Http\Controllers\BarItemController@sell');
+        });
+
+        /*
+         * Payments
+         */
+        $api->group(['prefix' => 'payments'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\PaymentController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\PaymentController@get');
         });
 
     });

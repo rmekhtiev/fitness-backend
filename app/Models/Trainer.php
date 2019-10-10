@@ -79,13 +79,14 @@ class Trainer extends BaseModel
             AllowedFilter::exact('trainer_id'),
             AllowedFilter::exact('phone_number'),
             AllowedFilter::exact('associated_employee_id'),
+            AllowedFilter::scope('hall_id', 'whereHallId'),
         ];
     }
 
     public function scopeWhereHallId(Builder $builder, $hall_id)
     {
-        return $this->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id) {
-            return $builder->where('id', $hall_id);
+        return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id) {
+            return $builder->where('hall_id', $hall_id);
         });
     }
 
