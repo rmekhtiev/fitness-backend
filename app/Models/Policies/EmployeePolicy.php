@@ -16,7 +16,7 @@ class EmployeePolicy extends BasePolicy
      */
     public function create(User $user)
     {
-        return $user->isOwner();
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
