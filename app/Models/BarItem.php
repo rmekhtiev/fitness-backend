@@ -41,6 +41,7 @@ class BarItem extends BaseModel
      */
     protected $hidden = [];
 
+    public static $defaultSorts = 'amount';
     /**
      * Return the validation rules for this model
      *
@@ -59,6 +60,7 @@ class BarItem extends BaseModel
     {
         return [
             AllowedFilter::partial('title'),
+            AllowedFilter::exact('hall_id'),
         ];
     }
 
