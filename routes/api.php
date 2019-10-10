@@ -155,6 +155,10 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->patch('/{uuid}', 'App\Http\Controllers\LockerClaimController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\LockerClaimController@delete');
         });
+
+        /**
+         * Issues
+         */
         $api->group(['prefix' => 'issues'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\IssueController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\IssueController@get');
@@ -183,6 +187,8 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\GroupController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\GroupController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\GroupController@delete');
+
+            $api->get('/{uuid}/events', 'App\Http\Controllers\GroupController@events');
 
             $api->get('/{parentUuid}/clients', 'App\Http\Controllers\GroupClientController@getAll');
             $api->put('/{parentUuid}/clients/{uuid}', 'App\Http\Controllers\GroupClientController@put');

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57e4c6b6a02a5d8846ffb285afcf1776",
+    "content-hash": "1ff8e196c98b42fb66acc3a2ce398d08",
     "packages": [
         {
             "name": "anahkiasen/underscore-php",
@@ -2906,6 +2906,56 @@
                 "type"
             ],
             "time": "2015-07-25T16:39:46+00:00"
+        },
+        {
+            "name": "plummer/calendarful",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/benplummer/calendarful.git",
+                "reference": "a58317832b32bf321fe8d04d42ac3c4526488649"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/benplummer/calendarful/zipball/a58317832b32bf321fe8d04d42ac3c4526488649",
+                "reference": "a58317832b32bf321fe8d04d42ac3c4526488649",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "4.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Plummer\\Calendarful\\": [
+                        "src",
+                        "tests"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Plummer",
+                    "email": "ben@benplummer.co.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Calendar generator that allows for recurring events.",
+            "homepage": "http://benplummer.co.uk",
+            "keywords": [
+                "calendar",
+                "events",
+                "recurrence"
+            ],
+            "time": "2016-01-10T13:09:00+00:00"
         },
         {
             "name": "predis/predis",

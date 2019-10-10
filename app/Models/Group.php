@@ -3,10 +3,18 @@
 namespace App\Models;
 
 use App\Models\Pivot\ClientGroup;
+use App\Plummer\Calendarful\Calendar\AccessibleCalendar;
 use App\Transformers\BaseTransformer;
+use Plummer\Calendarful\Calendar\Calendar;
+use Plummer\Calendarful\Event\EventInterface;
+use Plummer\Calendarful\Event\EventRegistryInterface;
+use Plummer\Calendarful\Recurrence\RecurrenceFactory;
+use Plummer\Calendarful\Recurrence\Type\Daily;
+use Plummer\Calendarful\Recurrence\Type\MonthlyDate;
+use Plummer\Calendarful\Recurrence\Type\Weekly;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class Group extends BaseModel
+class Group extends BaseModel implements EventRegistryInterface
 {
     /**
      * @var string UUID key of the resource
@@ -47,6 +55,10 @@ class Group extends BaseModel
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
+
+    protected $appends = [
+        'upcomingEvents',
+    ];
 
     /**
      * Return the validation rules for this model
@@ -92,5 +104,50 @@ class Group extends BaseModel
         return $this->belongsTo(Trainer::class, 'trainer_id');
     }
 
+    public function recurs()
+    {
+        return $this->hasMany(GroupRecur::class, 'group_id', 'group_id');
+    }
 
+    /**
+     * Gets data and allows the passing of filters if desired.
+     *
+     * @param array $filters
+     * @return    EventInterface[]
+     */
+    public function getEvents(array $filters = array())
+    {
+        return [];
+    }
+
+    /**
+     * Gets data and allows the passing of filters if desired.
+     *
+     * @param array $filters
+     * @return    EventInterface[]
+     */
+    public function getRecurrentEvents(array $filters = array())
+    {
+        $this->loadMissing('recurs');
+
+        return $this->recurs->all();
+    }
+
+    public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())
+    {
+        $recurrenceFactory = new RecurrenceFactory(); // todo
+        $recurrenceFactory->addRecurrenceType('daily', Daily::class);
+        $recurrenceFactory->addRecurrenceType('weekly', Weekly::class);
+        $recurrenceFactory->addRecurrenceType('monthly', MonthlyDate::class);
+
+        $calendar = new AccessibleCalendar($recurrenceFactory);
+        $calendar->populate($this, $fromDate, $toDate, $limit, $extraFilters);
+
+        return collect($calendar->getAllItems());
+    }
+
+    public function getUpcomingEventsAttribute()
+    {
+        return $this->getUpcomingEvents(now(), now()->addMonth(2));
+    }
 }

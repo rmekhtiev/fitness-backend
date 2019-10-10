@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Group;
 
@@ -22,7 +23,25 @@ class GroupController extends Controller
      */
     public static $transformer = null;
 
-    public function getAllClients($uuid){
+    public function events($uuid)
+    {
+        /** @var Group $model */
+        $model = new static::$model;
 
+        $resource = $model::with($model::getItemWith())->withCount($model::getItemWithCount())->where($model->getKeyName(), '=', $uuid)->first();
+
+        $fromDate = ($start_date = request()->query('start_date'))
+            ? Carbon::parse($start_date)->subDay()
+            : now();
+
+        $toDate = ($end_date = request()->query('end_date'))
+            ? Carbon::parse($end_date)->addDay()
+            : now();
+
+        $limit = request()->query('limit') ?? 200;
+
+        $resources = $resource->getUpcomingEvents($fromDate, $toDate, $limit);
+
+        return $this->response->collection($resources, $this->getTransformer());
     }
 }
