@@ -22,7 +22,15 @@ class GroupController extends Controller
      */
     public static $transformer = null;
 
-    public function getAllClients($uuid){
+    public function events($uuid)
+    {
+        /** @var Group $model */
+        $model = new static::$model;
 
+        $resource = $model::with($model::getItemWith())->withCount($model::getItemWithCount())->where($model->getKeyName(), '=', $uuid)->first();
+
+        $resources = $resource->getUpcomingEvents(now(), now()->addMonth(2));
+
+        return $this->response->collection($resources, $this->getTransformer());
     }
 }

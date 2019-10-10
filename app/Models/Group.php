@@ -133,7 +133,7 @@ class Group extends BaseModel implements EventRegistryInterface
         return $this->recurs->all();
     }
 
-    public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = null, array $extraFilters = array())
+    public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())
     {
         $recurrenceFactory = new RecurrenceFactory(); // todo
         $recurrenceFactory->addRecurrenceType('daily', Daily::class);
@@ -143,7 +143,7 @@ class Group extends BaseModel implements EventRegistryInterface
         $calendar = new AccessibleCalendar($recurrenceFactory);
         $calendar->populate($this, $fromDate, $toDate, $limit, $extraFilters);
 
-        return $calendar->getAllItems();
+        return collect($calendar->getAllItems());
     }
 
     public function getUpcomingEventsAttribute()
