@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BarItem;
+use App\Models\Hall;
 
 class BarItemsSeeder extends BaseSeeder
 {
@@ -10,8 +11,14 @@ class BarItemsSeeder extends BaseSeeder
      * @return mixed
      */
     public function runFake() {
-        for ($i = 0; $i < 15; $i++) {
-            factory(BarItem::class)->create();
+        $halls = Hall::all();
+
+        foreach ($halls as $hall) {
+            for ($i = 1; $i <= $this->faker->numberBetween(0, 10); $i++) {
+                factory(BarItem::class)->create([
+                    'hall_id' => $hall->hall_id,
+                ]);
+            }
         }
     }
 

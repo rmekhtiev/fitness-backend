@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class BarItem extends BaseModel
 {
@@ -40,6 +41,7 @@ class BarItem extends BaseModel
      */
     protected $hidden = [];
 
+    public static $defaultSorts = 'amount';
     /**
      * Return the validation rules for this model
      *
@@ -51,6 +53,14 @@ class BarItem extends BaseModel
             'title' => 'required',
             'amount' => 'required|numeric',
 
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::partial('title'),
+            AllowedFilter::exact('hall_id'),
         ];
     }
 
