@@ -34,7 +34,9 @@ class BarItem extends BaseModel
      */
     protected $fillable = [
         'title',
-        'amount'
+        'amount',
+        'cost',
+        'hall_id',
     ];
 
     /**
@@ -59,6 +61,8 @@ class BarItem extends BaseModel
         return [
             'title' => 'required',
             'amount' => 'required|numeric',
+            'cost' => 'required|numeric',
+            'hall_id' => 'required|nullable|uuid|exists:halls,hall_id',
         ];
     }
 
