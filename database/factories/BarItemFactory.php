@@ -13,5 +13,6 @@ $factory->define(BarItem::class, function (Faker $faker) {
     return [
         'title' => $faker->foodName(),
         'amount' => $faker->numberBetween($min=1, $max=100),
+        'cost' => $faker->randomNumber(3)
     ];
 });
