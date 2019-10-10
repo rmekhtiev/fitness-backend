@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Spatie\QueryBuilder\AllowedFilter;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Hash;
 use App\Models\Role;
@@ -27,11 +29,6 @@ class User extends BaseModel implements
     public $primaryKey = 'user_id';
 
     /**
-     * @var array Relations to load implicitly by Restful controllers
-     */
-    public static $localWith = ['primaryRole', 'roles'];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -47,6 +44,12 @@ class User extends BaseModel implements
      */
     protected $hidden = [
         'password', 'remember_token', 'primary_role',
+    ];
+
+    public static $itemWith = [
+        'primaryRole',
+        'roles',
+        'associatedEmployee'
     ];
 
     /**
@@ -73,8 +76,16 @@ class User extends BaseModel implements
     {
         return [
             'email' => 'email|max:255|unique:users',
-            'name'  => 'required|min:3',
+            'name' => 'required|min:3',
             'password' => 'required|min:6',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('id', 'user_id'),
+            AllowedFilter::exact('user_id'),
         ];
     }
 
@@ -86,6 +97,16 @@ class User extends BaseModel implements
     public function primaryRole()
     {
         return $this->belongsTo(Role::class, 'primary_role');
+    }
+
+    public function associatedEmployee()
+    {
+        return $this->hasOne(Employee::class, 'associated_user_id');
+    }
+
+    public function issues()
+    {
+        return $this->hasMany(Issue::class, 'user_id');
     }
 
     /**
@@ -117,10 +138,21 @@ class User extends BaseModel implements
      * Is this user an admin?
      *
      * @return bool
+     * @deprecated
      */
     public function isAdmin()
     {
-        return $this->primaryRole->name == Role::ROLE_ADMIN;
+        return $this->isOwner();
+    }
+
+    public function isOwner()
+    {
+        return $this->primaryRole->name == Role::ROLE_OWNER;
+    }
+
+    public function isHallAdmin()
+    {
+        return $this->primaryRole->name == Role::ROLE_HALL_ADMIN;
     }
 
     /**
@@ -159,5 +191,9 @@ class User extends BaseModel implements
     public function getAuthIdentifierName()
     {
         return $this->getKeyName();
+    }
+
+    public function getNameAttribute() {
+        return $this->associatedEmployee ? $this->associatedEmployee->name : $this->attributes['name'];
     }
 }

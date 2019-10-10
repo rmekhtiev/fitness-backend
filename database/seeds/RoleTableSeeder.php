@@ -7,24 +7,19 @@ class RoleTableSeeder extends BaseSeeder
     public function runAlways()
     {
         Role::firstOrCreate([
-            'name' => 'admin',
-            'description' => 'Administrator Users',
+            'name' => Role::ROLE_OWNER,
+            'description' => 'Owner',
         ]);
 
         Role::firstOrCreate([
-            'name' => 'regular',
-            'description' => 'Regular Users',
+            'name' => Role::ROLE_HALL_ADMIN,
+            'description' => 'Hall Administrators',
         ]);
-    }
 
-    public function runFake()
-    {
-        for ($i = 0; $i < 10; ++$i) {
-            Role::firstOrCreate([
-                'name' => $this->faker->unique()->word(),
-                'description' => $this->faker->sentence(),
-            ]);
-        }
+        Role::firstOrCreate([
+            'name' => Role::ROLE_CONCIERGE,
+            'description' => 'Concierges',
+        ]);
     }
 
     /**
@@ -43,7 +38,7 @@ class RoleTableSeeder extends BaseSeeder
 
         do {
             ++$i;
-            $fakeRoles[] = $roles->whereNotIn('name', ['admin'])->random();
+            $fakeRoles[] = $roles->whereNotIn('name', [Role::ROLE_OWNER])->random();
             $fakeRoles = array_unique($fakeRoles);
         } while (count($fakeRoles) < $count && $i < 50); // Iteration limit
 

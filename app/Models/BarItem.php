@@ -1,0 +1,104 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\PaymentMethod;
+use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
+
+class BarItem extends BaseModel
+{
+    /**
+     * @var string UUID key of the resource
+     */
+    public $primaryKey = 'bar_item_id';
+
+    /**
+     * @var null|array What relations should one model of this entity be returned with, from a relevant controller
+     */
+    public static $itemWith = [];
+
+    /**
+     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * If left null, then $itemWith will be used
+     */
+    public static $collectionWith = null;
+
+    /**
+     * @var null|BaseTransformer The transformer to use for this model, if overriding the default
+     */
+    public static $transformer = null;
+
+    /**
+     * @var array The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'title',
+        'amount',
+        'cost',
+        'hall_id',
+    ];
+
+    /**
+     * @var array The attributes that should be hidden for arrays and API output
+     */
+    protected $hidden = [];
+
+    public static $defaultSorts = 'amount';
+
+    public static function boot()
+    {
+        parent::boot();
+    }
+
+    /**
+     * Return the validation rules for this model
+     *
+     * @return array Rules
+     */
+    public function getValidationRules()
+    {
+        return [
+            'title' => 'required',
+            'amount' => 'required|numeric',
+            'cost' => 'required|numeric',
+            'hall_id' => 'required|nullable|uuid|exists:halls,hall_id',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::partial('title'),
+            AllowedFilter::exact('hall_id'),
+        ];
+    }
+
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'sellable');
+    }
+
+    public function sell($paymentMethod = PaymentMethod::CASH, $quantity = 1)
+    {
+        if ($quantity > $this->amount) {
+            throw new \InvalidArgumentException('Unable to sell more items, than in stock');
+        }
+
+        $payment = $this->payments()->create([
+            'cost' => $this->cost,
+            'quantity' => $quantity,
+            'method' => $paymentMethod,
+        ]);
+
+        if ($this->update([
+            'amount' => $this->amount - $quantity,
+        ])) {
+            return $payment->resolve();
+        } else {
+            $payment->fail();
+        }
+
+        return false;
+    }
+}

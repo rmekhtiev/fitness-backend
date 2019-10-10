@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class BaseSeeder extends Seeder
 {
     /**
-     * @var null Faker instance
+     * @var Faker\Generator Faker instance
      */
     public $faker = null;
 
