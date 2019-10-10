@@ -83,7 +83,7 @@ abstract class EventModel extends BaseModel implements EventInterface
      */
     public function getDuration()
     {
-        return $this->start_date->diff($this->start_date);
+        return $this->start_date->diff($this->end_date);
     }
 
     /**
