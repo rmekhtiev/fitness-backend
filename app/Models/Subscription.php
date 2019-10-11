@@ -44,6 +44,7 @@ class Subscription extends BaseModel
 
     protected $appends = [
         'frozen',
+        'inactive',
     ];
     /**
      * Return the validation rules for this model
@@ -75,5 +76,9 @@ class Subscription extends BaseModel
 
     public function getFrozenAttribute() {
         return $this->frozen_till >= today();
+    }
+
+    public function getInactiveAttribute() {
+        return $this->issue_date >= today();
     }
 }

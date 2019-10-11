@@ -160,7 +160,7 @@ class Client extends BaseModel
     public function activeSubscription()
     {
         return $this->hasOne(Subscription::class, 'client_id', 'client_id')
-            ->whereDate('issue_date', '<=', today())
+            ->whereDate('created_at', '<=', today())
             ->whereDate('valid_till', '>=', today());
     }
 
