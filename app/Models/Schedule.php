@@ -30,7 +30,18 @@ class Schedule extends RecurringEventModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'start_date',
+        'end_date',
+
+        'recurrence_type',
+        'recurrence_until',
+
+        'schedulable_id',
+        'schedulable_type',
+
+        'trainer_id',
+    ];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -53,5 +64,10 @@ class Schedule extends RecurringEventModel
     public function schedulable()
     {
         return $this->morphTo();
+    }
+
+    public function trainer()
+    {
+        return $this->belongsTo(Trainer::class, 'trainer_id', 'trainer_id');
     }
 }
