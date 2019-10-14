@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 
-class GroupRecur extends RecurringEventModel
+class Schedule extends RecurringEventModel
 {
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'group_recur_id';
+    public $primaryKey = 'schedule_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -47,4 +47,11 @@ class GroupRecur extends RecurringEventModel
         return [];
     }
 
+    /**
+     * Get the owning schedulable model.
+     */
+    public function schedulable()
+    {
+        return $this->morphTo();
+    }
 }
