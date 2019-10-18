@@ -16,6 +16,6 @@ $factory->define(Client::class, function (Faker $faker) {
 
         'phone_number' => $faker->unique()->phoneNumber,
         'whats_up_number' => $faker->unique()->phoneNumber,
-        'instagram' => $faker->unique()->firstName,
+        'instagram' => $faker->unique()->userName,
     ];
 });
