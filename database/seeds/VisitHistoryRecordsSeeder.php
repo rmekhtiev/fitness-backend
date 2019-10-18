@@ -16,7 +16,7 @@ class VisitHistoryRecordsSeeder extends BaseSeeder
         $count = Client::count();
         $clients = Client::inRandomOrder()->limit($count*0.8)->get();
         foreach ($clients as $client){
-            for ($i=0;$i<rand(50,100);$i++){
+            for ($i=0;$i<rand(1,4);$i++){
                 factory(VisitHistoryRecord::class)->create([
                     'client_id' => $client->client_id,
                     'hall_id' => $halls->random()->hall_id,
