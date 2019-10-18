@@ -26,7 +26,7 @@ class CreateVisitHistoryRecordsTable extends Migration
             $table->foreign('client_id')->references('client_id')->on('clients');
             $table->foreign('hall_id')->references('hall_id')->on('halls');
 
-            $table->primary('');
+            $table->primary('record_id');
 
             $table->timestamps();
             // $table->softDeletes();

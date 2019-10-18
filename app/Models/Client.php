@@ -32,8 +32,8 @@ class Client extends BaseModel
      */
     public static $itemWith = [
         'activeSubscription',
-        'groups'
-        'visit-histories',
+        'groups',
+        'lastVisitHistoryRecord',
     ];
 
     /**
@@ -42,6 +42,7 @@ class Client extends BaseModel
      */
     public static $collectionWith = [
         'activeSubscription',
+        'lastVisitHistoryRecord',
     ];
 
     public static $itemWithCount = [
@@ -156,6 +157,11 @@ class Client extends BaseModel
     public function visitHistoryRecords()
     {
         return $this->hasMany( VisitHistoryRecord::class, 'client_id');
+    }
+
+    public function lastVisitHistoryRecord()
+    {
+        return $this->hasOne( VisitHistoryRecord::class, 'client_id');
     }
 
     public function subscriptions()
