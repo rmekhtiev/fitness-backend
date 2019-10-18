@@ -62,7 +62,8 @@ class Client extends BaseModel
         'middle_name',
         'last_name',
         'phone_number',
-        'email',
+        'instagram',
+        'whats_up_number',
 
         'primary_hall_id',
     ];
@@ -113,10 +114,14 @@ class Client extends BaseModel
                 'required',
                 Rule::unique('clients', 'phone_number')->ignoreModel($this),
             ],
-            'email' => [
+            'instagram' => [
                 'sometimes',
                 'nullable',
-                'email',
+                Rule::unique('clients', 'instagram')->ignoreModel($this),
+            ],
+            'whats_up_number' => [
+                'sometimes',
+                'nullable',
                 Rule::unique('clients', 'email')->ignoreModel($this),
             ],
 
@@ -146,7 +151,8 @@ class Client extends BaseModel
             ->orWhere('middle_name', 'ILIKE', "%{$search}%")
             ->orWhere('last_name', 'ILIKE', "%{$search}%")
             ->orWhere('phone_number', 'ILIKE', "%{$search}%")
-            ->orWhere('email', 'ILIKE', "%{$search}%");
+            ->orWhere('instagram', 'ILIKE', "%{$search}%")
+            ->orWhere('what-up-number', 'ILIKE', "%{$search}%");
     }
 
     public function primaryHall()
