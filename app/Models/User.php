@@ -155,6 +155,11 @@ class User extends BaseModel implements
         return $this->primaryRole->name == Role::ROLE_HALL_ADMIN;
     }
 
+    public function isConcierge()
+    {
+        return $this->primaryRole->name == Role::ROLE_CONCIERGE;
+    }
+
     /**
      * For Authentication
      * Get the identifier that will be stored in the subject claim of the JWT.

@@ -2,8 +2,9 @@
 
 use App\Models\Client;
 use App\Models\Hall;
+use App\Models\VisitHistoryRecord;
 
-class ClientsSeeder extends BaseSeeder
+class VisitHistoryRecordsSeeder extends BaseSeeder
 {
     /**
      * Run fake seeds - for non production environments
@@ -12,12 +13,15 @@ class ClientsSeeder extends BaseSeeder
      */
     public function runFake() {
         $halls = Hall::all();
-
-        for ($i = 0; $i < 1000; $i++) {
-            factory(Client::class)->create([
-                'primary_hall_id' => $halls->random()->hall_id,
-                'created_at' => $this->faker->dateTimeBetween('-1 year')
-            ]);
+        $count = Client::count();
+        $clients = Client::inRandomOrder()->limit($count*0.8)->get();
+        foreach ($clients as $client){
+            for ($i=0;$i<rand(1,4);$i++){
+                factory(VisitHistoryRecord::class)->create([
+                    'client_id' => $client->client_id,
+                    'hall_id' => $halls->random()->hall_id,
+                ]);
+            }
         }
     }
 
