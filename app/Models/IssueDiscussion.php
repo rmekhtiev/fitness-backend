@@ -38,6 +38,9 @@ class IssueDiscussion extends BaseModel
         'issue_id'
     ];
 
+    protected $appends = [
+        'user_name',
+    ];
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
@@ -74,12 +77,16 @@ class IssueDiscussion extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function issue()
     {
-        return $this->belongsTo(Issue::class);
+        return $this->belongsTo(Issue::class, 'issue_id');
+    }
+
+    public function getUserNameAttribute() {
+        return $this->user->name;
     }
 
 }
