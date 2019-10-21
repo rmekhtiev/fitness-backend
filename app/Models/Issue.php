@@ -116,4 +116,9 @@ class Issue extends BaseModel
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
+
+    public function IssueDiscussions()
+    {
+        return $this->hasMany(IssueDiscussion::class);
+    }
 }

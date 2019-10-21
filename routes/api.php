@@ -227,5 +227,17 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->get('/{uuid}', 'App\Http\Controllers\PaymentController@get');
         });
 
+        /*
+        * IssueDiscussions
+        */
+        $api->group(['prefix' => 'issue-discussions'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\IssueDiscussionController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\IssueDiscussionController@get');
+            $api->post('/', 'App\Http\Controllers\IssueDiscussionController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\IssueDiscussionController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\IssueDiscussionController@delete');
+        });
+
+
     });
 });
