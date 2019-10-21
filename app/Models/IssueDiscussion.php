@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class IssueDiscussion extends BaseModel
 {
@@ -50,6 +51,13 @@ class IssueDiscussion extends BaseModel
     {
         return [
             'text' => 'max:255',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('issue_id'),
         ];
     }
 
