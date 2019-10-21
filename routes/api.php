@@ -239,5 +239,16 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         });
 
 
+        /*
+        * VisitHistoryRecords
+        */
+        $api->group(['prefix' => 'visit-history-records'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\VisitHistoryRecordController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@get');
+            $api->post('/', 'App\Http\Controllers\VisitHistoryRecordController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@delete');
+        });
+
     });
 });

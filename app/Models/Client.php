@@ -33,6 +33,7 @@ class Client extends BaseModel
     public static $itemWith = [
         'activeSubscription',
         'groups',
+        'visitHistoryRecords',
         'lastVisitHistoryRecord',
     ];
 
@@ -43,6 +44,7 @@ class Client extends BaseModel
     public static $collectionWith = [
         'activeSubscription',
         'lastVisitHistoryRecord',
+        'visitHistoryRecords',
     ];
 
     public static $itemWithCount = [
