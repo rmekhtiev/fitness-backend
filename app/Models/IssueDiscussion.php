@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class IssueDiscussion extends BaseModel
@@ -47,6 +48,16 @@ class IssueDiscussion extends BaseModel
      *
      * @return array Rules
      */
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('orderByTime', function (Builder $builder) {
+            return $builder->orderBy('created_at', 'DESC');
+        });
+    }
+
     public function getValidationRules()
     {
         return [
@@ -63,7 +74,7 @@ class IssueDiscussion extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,);
     }
 
     public function issue()

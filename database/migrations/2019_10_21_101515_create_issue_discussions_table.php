@@ -21,10 +21,10 @@ class CreateIssueDiscussionsTable extends Migration
 
             $table->primary('issue_discussion_id');
 
-            $table->integer('user_id')->unsigned();
+            $table->uuid('user_id')->unsigned();
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
 
-            $table->integer('issue_id')->unsigned();
+            $table->uuid('issue_id')->unsigned();
             $table->foreign('issue_id')->references('issue_id')->on('issues')->onDelete('cascade');
 
             $table->text('text');
