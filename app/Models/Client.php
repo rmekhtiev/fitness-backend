@@ -32,7 +32,9 @@ class Client extends BaseModel
      */
     public static $itemWith = [
         'activeSubscription',
+        'inactiveSubscription',
         'groups'
+
     ];
 
     /**
@@ -41,6 +43,7 @@ class Client extends BaseModel
      */
     public static $collectionWith = [
         'activeSubscription',
+        'inactiveSubscription',
     ];
 
     public static $itemWithCount = [
@@ -162,6 +165,12 @@ class Client extends BaseModel
         return $this->hasOne(Subscription::class, 'client_id', 'client_id')
             ->whereDate('issue_date', '<=', today())
             ->whereDate('valid_till', '>=', today());
+    }
+
+    public function inactiveSubscription()
+    {
+        return $this->hasOne(Subscription::class, 'client_id', 'client_id')
+            ->whereDate('issue_date', '>', today())->orderBy('issue_date');
     }
 
     public function groups()
