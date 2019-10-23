@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SubscriptionStatus;
 use App\Transformers\BaseTransformer;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -43,8 +44,7 @@ class Subscription extends BaseModel
     protected $hidden = [];
 
     protected $appends = [
-        'frozen',
-        'inactive',
+        'status',
     ];
     /**
      * Return the validation rules for this model
@@ -74,11 +74,17 @@ class Subscription extends BaseModel
         return $this->belongsTo(Client::class, 'client_id');
     }
 
-    public function getFrozenAttribute() {
-        return $this->frozen_till >= today();
+    public function getStatusAttribute() {
+        if ($this->frozen_till >= today()){
+            return SubscriptionStatus::FROZEN;
+        } else if ($this->valid_till < today()){
+            return SubscriptionStatus::EXPIRED;
+        } else if ($this->valid_till >= today() & $this->issue_date <= today()){
+            return SubscriptionStatus::ACTIVE;
+        } return SubscriptionStatus::NOT_ACTIVATED;
     }
 
-    public function getInactiveAttribute() {
-        return $this->issue_date >= today();
-    }
+//    public function getInactiveAttribute() {
+//        return $this->issue_date >= today();
+//    }
 }

@@ -13,6 +13,6 @@ final class SubscriptionStatus extends Enum
 {
     const ACTIVE = 'active';
     const FROZEN = 'frozen';
-    const NOT_ACTIVATED = 'not activated';
+    const NOT_ACTIVATED = 'not_activated';
     const EXPIRED = 'expired';
 }
