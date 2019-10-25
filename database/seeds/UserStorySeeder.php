@@ -19,14 +19,14 @@ class UserStorySeeder extends BaseSeeder
         factory(App\Models\User::class)->create([
             'name'         => 'Owner',
             'email'        => static::OWNER_CREDENTIALS[0],
-            'primary_role' => $roles->where('name', Role::ROLE_OWNER)->first()->role_id,
+            'primary_role_id' => $roles->where('name', Role::ROLE_OWNER)->first()->role_id,
         ]);
 
         // Create regular user
         factory(App\Models\User::class)->create([
             'name'         => 'Bob',
             'email'        => 'hall-admin@example.com',
-            'primary_role' => $roles->where('name', Role::ROLE_HALL_ADMIN)->first()->role_id,
+            'primary_role_id' => $roles->where('name', Role::ROLE_HALL_ADMIN)->first()->role_id,
         ]);
 
         // Get some random roles to assign to users
@@ -36,7 +36,7 @@ class UserStorySeeder extends BaseSeeder
         // Assign fake roles to users
         for ($i = 0; $i < 5; ++$i) {
             $user = factory(App\Models\User::class)->create([
-                'primary_role' => $roles->random()->role_id,
+                'primary_role_id' => $roles->random()->role_id,
             ]);
 
             for ($j = 0; $j < count($fakeRolesToAssign); ++$j) {

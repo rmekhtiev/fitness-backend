@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Validation\Rule;
 use Spatie\QueryBuilder\AllowedFilter;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Hash;
@@ -34,7 +35,7 @@ class User extends BaseModel implements
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'primary_role',
+        'name', 'email', 'password', 'primary_role_id',
     ];
 
     /**
@@ -43,7 +44,7 @@ class User extends BaseModel implements
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'primary_role',
+        'password', 'remember_token'
     ];
 
     public static $itemWith = [
@@ -75,9 +76,12 @@ class User extends BaseModel implements
     public function getValidationRules()
     {
         return [
-            'email' => 'email|max:255|unique:users',
             'name' => 'required|min:3',
-            'password' => 'required|min:6',
+            'password' => 'sometimes|required',
+            'email' => [
+                'required',
+                Rule::unique('users', 'email')->ignoreModel($this),
+            ],
         ];
     }
 
@@ -96,7 +100,7 @@ class User extends BaseModel implements
      */
     public function primaryRole()
     {
-        return $this->belongsTo(Role::class, 'primary_role');
+        return $this->belongsTo(Role::class, 'primary_role_id');
     }
 
     public function associatedEmployee()
