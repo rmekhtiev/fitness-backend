@@ -77,7 +77,7 @@ class User extends BaseModel implements
     {
         return [
             'name' => 'required|min:3',
-            'password' => 'sometimes|required',
+            'password' => 'sometimes|required|min:6',
             'email' => [
                 'required',
                 Rule::unique('users', 'email')->ignoreModel($this),
