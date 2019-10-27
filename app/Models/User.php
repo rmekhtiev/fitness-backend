@@ -125,6 +125,11 @@ class User extends BaseModel implements
         return $this->hasMany(Issue::class, 'user_id');
     }
 
+    public function issueDiscussions()
+    {
+        return $this->hasMany(IssueDiscussion::class);
+    }
+
     /**
      * User's secondary roles
      *
