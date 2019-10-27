@@ -9,7 +9,7 @@ class Requests extends BaseModel
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = '_id';
+    public $primaryKey = 'request_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -30,7 +30,10 @@ class Requests extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'phone'
+    ];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output

@@ -15,8 +15,7 @@ class RequestsPolicy extends BasePolicy
      */
     public function create(User $user)
     {
-        //@todo
-        return true;
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
@@ -39,8 +38,7 @@ class RequestsPolicy extends BasePolicy
      */
     public function viewAll(User $user)
     {
-        // @todo
-        return true;
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
@@ -75,8 +73,7 @@ class RequestsPolicy extends BasePolicy
      * @return mixed
      */
     public function own(User $user, Requests $requests) {
-        // @todo
-        return true;
+        return $user->isOwner() || $user->isHallAdmin();
     }
 
     /**
