@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class VisitHistoryRecord extends BaseModel
 {
@@ -41,6 +43,16 @@ class VisitHistoryRecord extends BaseModel
      */
     protected $hidden = [];
 
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('orderByTime', function (Builder $builder) {
+            return $builder->orderBy('datetime', 'DESC');
+        });
+    }
+
     /**
      * Return the validation rules for this model
      *
@@ -53,6 +65,14 @@ class VisitHistoryRecord extends BaseModel
 
             'hall_id' => 'required|uuid|exists:halls,hall_id',
             'client_id' => 'required|uuid|exists:clients,client_id',
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('id', 'record_id'),
+            AllowedFilter::exact('client_id', 'client_id'),
         ];
     }
 
