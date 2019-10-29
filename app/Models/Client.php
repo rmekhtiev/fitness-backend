@@ -65,7 +65,7 @@ class Client extends BaseModel
         'last_name',
         'phone_number',
         'instagram',
-        'whats_up_number',
+        'whats_app_number',
 
         'primary_hall_id',
     ];
@@ -121,10 +121,10 @@ class Client extends BaseModel
                 'nullable',
                 Rule::unique('clients', 'instagram')->ignoreModel($this),
             ],
-            'whats_up_number' => [
+            'whats_app_number' => [
                 'sometimes',
                 'nullable',
-                Rule::unique('clients', 'email')->ignoreModel($this),
+                Rule::unique('clients', 'whats_app_number')->ignoreModel($this),
             ],
 
             'gender' => [
