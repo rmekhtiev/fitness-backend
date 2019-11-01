@@ -66,6 +66,8 @@ class Subscription extends BaseModel
     {
         return [
             AllowedFilter::exact('client_id'),
+            AllowedFilter::scope('status'),
+
         ];
     }
 
