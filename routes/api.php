@@ -195,6 +195,17 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{parentUuid}/clients/{uuid}', 'App\Http\Controllers\GroupClientController@delete');
         });
 
+        /**
+         * Schedules
+         */
+        $api->group(['prefix' => 'schedules'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\ScheduleController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\ScheduleController@get');
+            $api->post('/', 'App\Http\Controllers\ScheduleController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\ScheduleController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\ScheduleController@delete');
+        });
+
         /*
          * Subscriptions
         */
@@ -209,7 +220,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * BarItems
          */
-        $api->group(['prefix' => 'bar-items'], function ($api) {
+        $api->group(['prefix' => 'bar-items'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\BarItemController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\BarItemController@get');
             $api->post('/', 'App\Http\Controllers\BarItemController@post');
@@ -222,7 +233,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Payments
          */
-        $api->group(['prefix' => 'payments'], function ($api) {
+        $api->group(['prefix' => 'payments'], function (Dingo\Api\Routing\Router  $api) {
             $api->get('/', 'App\Http\Controllers\PaymentController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\PaymentController@get');
         });

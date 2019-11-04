@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Schedule extends RecurringEventModel
 {
@@ -69,5 +70,13 @@ class Schedule extends RecurringEventModel
     public function trainer()
     {
         return $this->belongsTo(Trainer::class, 'trainer_id', 'trainer_id');
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('schedulable_type'),
+            AllowedFilter::exact('schedulable_id'),
+        ];
     }
 }
