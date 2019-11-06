@@ -140,6 +140,7 @@ class Client extends BaseModel
             AllowedFilter::exact('client_id', 'clients.client_id'),
             AllowedFilter::exact('primary_hall_id', 'clients.primary_hall_id'),
             AllowedFilter::scope('search'),
+            AllowedFilter::scope('status'),
         ];
     }
 
@@ -149,7 +150,13 @@ class Client extends BaseModel
             ->orWhere('middle_name', 'ILIKE', "%{$search}%")
             ->orWhere('last_name', 'ILIKE', "%{$search}%")
             ->orWhere('phone_number', 'ILIKE', "%{$search}%")
-            ->orWhere('email', 'ILIKE', "%{$search}%");
+            ->orWhere('instagram', 'ILIKE', "%{$search}%")
+            ->orWhere('whats_up_number', 'ILIKE', "%{$search}%");
+    }
+
+    public function scopeStatus(Builder $query)
+    {
+        // toDo
     }
 
     public function primaryHall()
