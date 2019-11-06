@@ -25,6 +25,7 @@ Route::get('/', function () {
     echo 'Welcome to our API';
 });
 
+Route::post('webhook', 'RequestsController@store');
 /**
  * @var $api \Dingo\Api\Routing\Router
  */
