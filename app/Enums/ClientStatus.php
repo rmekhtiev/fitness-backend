@@ -9,10 +9,12 @@ use BenSampo\Enum\Enum;
  * @method static static OptionTwo()
  * @method static static OptionThree()
  */
-final class SubscriptionStatus extends Enum
+final class ClientStatus extends Enum
 {
     const ACTIVE = 'active';
     const FROZEN = 'frozen';
     const NOT_ACTIVATED = 'not_activated';
     const EXPIRED = 'expired';
+    const NO_SUBSCRIPTION = 'no_subscription';
+
 }

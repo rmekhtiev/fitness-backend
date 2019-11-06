@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Gender;
+use App\Enums\ClientStatus;
 use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
@@ -76,6 +77,7 @@ class Client extends BaseModel
     protected $appends = [
         'name',
         'full_name',
+        'status',
     ];
 
     protected static $recordEvents = [
@@ -211,5 +213,18 @@ class Client extends BaseModel
     public function getQrCode($size = 200, $format = 'png')
     {
         return QrCode::format($format)->size($size)->generate(json_encode(['client_id' => $this->client_id]));
+    }
+
+    public function getStatusAttribute() {
+        if ($this->activeSubscription()->value('frozen_till') >= today()){
+            return ClientStatus::FROZEN;
+        } else if ($this->activeSubscription()->value('valid_till') >= today() & $this->activeSubscription()->value('issue_date') <= today()){
+            return ClientStatus::ACTIVE;
+        } else if ($this->inactiveSubscription()->value('issue_date') > today()){
+            return ClientStatus::NOT_ACTIVATED;
+        } else if ($this->subscriptions()->count() > 0) {
+            return ClientStatus::EXPIRED;
+        }
+        return ClientStatus::NO_SUBSCRIPTION;
     }
 }
