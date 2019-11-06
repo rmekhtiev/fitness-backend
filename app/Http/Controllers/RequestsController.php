@@ -25,8 +25,8 @@ class RequestsController extends Controller
     public function store( Request $request )
     {
         $kek = new Requests();
-        $kek->name = $request[0][config('app.form.name')];
-        $kek->phone = $request[1][config('app.form.phone')];
+        $kek->name = $request[0][env('FORM_NAME')];
+        $kek->phone = $request[1][env('FORM_PHONE')];
         $kek->save();
     }
 }
