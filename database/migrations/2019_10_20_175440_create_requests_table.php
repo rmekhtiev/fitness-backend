@@ -21,7 +21,7 @@ class CreateRequestsTable extends Migration
 
             $table->primary('request_id');
 
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('phone')->unique();
 
             $table->timestamps();
