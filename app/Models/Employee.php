@@ -3,13 +3,19 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\SoftDeletes; //add this line
 
 class Employee extends BaseModel
 {
 
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
+
+    protected $cascadeDeletes = ['associatedTrainer'];
+
+    protected $dates = ['deleted_at'];
+
     /**
      * @var string UUID key of the resource
      */
