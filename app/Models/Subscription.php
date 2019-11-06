@@ -56,7 +56,6 @@ class Subscription extends BaseModel
     public function getValidationRules()
     {
         return [
-            'subscription_id' => 'required|uuid|exists:lockers,locker_id',
             'client_id' => 'required|uuid|exists:clients,client_id',
 
             'issue_date' => 'required|date',
