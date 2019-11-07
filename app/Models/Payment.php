@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\PaymentStatus;
 use App\Transformers\BaseTransformer;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class Payment extends BaseModel
 {
@@ -51,6 +53,35 @@ class Payment extends BaseModel
     public function getValidationRules()
     {
         return [];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('sellable_type'),
+            AllowedFilter::exact('method'),
+            AllowedFilter::scope('start_date'),
+            AllowedFilter::scope('end_date'),
+        ];
+    }
+
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeStartDate(Builder $query, $value)
+    {
+        $query->whereDate('created_at', '>=', $value);
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeEndDate(Builder $query, $value)
+    {
+        $query->whereDate('created_at', '<=', $value);
     }
 
     /**
