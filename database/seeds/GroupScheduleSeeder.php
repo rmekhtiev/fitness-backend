@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Group;
-use App\Models\GroupRecur;
+use App\Models\Schedule;
 use App\Models\Hall;
 
-class GroupRecursSeeder extends BaseSeeder
+class GroupScheduleSeeder extends BaseSeeder
 {
     /**
      * Run fake seeds - for non production environments
@@ -19,9 +19,9 @@ class GroupRecursSeeder extends BaseSeeder
         foreach ($groups as $group) {
 
             for ($i = 0; $i < rand(1, 2); $i++) {
-                factory(GroupRecur::class)->create([
+                $group->schedules()->create(factory(Schedule::class)->raw([
                     'group_id' => $group->group_id,
-                ]);
+                ]));
             }
         }
     }

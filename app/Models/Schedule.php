@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
 
-class GroupRecur extends RecurringEventModel
+class Schedule extends RecurringEventModel
 {
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'group_recur_id';
+    public $primaryKey = 'schedule_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -30,7 +31,18 @@ class GroupRecur extends RecurringEventModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'start_date',
+        'end_date',
+
+        'recurrence_type',
+        'recurrence_until',
+
+        'schedulable_id',
+        'schedulable_type',
+
+        'trainer_id',
+    ];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -47,4 +59,24 @@ class GroupRecur extends RecurringEventModel
         return [];
     }
 
+    /**
+     * Get the owning schedulable model.
+     */
+    public function schedulable()
+    {
+        return $this->morphTo();
+    }
+
+    public function trainer()
+    {
+        return $this->belongsTo(Trainer::class, 'trainer_id', 'trainer_id');
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('schedulable_type'),
+            AllowedFilter::exact('schedulable_id'),
+        ];
+    }
 }

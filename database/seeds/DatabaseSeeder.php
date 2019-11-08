@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LockersSeeder::class);
         $this->call(IssuesSeeder::class);
         $this->call(GroupsSeeder::class);
-        $this->call(GroupRecursSeeder::class);
+        $this->call(GroupScheduleSeeder::class);
         $this->call(ClientGroupSeeder::class);
         $this->call(TrainersSeeder::class);
         $this->call(SubscriptionsSeeder::class);
