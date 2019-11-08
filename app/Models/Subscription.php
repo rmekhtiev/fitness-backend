@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\ClientStatus;
 use App\Transformers\BaseTransformer;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Subscription extends BaseModel
 {
+
     /**
      * @var string UUID key of the resource
      */
@@ -43,7 +46,7 @@ class Subscription extends BaseModel
     protected $hidden = [];
 
     protected $appends = [
-        'frozen',
+
     ];
     /**
      * Return the validation rules for this model
@@ -53,7 +56,6 @@ class Subscription extends BaseModel
     public function getValidationRules()
     {
         return [
-            'subscription_id' => 'required|uuid|exists:lockers,locker_id',
             'client_id' => 'required|uuid|exists:clients,client_id',
 
             'issue_date' => 'required|date',
@@ -68,12 +70,23 @@ class Subscription extends BaseModel
         ];
     }
 
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
 
-    public function getFrozenAttribute() {
-        return $this->frozen_till >= today();
-    }
+//    public function getStatusAttribute() {
+//        if ($this->frozen_till >= today()){
+//            return ClientStatus::FROZEN;
+//        } else if ($this->valid_till < today()){
+//            return ClientStatus::EXPIRED;
+//        } else if ($this->valid_till >= today() & $this->issue_date <= today()){
+//            return ClientStatus::ACTIVE;
+//        } return ClientStatus::NOT_ACTIVATED;
+//    }
+
+//    public function getInactiveAttribute() {
+//        return $this->issue_date >= today();
+//    }
 }
