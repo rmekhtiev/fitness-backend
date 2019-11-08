@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
 use App\Transformers\BaseTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class Payment extends BaseModel
+class VisitHistoryRecord extends BaseModel
 {
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'payment_id';
+    public $primaryKey = 'record_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -34,16 +33,25 @@ class Payment extends BaseModel
      * @var array The attributes that are mass assignable.
      */
     protected $fillable = [
-        'cost',
-        'quantity',
-        'discount',
-        'method',
+        'client_id',
+        'hall_id',
+        'datetime',
     ];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('orderByTime', function (Builder $builder) {
+            return $builder->orderBy('datetime', 'DESC');
+        });
+    }
 
     /**
      * Return the validation rules for this model
@@ -52,55 +60,31 @@ class Payment extends BaseModel
      */
     public function getValidationRules()
     {
-        return [];
+        return [
+            'datetime' => 'required|date',
+
+            'hall_id' => 'required|uuid|exists:halls,hall_id',
+            'client_id' => 'required|uuid|exists:clients,client_id',
+        ];
     }
 
     public static function getAllowedFilters()
     {
         return [
-            AllowedFilter::exact('sellable_type'),
-            AllowedFilter::exact('method'),
-            AllowedFilter::scope('start_date'),
-            AllowedFilter::scope('end_date'),
+            AllowedFilter::exact('id', 'record_id'),
+            AllowedFilter::exact('client_id', 'client_id'),
         ];
     }
 
 
-    /**
-     * @param Builder $query
-     * @param \DateTimeInterface|string|null $value
-     */
-    public function scopeStartDate(Builder $query, $value)
+    public function hall()
     {
-        $query->whereDate('created_at', '>=', $value);
+        return $this->belongsTo(Hall::class, 'hall_id');
     }
 
-    /**
-     * @param Builder $query
-     * @param \DateTimeInterface|string|null $value
-     */
-    public function scopeEndDate(Builder $query, $value)
+    public function client()
     {
-        $query->whereDate('created_at', '<=', $value);
+        return $this->belongsTo(Client::class, 'client_id');
     }
 
-    /**
-     * Get the owning imageable model.
-     */
-    public function sellable()
-    {
-        return $this->morphTo();
-    }
-
-    public function resolve($status = PaymentStatus::SUCCESS)
-    {
-        $this->status = $status;
-
-        return $this->update();
-    }
-
-    public function fail()
-    {
-        return $this->resolve(PaymentStatus::FAILED);
-    }
 }

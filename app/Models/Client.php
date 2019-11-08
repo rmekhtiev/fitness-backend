@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Gender;
+use App\Enums\ClientStatus;
 use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
@@ -32,7 +33,10 @@ class Client extends BaseModel
      */
     public static $itemWith = [
         'activeSubscription',
-        'groups'
+        'inactiveSubscription',
+        'groups',
+        'visitHistoryRecords',
+        'lastVisitHistoryRecord',
     ];
 
     /**
@@ -41,6 +45,9 @@ class Client extends BaseModel
      */
     public static $collectionWith = [
         'activeSubscription',
+        'lastVisitHistoryRecord',
+        'visitHistoryRecords',
+        'inactiveSubscription',
     ];
 
     public static $itemWithCount = [
@@ -60,7 +67,8 @@ class Client extends BaseModel
         'middle_name',
         'last_name',
         'phone_number',
-        'email',
+        'instagram',
+        'whats_app_number',
 
         'primary_hall_id',
     ];
@@ -73,6 +81,7 @@ class Client extends BaseModel
     protected $appends = [
         'name',
         'full_name',
+        'status',
     ];
 
     protected static $recordEvents = [
@@ -111,11 +120,15 @@ class Client extends BaseModel
                 'required',
                 Rule::unique('clients', 'phone_number')->ignoreModel($this),
             ],
-            'email' => [
+            'instagram' => [
                 'sometimes',
                 'nullable',
-                'email',
-                Rule::unique('clients', 'email')->ignoreModel($this),
+                Rule::unique('clients', 'instagram')->ignoreModel($this),
+            ],
+            'whats_app_number' => [
+                'sometimes',
+                'nullable',
+                Rule::unique('clients', 'whats_app_number')->ignoreModel($this),
             ],
 
             'gender' => [
@@ -135,6 +148,7 @@ class Client extends BaseModel
             AllowedFilter::exact('client_id', 'clients.client_id'),
             AllowedFilter::exact('primary_hall_id', 'clients.primary_hall_id'),
             AllowedFilter::scope('search'),
+            AllowedFilter::scope('status'),
         ];
     }
 
@@ -144,12 +158,28 @@ class Client extends BaseModel
             ->orWhere('middle_name', 'ILIKE', "%{$search}%")
             ->orWhere('last_name', 'ILIKE', "%{$search}%")
             ->orWhere('phone_number', 'ILIKE', "%{$search}%")
-            ->orWhere('email', 'ILIKE', "%{$search}%");
+            ->orWhere('instagram', 'ILIKE', "%{$search}%")
+            ->orWhere('whats_app_number', 'ILIKE', "%{$search}%");
+    }
+
+    public function scopeStatus(Builder $query)
+    {
+        // toDo
     }
 
     public function primaryHall()
     {
         return $this->belongsTo(Hall::class, 'primary_hall_id');
+    }
+
+    public function visitHistoryRecords()
+    {
+        return $this->hasMany( VisitHistoryRecord::class, 'client_id');
+    }
+
+    public function lastVisitHistoryRecord()
+    {
+        return $this->hasOne( VisitHistoryRecord::class, 'client_id');
     }
 
     public function subscriptions()
@@ -162,6 +192,12 @@ class Client extends BaseModel
         return $this->hasOne(Subscription::class, 'client_id', 'client_id')
             ->whereDate('issue_date', '<=', today())
             ->whereDate('valid_till', '>=', today());
+    }
+
+    public function inactiveSubscription()
+    {
+        return $this->hasOne(Subscription::class, 'client_id', 'client_id')
+            ->whereDate('issue_date', '>', today())->orderBy('issue_date');
     }
 
     public function groups()
@@ -202,5 +238,18 @@ class Client extends BaseModel
     public function getQrCode($size = 200, $format = 'png')
     {
         return QrCode::format($format)->size($size)->generate(json_encode(['client_id' => $this->client_id]));
+    }
+
+    public function getStatusAttribute() {
+        if ($this->activeSubscription()->value('frozen_till') >= today()){
+            return ClientStatus::FROZEN;
+        } else if ($this->activeSubscription()->value('valid_till') >= today() & $this->activeSubscription()->value('issue_date') <= today()){
+            return ClientStatus::ACTIVE;
+        } else if ($this->inactiveSubscription()->value('issue_date') > today()){
+            return ClientStatus::NOT_ACTIVATED;
+        } else if ($this->subscriptions()->count() > 0) {
+            return ClientStatus::EXPIRED;
+        }
+        return ClientStatus::NO_SUBSCRIPTION;
     }
 }

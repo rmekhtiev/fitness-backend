@@ -25,6 +25,7 @@ Route::get('/', function () {
     echo 'Welcome to our API';
 });
 
+Route::post('webhook', 'RequestsController@store');
 /**
  * @var $api \Dingo\Api\Routing\Router
  */
@@ -227,5 +228,38 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->get('/{uuid}', 'App\Http\Controllers\PaymentController@get');
         });
 
+        /*
+        * IssueDiscussions
+        */
+        $api->group(['prefix' => 'issue-discussions'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\IssueDiscussionController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\IssueDiscussionController@get');
+            $api->post('/', 'App\Http\Controllers\IssueDiscussionController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\IssueDiscussionController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\IssueDiscussionController@delete');
+        });
+
+
+        /*
+        * VisitHistoryRecords
+        */
+        $api->group(['prefix' => 'visit-history-records'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\VisitHistoryRecordController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@get');
+            $api->post('/', 'App\Http\Controllers\VisitHistoryRecordController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@delete');
+        });
+
+        /*
+        * Requests
+        */
+        $api->group(['prefix' => 'requests'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\RequestsController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\RequestsController@get');
+            $api->post('/', 'App\Http\Controllers\RequestsController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\RequestsController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\RequestsController@delete');
+        });
     });
 });

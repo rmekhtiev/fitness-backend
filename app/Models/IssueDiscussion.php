@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
-use App\Enums\ClientStatus;
 use App\Transformers\BaseTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class Subscription extends BaseModel
+class IssueDiscussion extends BaseModel
 {
-
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = 'subscription_id';
+    public $primaryKey = 'issue_discussion_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -35,58 +33,60 @@ class Subscription extends BaseModel
      * @var array The attributes that are mass assignable.
      */
     protected $fillable = [
-        'client_id',
-        'issue_date',
-        'valid_till',
+        'text',
+        'user_id',
+        'issue_id'
     ];
 
+    protected $appends = [
+        'user_name',
+    ];
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
 
-    protected $appends = [
-
-    ];
     /**
      * Return the validation rules for this model
      *
      * @return array Rules
      */
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('orderByTime', function (Builder $builder) {
+            return $builder->orderBy('created_at', 'DESC');
+        });
+    }
+
     public function getValidationRules()
     {
         return [
-            'client_id' => 'required|uuid|exists:clients,client_id',
-
-            'issue_date' => 'required|date',
-            'valid_till' => 'required|date',
+            'text' => 'max:255',
         ];
     }
 
     public static function getAllowedFilters()
     {
         return [
-            AllowedFilter::exact('client_id'),
+            AllowedFilter::exact('issue_id'),
         ];
     }
 
-
-    public function client()
+    public function user()
     {
-        return $this->belongsTo(Client::class, 'client_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-//    public function getStatusAttribute() {
-//        if ($this->frozen_till >= today()){
-//            return ClientStatus::FROZEN;
-//        } else if ($this->valid_till < today()){
-//            return ClientStatus::EXPIRED;
-//        } else if ($this->valid_till >= today() & $this->issue_date <= today()){
-//            return ClientStatus::ACTIVE;
-//        } return ClientStatus::NOT_ACTIVATED;
-//    }
+    public function issue()
+    {
+        return $this->belongsTo(Issue::class, 'issue_id');
+    }
 
-//    public function getInactiveAttribute() {
-//        return $this->issue_date >= today();
-//    }
+    public function getUserNameAttribute() {
+        return $this->user->name;
+    }
+
 }
