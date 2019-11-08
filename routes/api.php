@@ -25,6 +25,7 @@ Route::get('/', function () {
     echo 'Welcome to our API';
 });
 
+Route::post('webhook', 'RequestsController@store');
 /**
  * @var $api \Dingo\Api\Routing\Router
  */
@@ -250,5 +251,15 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@delete');
         });
 
+        /*
+        * Requests
+        */
+        $api->group(['prefix' => 'requests'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\RequestsController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\RequestsController@get');
+            $api->post('/', 'App\Http\Controllers\RequestsController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\RequestsController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\RequestsController@delete');
+        });
     });
 });
