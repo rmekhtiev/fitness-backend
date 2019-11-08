@@ -104,9 +104,9 @@ class Group extends BaseModel implements EventRegistryInterface
         return $this->belongsTo(Trainer::class, 'trainer_id');
     }
 
-    public function recurs()
+    public function schedules()
     {
-        return $this->hasMany(GroupRecur::class, 'group_id', 'group_id');
+        return $this->morphMany(Schedule::class, 'schedulable');
     }
 
     /**
@@ -128,9 +128,9 @@ class Group extends BaseModel implements EventRegistryInterface
      */
     public function getRecurrentEvents(array $filters = array())
     {
-        $this->loadMissing('recurs');
+        $this->loadMissing('schedules');
 
-        return $this->recurs->all();
+        return $this->schedules->all();
     }
 
     public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())
@@ -142,6 +142,7 @@ class Group extends BaseModel implements EventRegistryInterface
 
         $calendar = new AccessibleCalendar($recurrenceFactory);
         $calendar->populate($this, $fromDate, $toDate, $limit, $extraFilters);
+        $calendar->sort();
 
         return collect($calendar->getAllItems());
     }
