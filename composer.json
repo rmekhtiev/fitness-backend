@@ -1,6 +1,6 @@
 {
-    "name": "specialtactics/l5-api-boilerplate",
-    "description": "An API boilerplate for Laravel 5",
+    "name": "explabs/multipower-fitness-erp",
+    "description": "An ERP for Multipower fitness network",
     "keywords": ["laravel", "boilerplate", "api", "api boilerplate", "laravel api"],
     "license": "MIT",
     "type": "project",
