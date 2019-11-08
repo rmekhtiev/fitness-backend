@@ -172,6 +172,18 @@ class Client extends BaseModel
             $builder->whereHas('inactiveSubscription', function (Builder $builder){
                 return $builder->inactive();
             });
+        })->when( $status === ClientStatus::EXPIRED, function (Builder $builder){
+            $builder->whereHas('subscriptions', function (Builder $builder){
+                return $builder->expired();
+            });
+        })->when( $status === ClientStatus::ACTIVE, function (Builder $builder){
+        $builder->whereHas('activeSubscription', function (Builder $builder){
+            return $builder->active();
+            });
+        })->when( $status === ClientStatus::NO_SUBSCRIPTION, function (Builder $builder){
+            $builder->whereDoesntHave('subscriptions', function (Builder $builder){
+                return $builder;
+            });
         });
     }
 

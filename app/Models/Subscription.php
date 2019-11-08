@@ -80,6 +80,16 @@ class Subscription extends BaseModel
         return $query->where('issue_date', '>', today());
     }
 
+    public function scopeActive(Builder $query)
+    {
+        return $query->where('issue_date', '<', today())->where('valid_till', '<', today())->where('frozen_till', '<', today())->orWhereNull('frozen_till');
+    }
+
+    public function scopeExpired(Builder $query)
+    {
+        return $query->where('valid_till', '<', today());
+    }
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
