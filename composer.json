@@ -20,6 +20,7 @@
         "fico7489/laravel-eloquent-join": "^4.0",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "~6.0",
+        "iatstuti/laravel-cascade-soft-deletes": "1.5.0",
         "jzonta/faker-restaurant": "^1.1",
         "laravel/framework": "5.8.*",
         "laravel/nexmo-notification-channel": "^2.1",

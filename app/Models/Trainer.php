@@ -106,8 +106,7 @@ class Trainer extends BaseModel
     public function getHallIdAttribute()
     {
         // phpcs:ignore
-        $associatedEmployee = $this->hasOne(Employee::class, 'employee_id', 'associated_employee_id')->first();
-        return $associatedEmployee->hall_id;
+        return $this->associatedEmployee->hall_id;
     }
 
     /**
@@ -116,7 +115,7 @@ class Trainer extends BaseModel
     public function getNameAttribute()
     {
         // phpcs:ignore
-        $associatedEmployee = $this->hasOne(Employee::class, 'employee_id', 'associated_employee_id')->first();
+        $associatedEmployee = $this->associatedEmployee;
         return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . mb_substr($associatedEmployee->first_name, 0, 1) . '.') : '') . ($associatedEmployee->middle_name ? (' ' . mb_substr($associatedEmployee->middle_name, 0, 1) . '.') : '') : $associatedEmployee->first_name;
     }
 
@@ -126,7 +125,7 @@ class Trainer extends BaseModel
     public function getFullNameAttribute()
     {
         // phpcs:ignore
-        $associatedEmployee = $this->hasOne(Employee::class, 'employee_id', 'associated_employee_id')->first();
+        $associatedEmployee = $this->associatedEmployee;
         return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . $associatedEmployee->first_name) : '') . ($associatedEmployee->middle_name ? (' ' . $associatedEmployee->middle_name) : '') : $associatedEmployee->first_name;
     }
 
