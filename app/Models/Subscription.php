@@ -70,23 +70,21 @@ class Subscription extends BaseModel
         ];
     }
 
+    public function scopeFrozen(Builder $query)
+    {
+        return $query->where('frozen_till', '>', today());
+    }
+
+    public function scopeInactive(Builder $query)
+    {
+        return $query->where('issue_date', '>', today());
+    }
 
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
 
-//    public function getStatusAttribute() {
-//        if ($this->frozen_till >= today()){
-//            return ClientStatus::FROZEN;
-//        } else if ($this->valid_till < today()){
-//            return ClientStatus::EXPIRED;
-//        } else if ($this->valid_till >= today() & $this->issue_date <= today()){
-//            return ClientStatus::ACTIVE;
-//        } return ClientStatus::NOT_ACTIVATED;
-//    }
 
-//    public function getInactiveAttribute() {
-//        return $this->issue_date >= today();
-//    }
+
 }

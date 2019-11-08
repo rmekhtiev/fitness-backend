@@ -162,10 +162,19 @@ class Client extends BaseModel
             ->orWhere('whats_app_number', 'ILIKE', "%{$search}%");
     }
 
-    public function scopeStatus(Builder $query)
+    public function scopeStatus(Builder $query, $status)
     {
-        // toDo
+        $query->when($status === ClientStatus::FROZEN, function (Builder $builder) {
+            $builder->whereHas('activeSubscription', function (Builder $builder) {
+                return $builder->frozen();
+            });
+        })->when($status === ClientStatus::NOT_ACTIVATED, function (Builder $builder){
+            $builder->whereHas('inactiveSubscription', function (Builder $builder){
+                return $builder->inactive();
+            });
+        });
     }
+
 
     public function primaryHall()
     {
@@ -240,12 +249,13 @@ class Client extends BaseModel
         return QrCode::format($format)->size($size)->generate(json_encode(['client_id' => $this->client_id]));
     }
 
-    public function getStatusAttribute() {
-        if ($this->activeSubscription()->value('frozen_till') >= today()){
+    public function getStatusAttribute()
+    {
+        if ($this->activeSubscription()->value('frozen_till') >= today()) {
             return ClientStatus::FROZEN;
-        } else if ($this->activeSubscription()->value('valid_till') >= today() & $this->activeSubscription()->value('issue_date') <= today()){
+        } else if ($this->activeSubscription()->value('valid_till') >= today() & $this->activeSubscription()->value('issue_date') <= today()) {
             return ClientStatus::ACTIVE;
-        } else if ($this->inactiveSubscription()->value('issue_date') > today()){
+        } else if ($this->inactiveSubscription()->value('issue_date') > today()) {
             return ClientStatus::NOT_ACTIVATED;
         } else if ($this->subscriptions()->count() > 0) {
             return ClientStatus::EXPIRED;
