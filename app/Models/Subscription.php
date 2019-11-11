@@ -38,6 +38,7 @@ class Subscription extends BaseModel
         'client_id',
         'issue_date',
         'valid_till',
+        'frozen_till',
     ];
 
     /**
@@ -58,6 +59,7 @@ class Subscription extends BaseModel
         return [
             'client_id' => 'required|uuid|exists:clients,client_id',
 
+            'frozen_till' => 'date',
             'issue_date' => 'required|date',
             'valid_till' => 'required|date',
         ];
