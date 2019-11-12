@@ -39,6 +39,7 @@ class Subscription extends BaseModel
         'issue_date',
         'valid_till',
         'frozen_till',
+        'frozen_start',
     ];
 
     /**
@@ -58,8 +59,8 @@ class Subscription extends BaseModel
     {
         return [
             'client_id' => 'required|uuid|exists:clients,client_id',
-
-            'frozen_till' => 'date',
+            'frozen_start' => 'date|nullable',
+            'frozen_till' => 'date|nullable',
             'issue_date' => 'required|date',
             'valid_till' => 'required|date',
         ];
@@ -74,7 +75,7 @@ class Subscription extends BaseModel
 
     public function scopeFrozen(Builder $query)
     {
-        return $query->where('frozen_till', '>', today());
+        return $query->where('frozen_till', '>=', today());
     }
 
     public function scopeInactive(Builder $query)
@@ -84,7 +85,7 @@ class Subscription extends BaseModel
 
     public function scopeActive(Builder $query)
     {
-        return $query->where('issue_date', '<', today())->where('valid_till', '<', today())->where('frozen_till', '<', today())->orWhereNull('frozen_till');
+        return $query->where('issue_date', '<', today())->where('valid_till', '>', today())->where('frozen_till', '<=', today())->orWhereNull('frozen_till');
     }
 
     public function scopeExpired(Builder $query)
