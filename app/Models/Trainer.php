@@ -80,6 +80,7 @@ class Trainer extends BaseModel
             AllowedFilter::exact('phone_number'),
             AllowedFilter::exact('associated_employee_id'),
             AllowedFilter::scope('hall_id', 'whereHallId'),
+            AllowedFilter::scope('search')
         ];
     }
 
@@ -88,6 +89,15 @@ class Trainer extends BaseModel
         return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id) {
             return $builder->where('hall_id', $hall_id);
         });
+    }
+
+    public function scopeSearch(Builder $query, $search)
+    {
+        return $query->whereHas('associatedEmployee', function (Builder $query) use ($search) {
+            return $query->where('first_name', 'ILIKE', "%{$search}%")
+                ->orWhere('middle_name', 'ILIKE', "%{$search}%")
+                ->orWhere('last_name', 'ILIKE', "%{$search}%");
+                });
     }
 
     public function associatedEmployee()
