@@ -60,8 +60,8 @@ class Payment extends BaseModel
         return [
             AllowedFilter::exact('sellable_type'),
             AllowedFilter::exact('method'),
-            AllowedFilter::scope('start_date'),
-            AllowedFilter::scope('end_date'),
+            AllowedFilter::scope('start'),
+            AllowedFilter::scope('end'),
         ];
     }
 
@@ -70,7 +70,7 @@ class Payment extends BaseModel
      * @param Builder $query
      * @param \DateTimeInterface|string|null $value
      */
-    public function scopeStartDate(Builder $query, $value)
+    public function scopeStart(Builder $query, $value)
     {
         $query->whereDate('created_at', '>=', $value);
     }
@@ -79,7 +79,7 @@ class Payment extends BaseModel
      * @param Builder $query
      * @param \DateTimeInterface|string|null $value
      */
-    public function scopeEndDate(Builder $query, $value)
+    public function scopeEnd(Builder $query, $value)
     {
         $query->whereDate('created_at', '<=', $value);
     }
