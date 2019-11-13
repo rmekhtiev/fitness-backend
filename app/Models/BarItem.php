@@ -71,6 +71,7 @@ class BarItem extends BaseModel
         return [
             AllowedFilter::partial('title'),
             AllowedFilter::exact('hall_id'),
+            AllowedFilter::exact('bar_item_id'),
         ];
     }
 
