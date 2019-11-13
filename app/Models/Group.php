@@ -109,6 +109,10 @@ class Group extends BaseModel implements EventRegistryInterface
         return $this->morphMany(Schedule::class, 'schedulable');
     }
 
+    public function subscriptions()
+    {
+        return $this->morphMany(Subscription::class, 'subscriable');
+    }
     /**
      * Gets data and allows the passing of filters if desired.
      *

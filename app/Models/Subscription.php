@@ -98,6 +98,11 @@ class Subscription extends BaseModel
         return $this->belongsTo(Client::class, 'client_id');
     }
 
+    public function subscriable()
+    {
+        return $this->morphTo();
+    }
+
 
 
 }
