@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\SoftDeletes; //add this line
 
@@ -82,6 +83,7 @@ class Employee extends BaseModel
             AllowedFilter::exact('id', 'employee_id'),
             AllowedFilter::exact('employee_id'),
             AllowedFilter::exact('hall_id'),
+            AllowedFilter::scope('search'),
         ];
     }
 
@@ -121,5 +123,12 @@ class Employee extends BaseModel
     {
         // phpcs:ignore
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
+    }
+
+    public function scopeSearch(Builder $query, $search)
+    {
+        return $query->where('first_name', 'ILIKE', "%{$search}%")
+            ->orWhere('middle_name', 'ILIKE', "%{$search}%")
+            ->orWhere('last_name', 'ILIKE', "%{$search}%");
     }
 }
