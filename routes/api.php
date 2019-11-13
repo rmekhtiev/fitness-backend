@@ -272,5 +272,17 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->patch('/{uuid}', 'App\Http\Controllers\RequestsController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\RequestsController@delete');
         });
+
+        /*
+        Identifiers
+        */
+        $api->group(['prefix' => 'identifiers'], function ($api) {
+            $api->get('/', 'App\Http\Controllers\IdentifierController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\IdentifierController@get');
+            $api->post('/', 'App\Http\Controllers\IdentifierController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\IdentifierController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\IdentifierController@delete');
+        });
+
     });
 });

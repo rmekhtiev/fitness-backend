@@ -35,6 +35,7 @@ class Client extends BaseModel
         'activeSubscription',
         'inactiveSubscription',
         'groups',
+        'identifiers',
         'visitHistoryRecords',
         'lastVisitHistoryRecord',
     ];
@@ -48,6 +49,8 @@ class Client extends BaseModel
         'lastVisitHistoryRecord',
         'visitHistoryRecords',
         'inactiveSubscription',
+        'inactiveSubscription',
+        'identifiers',
     ];
 
     public static $itemWithCount = [
@@ -206,6 +209,11 @@ class Client extends BaseModel
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class, 'client_id', 'client_id');
+    }
+
+    public function identifiers()
+    {
+        return $this->hasMany(Identifier::class, 'client_id', 'client_id');
     }
 
     public function activeSubscription()
