@@ -14,7 +14,7 @@ class AddGroupsToSubscriptionsTable extends Migration
     public function up()
     {
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->uuidMorphs('subscriable');
+            $table->nullableUuidMorphs('subscriable');
         });
     }
 

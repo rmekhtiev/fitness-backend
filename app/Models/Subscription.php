@@ -70,6 +70,7 @@ class Subscription extends BaseModel
     {
         return [
             AllowedFilter::exact('client_id'),
+            AllowedFilter::exact('id', 'subscription_id'),
         ];
     }
 
