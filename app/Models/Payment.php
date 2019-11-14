@@ -59,6 +59,8 @@ class Payment extends BaseModel
     {
         return [
             AllowedFilter::exact('sellable_type'),
+            AllowedFilter::exact('sellable_id'),
+            AllowedFilter::exact('payment_id'),
             AllowedFilter::exact('method'),
             AllowedFilter::scope('start'),
             AllowedFilter::scope('end'),
