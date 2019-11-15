@@ -17,9 +17,9 @@ class CreateTrainingSessionsTable extends Migration
     public function up()
     {
         Schema::create(static::TABLE_NAME, function (Blueprint $table) {
-            $table->uuid('_id');
+            $table->uuid('training_session_id');
 
-            $table->primary('');
+            $table->primary('training_session_id');
 
             $table->timestamps();
             // $table->softDeletes();
