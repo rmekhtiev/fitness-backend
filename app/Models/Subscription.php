@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ClientStatus;
+use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -40,6 +41,8 @@ class Subscription extends BaseModel
         'valid_till',
         'frozen_till',
         'frozen_start',
+        'subscriable_id',
+        'subscriable_type',
     ];
 
     /**
@@ -63,6 +66,7 @@ class Subscription extends BaseModel
             'frozen_till' => 'date|nullable',
             'issue_date' => 'required|date',
             'valid_till' => 'required|date',
+            'subscriable_id' => 'sometimes|nullable|uuid',
         ];
     }
 
@@ -102,6 +106,29 @@ class Subscription extends BaseModel
     public function subscriable()
     {
         return $this->morphTo();
+    }
+
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'sellable');
+    }
+
+    public function sell($paymentMethod = PaymentMethod::CASH, $quantity = 1)
+    {
+
+        $payment = $this->payments()->create([
+            'cost' => '1000',
+            'quantity' => $quantity,
+            'method' => $paymentMethod,
+        ]);
+
+        if ($this->update)
+        {
+            return $payment->resolve();
+        } else {
+            $payment->fail();
+        }
+        return false;
     }
 
 
