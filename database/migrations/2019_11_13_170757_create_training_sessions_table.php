@@ -21,6 +21,14 @@ class CreateTrainingSessionsTable extends Migration
 
             $table->primary('training_session_id');
 
+            $table->uuid('client_id');
+            $table->foreign('client_id')->references('client_id')->on('clients')->onDelete('cascade');
+
+            $table->uuid('trainer_id');
+            $table->foreign('trainer_id')->references('trainer_id')->on('trainers')->onDelete('set null');
+
+            $table->dateTime('payed_until')->default(DB::raw('current_timestamp + interval \'1 month\''));
+
             $table->timestamps();
             // $table->softDeletes();
         });

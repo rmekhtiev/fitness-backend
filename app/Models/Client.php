@@ -205,12 +205,12 @@ class Client extends BaseModel
 
     public function visitHistoryRecords()
     {
-        return $this->hasMany( VisitHistoryRecord::class, 'client_id');
+        return $this->hasMany(VisitHistoryRecord::class, 'client_id');
     }
 
     public function lastVisitHistoryRecord()
     {
-        return $this->hasOne( VisitHistoryRecord::class, 'client_id');
+        return $this->hasOne(VisitHistoryRecord::class, 'client_id');
     }
 
     public function subscriptions()
@@ -241,6 +241,11 @@ class Client extends BaseModel
         return $this->belongsToMany(Group::class, 'client_group', 'client_id', 'group_id')
             ->using(ClientGroup::class)
             ->withTimestamps();
+    }
+
+    public function sessions()
+    {
+        return $this->belongsTo(TrainingSession::class, 'client_id', 'client_id');
     }
 
     /**
@@ -278,11 +283,11 @@ class Client extends BaseModel
 
     public function getStatusAttribute()
     {
-        if ($this->activeSubscriptions()->value('frozen_till') >= (today()->modify('-1 day'))) {
+        if ($this->activeSubscription()->value('frozen_till') >= today()) {
             return ClientStatus::FROZEN;
-        } else if ($this->activeSubscriptions()->value('valid_till') >= today() & $this->activeSubscriptions()->value('issue_date') <= today()) {
+        } else if ($this->activeSubscription()->value('valid_till') >= today() & $this->activeSubscription()->value('issue_date') <= today()) {
             return ClientStatus::ACTIVE;
-        } else if ($this->inactiveSubscriptions()->value('issue_date') > today()) {
+        } else if ($this->inactiveSubscription()->value('issue_date') > today()) {
             return ClientStatus::NOT_ACTIVATED;
         } else if ($this->subscriptions()->count() > 0) {
             return ClientStatus::EXPIRED;

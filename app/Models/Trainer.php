@@ -110,6 +110,11 @@ class Trainer extends BaseModel
         return $this->hasMany(Group::class);
     }
 
+    public function sessions()
+    {
+        return $this->belongsTo(TrainingSession::class, 'trainer_id', 'trainer_id');
+    }
+
     /**
      * @return mixed|string
      */

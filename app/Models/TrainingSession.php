@@ -9,7 +9,7 @@ class TrainingSession extends BaseModel
     /**
      * @var string UUID key of the resource
      */
-    public $primaryKey = '_id';
+    public $primaryKey = 'training_session_id';
 
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
@@ -30,7 +30,11 @@ class TrainingSession extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'client_id',
+        'trainer_id',
+        'payed_until',
+    ];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -44,7 +48,20 @@ class TrainingSession extends BaseModel
      */
     public function getValidationRules()
     {
-        return [];
+        return [
+            'client_id' => 'required|nullable|uuid|exists:clients,client_id',
+            'trainer_id' => 'required|nullable|uuid|exists:trainers,trainer_id',
+            'payed_until' => 'required', // todo
+        ];
     }
 
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'client_id', 'client_id');
+    }
+
+    public function trainer()
+    {
+        return $this->hasOne(Trainer::class, 'trainer_id', 'trainer_id');
+    }
 }
