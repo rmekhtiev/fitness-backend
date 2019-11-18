@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Plummer\Calendarful\Event\EventRegistryInterface;
 
-class TrainingSession extends BaseModel
+class TrainingSession extends BaseModel implements EventRegistryInterface
 {
+    use Sellable, Schedulable;
+
     /**
      * @var string UUID key of the resource
      */
