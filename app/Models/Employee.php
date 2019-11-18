@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\SoftDeletes; //add this line
 
@@ -82,6 +83,7 @@ class Employee extends BaseModel
             AllowedFilter::exact('id', 'employee_id'),
             AllowedFilter::exact('employee_id'),
             AllowedFilter::exact('hall_id'),
+            AllowedFilter::scope('trainer'),
         ];
     }
 
@@ -121,5 +123,9 @@ class Employee extends BaseModel
     {
         // phpcs:ignore
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
+    }
+
+    public function scopeTrainer(Builder $builder, $has) {
+        return $has ? $builder->whereHas('associatedTrainer') : $builder->whereDoesntHave('associatedTrainer');
     }
 }
