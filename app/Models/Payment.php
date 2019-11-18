@@ -50,6 +50,9 @@ class Payment extends BaseModel
      *
      * @return array Rules
      */
+    protected $appends = [
+        'hall_id',
+    ];
     public function getValidationRules()
     {
         return [];
@@ -64,6 +67,7 @@ class Payment extends BaseModel
             AllowedFilter::exact('method'),
             AllowedFilter::scope('start'),
             AllowedFilter::scope('end'),
+            AllowedFilter::scope('hall_id','whereHallId'),
         ];
     }
 
@@ -86,6 +90,13 @@ class Payment extends BaseModel
         $query->whereDate('created_at', '<=', $value);
     }
 
+    public function scopeWhereHallId(Builder $builder, $hall_id)
+    {
+        return $builder->whereHasMorph('sellable',['App\\Models\\BarItem'], function (Builder $builder) use ($hall_id) {
+            return $builder->where('hall_id', $hall_id);
+        });
+    }
+
     /**
      * Get the owning imageable model.
      */
@@ -104,5 +115,9 @@ class Payment extends BaseModel
     public function fail()
     {
         return $this->resolve(PaymentStatus::FAILED);
+    }
+    public function getHallIdAttribute()
+    {
+        return $this->sellable->hall_id;
     }
 }
