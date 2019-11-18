@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Trainer extends BaseModel
