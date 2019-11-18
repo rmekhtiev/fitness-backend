@@ -19,7 +19,9 @@ class GroupScheduleSeeder extends BaseSeeder
         foreach ($groups as $group) {
 
             for ($i = 0; $i < rand(1, 2); $i++) {
-                $group->schedules()->create(factory(Schedule::class)->raw());
+                $group->schedules()->create(factory(Schedule::class)->raw([
+                    'schedulable_id' => $group->group_id,
+                ]));
             }
         }
     }
