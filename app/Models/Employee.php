@@ -83,6 +83,7 @@ class Employee extends BaseModel
             AllowedFilter::exact('id', 'employee_id'),
             AllowedFilter::exact('employee_id'),
             AllowedFilter::exact('hall_id'),
+            AllowedFilter::scope('trainer'),
             AllowedFilter::scope('search'),
         ];
     }
@@ -123,6 +124,10 @@ class Employee extends BaseModel
     {
         // phpcs:ignore
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
+    }
+
+    public function scopeTrainer(Builder $builder, $has) {
+        return $has ? $builder->whereHas('associatedTrainer') : $builder->whereDoesntHave('associatedTrainer');
     }
 
     public function scopeSearch(Builder $query, $search)
