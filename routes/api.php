@@ -216,6 +216,8 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\SubscriptionController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\SubscriptionController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\SubscriptionController@delete');
+            $api->post('/{uuid}/sell', 'App\Http\Controllers\SubscriptionController@sell');
+
         });
 
         /*

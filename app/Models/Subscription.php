@@ -43,6 +43,7 @@ class Subscription extends BaseModel
         'frozen_start',
         'subscriable_id',
         'subscriable_type',
+        'cost',
     ];
 
     /**
@@ -51,8 +52,29 @@ class Subscription extends BaseModel
     protected $hidden = [];
 
     protected $appends = [
-
+        'sold'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+//        self::created(function (self $subscription){
+//            $group = $this->client()->groups()->create([
+//                'cost' => $this->cost,
+//                'quantity' => 1,
+//                'method' => $paymentMethod,
+//            ]);
+//
+//            if ($this->update())
+//            {
+//                return $payment->resolve();
+//            } else {
+//                $payment->fail();
+//            }
+//            return false;
+//        });
+    }
+
     /**
      * Return the validation rules for this model
      *
@@ -108,21 +130,26 @@ class Subscription extends BaseModel
         return $this->morphTo();
     }
 
-    public function payments()
+    public function payment()
     {
-        return $this->morphMany(Payment::class, 'sellable');
+        return $this->morphOne(Payment::class, 'sellable');
     }
 
-    public function sell($paymentMethod = PaymentMethod::CASH, $quantity = 1)
+    public function getSoldAttribute()
+    {
+        return $this->payment != null;
+    }
+
+    public function sell($paymentMethod = PaymentMethod::CASH)
     {
 
-        $payment = $this->payments()->create([
-            'cost' => '1000',
-            'quantity' => $quantity,
+        $payment = $this->payment()->create([
+            'cost' => $this->cost,
+            'quantity' => 1,
             'method' => $paymentMethod,
         ]);
 
-        if ($this->update)
+        if ($this->update())
         {
             return $payment->resolve();
         } else {
