@@ -140,13 +140,20 @@ class Subscription extends BaseModel
         return $this->payment != null;
     }
 
+    public function getHallIdAttribute()
+    {
+        $this->loadMissing('client');
+
+        return $this->client->primary_hall_id; // todo: КОСТЫЛЬ ССУКА
+    }
+
     public function sell($paymentMethod = PaymentMethod::CASH)
     {
-
         $payment = $this->payment()->create([
             'cost' => $this->cost,
             'quantity' => 1,
             'method' => $paymentMethod,
+            'hall_id' => $this->client->primary_hall_id,
         ]);
 
         if ($this->update())
