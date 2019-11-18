@@ -50,6 +50,9 @@ class Payment extends BaseModel
      *
      * @return array Rules
      */
+    protected $appends = [
+        'hall_id',
+    ];
     public function getValidationRules()
     {
         return [];
@@ -59,9 +62,12 @@ class Payment extends BaseModel
     {
         return [
             AllowedFilter::exact('sellable_type'),
+            AllowedFilter::exact('sellable_id'),
+            AllowedFilter::exact('payment_id'),
             AllowedFilter::exact('method'),
-            AllowedFilter::scope('start_date'),
-            AllowedFilter::scope('end_date'),
+            AllowedFilter::scope('start'),
+            AllowedFilter::scope('end'),
+            AllowedFilter::scope('hall_id','whereHallId'),
         ];
     }
 
@@ -70,7 +76,7 @@ class Payment extends BaseModel
      * @param Builder $query
      * @param \DateTimeInterface|string|null $value
      */
-    public function scopeStartDate(Builder $query, $value)
+    public function scopeStart(Builder $query, $value)
     {
         $query->whereDate('created_at', '>=', $value);
     }
@@ -79,9 +85,16 @@ class Payment extends BaseModel
      * @param Builder $query
      * @param \DateTimeInterface|string|null $value
      */
-    public function scopeEndDate(Builder $query, $value)
+    public function scopeEnd(Builder $query, $value)
     {
         $query->whereDate('created_at', '<=', $value);
+    }
+
+    public function scopeWhereHallId(Builder $builder, $hall_id)
+    {
+        return $builder->whereHasMorph('sellable',['App\\Models\\BarItem'], function (Builder $builder) use ($hall_id) {
+            return $builder->where('hall_id', $hall_id);
+        });
     }
 
     /**
@@ -102,5 +115,9 @@ class Payment extends BaseModel
     public function fail()
     {
         return $this->resolve(PaymentStatus::FAILED);
+    }
+    public function getHallIdAttribute()
+    {
+        return $this->sellable->hall_id;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\BarItem;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Group;
@@ -37,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
             'client-group' => ClientGroup::class,
             'groups' => Group::class,
             'schedules' => Schedule::class,
+            'bar-items' => BarItem::class,
         ]);
     }
 
