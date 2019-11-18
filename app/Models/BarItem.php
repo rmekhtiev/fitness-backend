@@ -71,6 +71,7 @@ class BarItem extends BaseModel
         return [
             AllowedFilter::partial('title'),
             AllowedFilter::exact('hall_id'),
+            AllowedFilter::exact('bar_item_id'),
         ];
     }
 
@@ -89,6 +90,7 @@ class BarItem extends BaseModel
             'cost' => $this->cost,
             'quantity' => $quantity,
             'method' => $paymentMethod,
+            'hall_id' => $this->hall_id
         ]);
 
         if ($this->update([

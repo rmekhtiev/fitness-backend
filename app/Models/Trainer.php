@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Trainer extends BaseModel
@@ -80,6 +80,7 @@ class Trainer extends BaseModel
             AllowedFilter::exact('phone_number'),
             AllowedFilter::exact('associated_employee_id'),
             AllowedFilter::scope('hall_id', 'whereHallId'),
+            AllowedFilter::scope('search')
         ];
     }
 
@@ -88,6 +89,15 @@ class Trainer extends BaseModel
         return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id) {
             return $builder->where('hall_id', $hall_id);
         });
+    }
+
+    public function scopeSearch(Builder $query, $search)
+    {
+        return $query->whereHas('associatedEmployee', function (Builder $query) use ($search) {
+            return $query->where('first_name', 'ILIKE', "%{$search}%")
+                ->orWhere('middle_name', 'ILIKE', "%{$search}%")
+                ->orWhere('last_name', 'ILIKE', "%{$search}%");
+                });
     }
 
     public function associatedEmployee()
@@ -114,8 +124,9 @@ class Trainer extends BaseModel
      */
     public function getNameAttribute()
     {
-        // phpcs:ignore
         $associatedEmployee = $this->associatedEmployee;
+
+        // phpcs:ignore
         return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . mb_substr($associatedEmployee->first_name, 0, 1) . '.') : '') . ($associatedEmployee->middle_name ? (' ' . mb_substr($associatedEmployee->middle_name, 0, 1) . '.') : '') : $associatedEmployee->first_name;
     }
 

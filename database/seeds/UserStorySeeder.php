@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use App\Models\Role;
 use App\Models\User;
 
@@ -14,6 +15,7 @@ class UserStorySeeder extends BaseSeeder
     {
         // Grab all roles for reference
         $roles = Role::all();
+        $employees = Employee::all();
 
         // Create an admin user
         factory(App\Models\User::class)->create([
@@ -26,6 +28,7 @@ class UserStorySeeder extends BaseSeeder
         factory(App\Models\User::class)->create([
             'name'         => 'Bob',
             'email'        => 'hall-admin@example.com',
+            'employee_id'  => $employees->shuffle()->pop(),
             'primary_role_id' => $roles->where('name', Role::ROLE_HALL_ADMIN)->first()->role_id,
         ]);
 
@@ -36,6 +39,7 @@ class UserStorySeeder extends BaseSeeder
         // Assign fake roles to users
         for ($i = 0; $i < 5; ++$i) {
             $user = factory(App\Models\User::class)->create([
+                'employee_id'  => $employees->shuffle()->pop(),
                 'primary_role_id' => $roles->random()->role_id,
             ]);
 

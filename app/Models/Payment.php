@@ -38,6 +38,7 @@ class Payment extends BaseModel
         'quantity',
         'discount',
         'method',
+        'hall_id',
     ];
 
     /**
@@ -50,6 +51,8 @@ class Payment extends BaseModel
      *
      * @return array Rules
      */
+    protected $appends = [];
+
     public function getValidationRules()
     {
         return [];
@@ -59,9 +62,12 @@ class Payment extends BaseModel
     {
         return [
             AllowedFilter::exact('sellable_type'),
+            AllowedFilter::exact('sellable_id'),
+            AllowedFilter::exact('payment_id'),
             AllowedFilter::exact('method'),
-            AllowedFilter::scope('start_date'),
-            AllowedFilter::scope('end_date'),
+            AllowedFilter::scope('start'),
+            AllowedFilter::scope('end'),
+            AllowedFilter::exact('hall_id'),
         ];
     }
 
@@ -70,7 +76,7 @@ class Payment extends BaseModel
      * @param Builder $query
      * @param \DateTimeInterface|string|null $value
      */
-    public function scopeStartDate(Builder $query, $value)
+    public function scopeStart(Builder $query, $value)
     {
         $query->whereDate('created_at', '>=', $value);
     }
@@ -79,7 +85,7 @@ class Payment extends BaseModel
      * @param Builder $query
      * @param \DateTimeInterface|string|null $value
      */
-    public function scopeEndDate(Builder $query, $value)
+    public function scopeEnd(Builder $query, $value)
     {
         $query->whereDate('created_at', '<=', $value);
     }

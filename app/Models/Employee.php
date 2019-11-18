@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\SoftDeletes; //add this line
 
@@ -82,6 +83,9 @@ class Employee extends BaseModel
             AllowedFilter::exact('id', 'employee_id'),
             AllowedFilter::exact('employee_id'),
             AllowedFilter::exact('hall_id'),
+            AllowedFilter::scope('trainer'),
+            AllowedFilter::scope('search'),
+            AllowedFilter::scope('user'),
         ];
     }
 
@@ -92,7 +96,7 @@ class Employee extends BaseModel
 
     public function associatedUser()
     {
-        return $this->belongsTo(User::class, 'associated_user_id');
+        return $this->hasOne(User::class, 'employee_id');
     }
 
     public function associatedTrainer()
@@ -121,5 +125,19 @@ class Employee extends BaseModel
     {
         // phpcs:ignore
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
+    }
+
+    public function scopeTrainer(Builder $builder, $has) {
+        return $has ? $builder->whereHas('associatedTrainer') : $builder->whereDoesntHave('associatedTrainer');
+    }
+
+    public function scopeSearch(Builder $query, $search)
+    {
+        return $query->where('first_name', 'ILIKE', "%{$search}%")
+            ->orWhere('middle_name', 'ILIKE', "%{$search}%")
+            ->orWhere('last_name', 'ILIKE', "%{$search}%");
+    }
+    public function scopeUser(Builder $builder, $has) {
+        return $has ? $builder->whereHas('associatedUser') : $builder->whereDoesntHave('associatedUser');
     }
 }

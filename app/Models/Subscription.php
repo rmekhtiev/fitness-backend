@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ClientStatus;
+use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -38,6 +39,11 @@ class Subscription extends BaseModel
         'client_id',
         'issue_date',
         'valid_till',
+        'frozen_till',
+        'frozen_start',
+        'subscriable_id',
+        'subscriable_type',
+        'cost',
     ];
 
     /**
@@ -46,8 +52,29 @@ class Subscription extends BaseModel
     protected $hidden = [];
 
     protected $appends = [
-
+        'sold'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+//        self::created(function (self $subscription){
+//            $group = $this->client()->groups()->create([
+//                'cost' => $this->cost,
+//                'quantity' => 1,
+//                'method' => $paymentMethod,
+//            ]);
+//
+//            if ($this->update())
+//            {
+//                return $payment->resolve();
+//            } else {
+//                $payment->fail();
+//            }
+//            return false;
+//        });
+    }
+
     /**
      * Return the validation rules for this model
      *
@@ -57,9 +84,11 @@ class Subscription extends BaseModel
     {
         return [
             'client_id' => 'required|uuid|exists:clients,client_id',
-
+            'frozen_start' => 'date|nullable',
+            'frozen_till' => 'date|nullable',
             'issue_date' => 'required|date',
             'valid_till' => 'required|date',
+            'subscriable_id' => 'sometimes|nullable|uuid',
         ];
     }
 
@@ -67,26 +96,75 @@ class Subscription extends BaseModel
     {
         return [
             AllowedFilter::exact('client_id'),
+            AllowedFilter::exact('id', 'subscription_id'),
         ];
     }
 
+    public function scopeFrozen(Builder $query)
+    {
+        return $query->where('frozen_till', '>=', today());
+    }
+
+    public function scopeInactive(Builder $query)
+    {
+        return $query->where('issue_date', '>', today());
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        return $query->where('issue_date', '<', today())->where('valid_till', '>', today())->where('frozen_till', '<=', today())->orWhereNull('frozen_till');
+    }
+
+    public function scopeExpired(Builder $query)
+    {
+        return $query->where('valid_till', '<', today());
+    }
 
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
 
-//    public function getStatusAttribute() {
-//        if ($this->frozen_till >= today()){
-//            return ClientStatus::FROZEN;
-//        } else if ($this->valid_till < today()){
-//            return ClientStatus::EXPIRED;
-//        } else if ($this->valid_till >= today() & $this->issue_date <= today()){
-//            return ClientStatus::ACTIVE;
-//        } return ClientStatus::NOT_ACTIVATED;
-//    }
+    public function subscriable()
+    {
+        return $this->morphTo();
+    }
 
-//    public function getInactiveAttribute() {
-//        return $this->issue_date >= today();
-//    }
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'sellable');
+    }
+
+    public function getSoldAttribute()
+    {
+        return $this->payment != null;
+    }
+
+    public function getHallIdAttribute()
+    {
+        $this->loadMissing('client');
+
+        return $this->client->primary_hall_id; // todo: КОСТЫЛЬ ССУКА
+    }
+
+    public function sell($paymentMethod = PaymentMethod::CASH)
+    {
+        $payment = $this->payment()->create([
+            'cost' => $this->cost,
+            'quantity' => 1,
+            'method' => $paymentMethod,
+            'hall_id' => $this->client->primary_hall_id,
+        ]);
+
+        if ($this->update())
+        {
+            return $payment->resolve();
+        } else {
+            $payment->fail();
+        }
+        return false;
+    }
+
+
+
 }
