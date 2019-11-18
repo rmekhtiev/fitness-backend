@@ -90,6 +90,7 @@ class BarItem extends BaseModel
             'cost' => $this->cost,
             'quantity' => $quantity,
             'method' => $paymentMethod,
+            'hall_id' => $this->hall_id
         ]);
 
         if ($this->update([

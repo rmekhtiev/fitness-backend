@@ -12,6 +12,7 @@ use App\Models\Locker;
 use App\Models\LockerClaim;
 use App\Models\Pivot\ClientGroup;
 use App\Models\Schedule;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
@@ -39,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
             'groups' => Group::class,
             'schedules' => Schedule::class,
             'bar-items' => BarItem::class,
+            'subscriptions' => Subscription::class,
         ]);
     }
 
