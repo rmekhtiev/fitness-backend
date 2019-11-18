@@ -117,7 +117,7 @@ class User extends BaseModel implements
 
     public function associatedEmployee()
     {
-        return $this->hasOne(Employee::class, 'associated_user_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 
     public function issues()

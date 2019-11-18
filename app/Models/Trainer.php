@@ -114,8 +114,9 @@ class Trainer extends BaseModel
      */
     public function getNameAttribute()
     {
-        // phpcs:ignore
         $associatedEmployee = $this->associatedEmployee;
+
+        // phpcs:ignore
         return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . mb_substr($associatedEmployee->first_name, 0, 1) . '.') : '') . ($associatedEmployee->middle_name ? (' ' . mb_substr($associatedEmployee->middle_name, 0, 1) . '.') : '') : $associatedEmployee->first_name;
     }
 
