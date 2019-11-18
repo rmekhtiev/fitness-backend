@@ -85,6 +85,7 @@ class Employee extends BaseModel
             AllowedFilter::exact('hall_id'),
             AllowedFilter::scope('trainer'),
             AllowedFilter::scope('search'),
+            AllowedFilter::scope('user'),
         ];
     }
 
@@ -135,5 +136,8 @@ class Employee extends BaseModel
         return $query->where('first_name', 'ILIKE', "%{$search}%")
             ->orWhere('middle_name', 'ILIKE', "%{$search}%")
             ->orWhere('last_name', 'ILIKE', "%{$search}%");
+    }
+    public function scopeUser(Builder $builder, $has) {
+        return $has ? $builder->whereHas('associatedUser') : $builder->whereDoesntHave('associatedUser');
     }
 }
