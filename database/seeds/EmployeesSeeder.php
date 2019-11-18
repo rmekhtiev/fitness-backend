@@ -16,14 +16,10 @@ class EmployeesSeeder extends BaseSeeder
     public function runFake()
     {
         $halls = Hall::all();
-        $users = User::query()->whereDoesntHave('primaryRole', function (Builder $query) {
-            $query->where('name', Role::ROLE_OWNER);
-        })->get()->shuffle();
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i <= 20; $i++) {
             factory(Employee::class)->create([
                 'hall_id' => $halls->random()->hall_id,
-                'associated_user_id' => $this->faker->boolean ? optional($users->shift())->user_id : null,
             ]);
         }
     }
