@@ -95,6 +95,7 @@ class Subscription extends BaseModel
     public static function getAllowedFilters()
     {
         return [
+            AllowedFilter::exact('subscription_id'),
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('id', 'subscription_id'),
         ];
