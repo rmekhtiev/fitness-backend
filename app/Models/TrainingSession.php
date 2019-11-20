@@ -69,6 +69,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     public static function getAllowedFilters()
     {
         return [
+            AllowedFilter::exact('training_sessions_id'),
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('trainer_id'),
             AllowedFilter::exact('count'),
