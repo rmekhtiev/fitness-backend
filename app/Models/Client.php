@@ -205,12 +205,12 @@ class Client extends BaseModel
 
     public function visitHistoryRecords()
     {
-        return $this->hasMany( VisitHistoryRecord::class, 'client_id');
+        return $this->hasMany(VisitHistoryRecord::class, 'client_id');
     }
 
     public function lastVisitHistoryRecord()
     {
-        return $this->hasOne( VisitHistoryRecord::class, 'client_id');
+        return $this->hasOne(VisitHistoryRecord::class, 'client_id');
     }
 
     public function subscriptions()
@@ -241,6 +241,11 @@ class Client extends BaseModel
         return $this->belongsToMany(Group::class, 'client_group', 'client_id', 'group_id')
             ->using(ClientGroup::class)
             ->withTimestamps();
+    }
+
+    public function sessions()
+    {
+        return $this->belongsTo(TrainingSession::class, 'client_id', 'client_id');
     }
 
     /**

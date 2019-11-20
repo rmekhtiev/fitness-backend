@@ -16,6 +16,8 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class Group extends BaseModel implements EventRegistryInterface
 {
+    use Schedulable;
+
     /**
      * @var string UUID key of the resource
      */

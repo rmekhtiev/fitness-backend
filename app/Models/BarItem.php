@@ -6,8 +6,10 @@ use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class BarItem extends BaseModel
+class BarItem extends BaseModel implements PaymentSubject
 {
+    use Sellable;
+
     /**
      * @var string UUID key of the resource
      */
