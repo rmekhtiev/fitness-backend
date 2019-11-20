@@ -36,7 +36,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     protected $fillable = [
         'client_id',
         'trainer_id',
-        'payed_until',
+        'cost',
+        'count',
     ];
 
     /**
@@ -54,7 +55,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
         return [
             'client_id' => 'required|nullable|uuid|exists:clients,client_id',
             'trainer_id' => 'required|nullable|uuid|exists:trainers,trainer_id',
-            'payed_until' => 'required', // todo
+            'cost' => 'required', // todo
+            'count' => 'required|integer', // todo
         ];
     }
 
