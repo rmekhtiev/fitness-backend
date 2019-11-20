@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Transformers\BaseTransformer;
 use Plummer\Calendarful\Event\EventRegistryInterface;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class TrainingSession extends BaseModel implements EventRegistryInterface
 {
@@ -45,6 +46,11 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      */
     protected $hidden = [];
 
+    public static $allowedSorts = [
+        'cost',
+        'count'
+    ];
+
     /**
      * Return the validation rules for this model
      *
@@ -57,6 +63,16 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             'trainer_id' => 'required|nullable|uuid|exists:trainers,trainer_id',
             'cost' => 'required', // todo
             'count' => 'required|integer', // todo
+        ];
+    }
+
+    public static function getAllowedFilters()
+    {
+        return [
+            AllowedFilter::exact('client_id'),
+            AllowedFilter::exact('trainer_id'),
+            AllowedFilter::exact('count'),
+            AllowedFilter::exact('cost'),
         ];
     }
 
