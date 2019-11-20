@@ -95,6 +95,7 @@ class Subscription extends BaseModel
     public static function getAllowedFilters()
     {
         return [
+            AllowedFilter::exact('subscription_id'),
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('id', 'subscription_id'),
         ];
@@ -103,6 +104,11 @@ class Subscription extends BaseModel
     public function scopeFrozen(Builder $query)
     {
         return $query->where('frozen_till', '>=', today());
+    }
+
+    public function scopeSubscriable(Builder $query, $search)
+    {
+        return $query->where('subscriable_id', "=", $search);
     }
 
     public function scopeInactive(Builder $query)

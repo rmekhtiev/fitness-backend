@@ -31,17 +31,17 @@ Route::post('webhook', 'RequestsController@store');
  */
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Router $api) {
+
     /*
     * Trainers
     */
-    $api->group(['prefix' => 'trainers'], function ($api) {
+    $api->group(['prefix' => 'trainers'], function (Dingo\Api\Routing\Router $api) {
         $api->get('/', 'App\Http\Controllers\TrainerController@getAll');
         $api->get('/{uuid}', 'App\Http\Controllers\TrainerController@get');
         $api->post('/', 'App\Http\Controllers\TrainerController@post');
         $api->patch('/{uuid}', 'App\Http\Controllers\TrainerController@patch');
         $api->delete('/{uuid}', 'App\Http\Controllers\TrainerController@delete');
     });
-
 
     /*
      * Authentication
@@ -61,8 +61,8 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Authentication
          */
-        $api->group(['prefix' => 'auth'], function ($api) {
-            $api->group(['prefix' => 'jwt'], function ($api) {
+        $api->group(['prefix' => 'auth'], function (Dingo\Api\Routing\Router $api) {
+            $api->group(['prefix' => 'jwt'], function (Dingo\Api\Routing\Router $api) {
                 $api->get('/refresh', 'App\Http\Controllers\Auth\AuthController@refresh');
                 $api->delete('/token', 'App\Http\Controllers\Auth\AuthController@logout');
             });
@@ -73,7 +73,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Users
          */
-        $api->group(['prefix' => 'users', 'middleware' => 'check_role:' . Role::ROLE_OWNER . ',' . Role::ROLE_HALL_ADMIN], function ($api) {
+        $api->group(['prefix' => 'users', 'middleware' => 'check_role:' . Role::ROLE_OWNER . ',' . Role::ROLE_HALL_ADMIN], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\UserController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\UserController@get');
             $api->post('/', 'App\Http\Controllers\UserController@post');
@@ -236,7 +236,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
          * Payments
          */
-        $api->group(['prefix' => 'payments'], function (Dingo\Api\Routing\Router  $api) {
+        $api->group(['prefix' => 'payments'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\PaymentController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\PaymentController@get');
         });
@@ -244,7 +244,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
         * IssueDiscussions
         */
-        $api->group(['prefix' => 'issue-discussions'], function ($api) {
+        $api->group(['prefix' => 'issue-discussions'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\IssueDiscussionController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\IssueDiscussionController@get');
             $api->post('/', 'App\Http\Controllers\IssueDiscussionController@post');
@@ -256,7 +256,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
         * VisitHistoryRecords
         */
-        $api->group(['prefix' => 'visit-history-records'], function ($api) {
+        $api->group(['prefix' => 'visit-history-records'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\VisitHistoryRecordController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\VisitHistoryRecordController@get');
             $api->post('/', 'App\Http\Controllers\VisitHistoryRecordController@post');
@@ -267,7 +267,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         /*
         * Requests
         */
-        $api->group(['prefix' => 'requests'], function ($api) {
+        $api->group(['prefix' => 'requests'], function (Dingo\Api\Routing\Router $api) {
             $api->get('/', 'App\Http\Controllers\RequestsController@getAll');
             $api->get('/{uuid}', 'App\Http\Controllers\RequestsController@get');
             $api->post('/', 'App\Http\Controllers\RequestsController@post');
@@ -276,7 +276,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         });
 
         /*
-        Identifiers
+        * Identifiers
         */
         $api->group(['prefix' => 'identifiers'], function ($api) {
             $api->get('/', 'App\Http\Controllers\IdentifierController@getAll');
@@ -286,5 +286,16 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->delete('/{uuid}', 'App\Http\Controllers\IdentifierController@delete');
         });
 
+        /*
+         * TrainingSessions
+         */
+        $api->group(['prefix' => 'training-sessions'], function (Dingo\Api\Routing\Router $api) {
+            $api->get('/', 'App\Http\Controllers\TrainingSessionController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\TrainingSessionController@get');
+            $api->post('/', 'App\Http\Controllers\TrainingSessionController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\TrainingSessionController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\TrainingSessionController@delete');
+            $api->post('/{uuid}/sell', 'App\Http\Controllers\TrainingSessionController@sell');
+        });
     });
 });

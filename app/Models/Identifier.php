@@ -58,6 +58,7 @@ class Identifier extends BaseModel
     {
         return [
             AllowedFilter::exact('client_id', 'client.client_id'),
+            AllowedFilter::exact('identifier'),
         ];
     }
 
