@@ -29,7 +29,6 @@ class SubscriptionSellRequest extends FormRequest
             'payment_method' => [
                 'required',
                 new EnumValue(PaymentMethod::class, true),
-            'cost' => ['required']
             ],
         ];
     }

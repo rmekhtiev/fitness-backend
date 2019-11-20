@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
 use Plummer\Calendarful\Event\EventRegistryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -46,6 +47,10 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      */
     protected $hidden = [];
 
+    protected $appends = [
+        'sold'
+    ];
+
     public static $allowedSorts = [
         'cost',
         'count'
@@ -85,5 +90,33 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     public function trainer()
     {
         return $this->hasOne(Trainer::class, 'trainer_id', 'trainer_id');
+    }
+
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'sellable');
+    }
+
+    public function getSoldAttribute()
+    {
+        return $this->payment != null;
+    }
+
+    public function sell($paymentMethod = PaymentMethod::CASH)
+    {
+        $payment = $this->payment()->create([
+            'cost' => $this->cost,
+            'quantity' => 1,
+            'method' => $paymentMethod,
+            'hall_id' => $this->client->primary_hall_id,
+        ]);
+
+        if ($this->update())
+        {
+            return $payment->resolve();
+        } else {
+            $payment->fail();
+        }
+        return false;
     }
 }

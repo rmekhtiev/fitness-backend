@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SubscriptionSellRequest;
 use Illuminate\Http\Request;
 use App\Models\TrainingSession;
 
@@ -21,4 +22,24 @@ class TrainingSessionController extends Controller
      * @var null|BaseTransformer The transformer this controller should use, if overriding the model & default
      */
     public static $transformer = null;
+
+    public function sell($uuid, SubscriptionSellRequest $request)
+    {
+        /** @var Subscription $model */
+        $model = static::$model::findOrFail($uuid);
+
+        $this->authorizeUserAction('update', $model);
+
+        $validated = $request->validated();
+
+        $model->sell($validated['payment_method']);
+
+        if ($this->shouldTransform()) {
+            $response = $this->response->item($model, $this->getTransformer());
+        } else {
+            $response = $model;
+        }
+
+        return $response;
+    }
 }
