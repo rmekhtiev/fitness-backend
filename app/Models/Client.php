@@ -283,11 +283,11 @@ class Client extends BaseModel
 
     public function getStatusAttribute()
     {
-        if ($this->activeSubscription()->value('frozen_till') >= today()) {
+        if ($this->activeSubscriptions()->value('frozen_till') >= (today()->modify('-1 day'))) {
             return ClientStatus::FROZEN;
-        } else if ($this->activeSubscription()->value('valid_till') >= today() & $this->activeSubscription()->value('issue_date') <= today()) {
+        } else if ($this->activeSubscriptions()->value('valid_till') >= today() & $this->activeSubscriptions()->value('issue_date') <= today()) {
             return ClientStatus::ACTIVE;
-        } else if ($this->inactiveSubscription()->value('issue_date') > today()) {
+        } else if ($this->inactiveSubscriptions()->value('issue_date') > today()) {
             return ClientStatus::NOT_ACTIVATED;
         } else if ($this->subscriptions()->count() > 0) {
             return ClientStatus::EXPIRED;
