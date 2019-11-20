@@ -105,6 +105,11 @@ class Subscription extends BaseModel
         return $query->where('frozen_till', '>=', today());
     }
 
+    public function scopeSubscriable(Builder $query, $search)
+    {
+        return $query->where('subscriable_id', "=", $search);
+    }
+
     public function scopeInactive(Builder $query)
     {
         return $query->where('issue_date', '>', today());

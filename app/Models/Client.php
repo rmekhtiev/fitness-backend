@@ -151,6 +151,7 @@ class Client extends BaseModel
             AllowedFilter::exact('primary_hall_id', 'clients.primary_hall_id'),
             AllowedFilter::scope('search'),
             AllowedFilter::scope('status'),
+            AllowedFilter::scope('subscriable'),
         ];
     }
 
@@ -162,6 +163,13 @@ class Client extends BaseModel
             ->orWhere('phone_number', 'ILIKE', "%{$search}%")
             ->orWhere('instagram', 'ILIKE', "%{$search}%")
             ->orWhere('whats_app_number', 'ILIKE', "%{$search}%");
+    }
+
+    public function scopeSubscriable(Builder $query, $search)
+    {
+        return $query->whereHas('activeSubscriptions', function (Builder $builder) use ($search) {
+            return $builder->subscriable($search);
+        });
     }
 
     public function scopeStatus(Builder $query, $status)
