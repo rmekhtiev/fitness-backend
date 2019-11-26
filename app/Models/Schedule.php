@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transformers\BaseTransformer;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class Schedule extends RecurringEventModel
@@ -61,6 +62,25 @@ class Schedule extends RecurringEventModel
         return [];
     }
 
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeAfter(Builder $query, $value)
+    {
+        $query->whereDate('end_date', '>=', $value);
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeBefore(Builder $query, $value)
+    {
+        $query->whereDate('end_date', '<=', $value);
+    }
+
     /**
      * Get the owning schedulable model.
      */
@@ -79,6 +99,8 @@ class Schedule extends RecurringEventModel
         return [
             AllowedFilter::exact('schedulable_type'),
             AllowedFilter::exact('schedulable_id'),
+            AllowedFilter::scope('after'),
+            AllowedFilter::scope('before'),
         ];
     }
 }
