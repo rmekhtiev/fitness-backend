@@ -62,8 +62,7 @@ class VisitHistoryRecord extends BaseModel
     {
         return [
             'datetime' => 'required|date',
-
-            'hall_id' => 'required|uuid|exists:halls,hall_id',
+            'hall_id' => 'nullable',
             'client_id' => 'required|uuid|exists:clients,client_id',
         ];
     }

@@ -49,7 +49,7 @@ class Identifier extends BaseModel
     public function getValidationRules()
     {
         return [
-            'first_name' => 'required',
+            'identifier' => 'required|unique:identifiers,identifier',
             'client_id' => 'required|uuid|exists:clients,client_id',
         ];
     }

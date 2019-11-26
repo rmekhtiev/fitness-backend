@@ -23,6 +23,11 @@ trait Schedulable
         return $this->morphMany(Schedule::class, 'schedulable');
     }
 
+    public function events()
+    {
+        return $this->schedules()->whereNull('recurrence_type');
+    }
+
     /**
      * Gets data and allows the passing of filters if desired.
      *
@@ -31,7 +36,12 @@ trait Schedulable
      */
     public function getEvents(array $filters = array())
     {
-        return [];
+        return $this->events()->get();
+    }
+
+    public function recurringEvents()
+    {
+        return $this->schedules()->whereNotNull('recurrence_type');
     }
 
     /**
@@ -42,9 +52,7 @@ trait Schedulable
      */
     public function getRecurrentEvents(array $filters = array())
     {
-        $this->loadMissing('schedules');
-
-        return $this->schedules->all();
+        return $this->recurringEvents()->get();
     }
 
     public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
+use Illuminate\Database\Query\Builder;
 use Plummer\Calendarful\Event\EventRegistryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -19,7 +20,9 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = [
+        'pastEvents'
+    ];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -48,12 +51,13 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     protected $hidden = [];
 
     protected $appends = [
-        'sold'
+        'sold',
+        'pastEventsCount'
     ];
 
     public static $allowedSorts = [
         'cost',
-        'count'
+        'count',
     ];
 
     /**
@@ -97,9 +101,22 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
         return $this->morphOne(Payment::class, 'sellable');
     }
 
+    /**
+     * @return Builder
+     */
+    public function pastEvents()
+    {
+        return $this->events()->whereDate('end_date', '<=', now());
+    }
+
     public function getSoldAttribute()
     {
         return $this->payment != null;
+    }
+
+    public function getPastEventsCountAttribute()
+    {
+        return $this->pastEvents()->count();
     }
 
     public function sell($paymentMethod = PaymentMethod::CASH)
@@ -111,8 +128,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             'hall_id' => $this->client->primary_hall_id,
         ]);
 
-        if ($this->update())
-        {
+        if ($this->update()) {
             return $payment->resolve();
         } else {
             $payment->fail();

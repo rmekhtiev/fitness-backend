@@ -21,7 +21,7 @@ class CreateVisitHistoryRecordsTable extends Migration
             $table->date('datetime');
 
             $table->uuid('client_id');
-            $table->uuid('hall_id');
+            $table->uuid('hall_id')->nullable();
 
             $table->foreign('client_id')->references('client_id')->on('clients');
             $table->foreign('hall_id')->references('hall_id')->on('halls');
