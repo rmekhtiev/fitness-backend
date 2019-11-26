@@ -49,6 +49,8 @@ class Schedule extends RecurringEventModel
      */
     protected $hidden = [];
 
+    public static $defaultSorts = '-end_date';
+
     /**
      * Return the validation rules for this model
      *
