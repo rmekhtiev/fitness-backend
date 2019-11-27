@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use App\Plummer\Calendarful\Calendar\AccessibleCalendar;
 use App\Transformers\BaseTransformer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
+use Plummer\Calendarful\Event\EventRegistryInterface;
+use Plummer\Calendarful\Recurrence\RecurrenceFactory;
+use Plummer\Calendarful\Recurrence\Type\Daily;
+use Plummer\Calendarful\Recurrence\Type\MonthlyDate;
+use Plummer\Calendarful\Recurrence\Type\Weekly;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class Trainer extends BaseModel
+class Trainer extends BaseModel implements EventRegistryInterface
 {
     /**
      * @var string UUID key of the resource
@@ -17,7 +23,9 @@ class Trainer extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = [
+        'events',
+    ];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -115,6 +123,49 @@ class Trainer extends BaseModel
         return $this->belongsTo(TrainingSession::class, 'trainer_id', 'trainer_id');
     }
 
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'trainer_id');
+    }
+
+    public function events()
+    {
+        return $this->schedules()->whereNull('recurrence_type');
+    }
+
+    public function recurringEvents()
+    {
+        return $this->schedules()->whereNotNull('recurrence_type');
+    }
+
+    public function getEvents(array $filters = array())
+    {
+        $this->loadMissing('events');
+
+        return $this->events->all();
+    }
+
+    public function getRecurrentEvents(array $filters = array())
+    {
+        $this->loadMissing('recurringEvents');
+
+        return $this->recurringEvents->all();
+    }
+
+    public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())
+    {
+        $recurrenceFactory = new RecurrenceFactory(); // todo
+        $recurrenceFactory->addRecurrenceType('daily', Daily::class);
+        $recurrenceFactory->addRecurrenceType('weekly', Weekly::class);
+        $recurrenceFactory->addRecurrenceType('monthly', MonthlyDate::class);
+
+        $calendar = new AccessibleCalendar($recurrenceFactory);
+        $calendar->populate($this, $fromDate, $toDate, $limit, $extraFilters);
+        $calendar->sort();
+
+        return collect($calendar->getAllItems());
+    }
+
     /**
      * @return mixed|string
      */
@@ -144,6 +195,4 @@ class Trainer extends BaseModel
         $associatedEmployee = $this->associatedEmployee;
         return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . $associatedEmployee->first_name) : '') . ($associatedEmployee->middle_name ? (' ' . $associatedEmployee->middle_name) : '') : $associatedEmployee->first_name;
     }
-
-
 }
