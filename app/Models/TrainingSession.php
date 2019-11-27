@@ -30,6 +30,10 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      */
     public static $collectionWith = null;
 
+    public static $itemWithCount = [
+        'events',
+    ];
+
     /**
      * @var null|BaseTransformer The transformer to use for this model, if overriding the default
      */
@@ -86,6 +90,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             AllowedFilter::exact('count'),
             AllowedFilter::exact('cost'),
             AllowedFilter::scope('active'),
+            AllowedFilter::scope('bound'),
         ];
     }
 
@@ -96,8 +101,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      */
     public function scopeActive(Builder $builder, $flag)
     {
-        return $builder->whereHas('payment')
-            ->whereHas('events', null, $flag ? '<' : '>=', \DB::raw('"count"'))
+        return $builder->bound(!$flag)
             ->orWhereHas('events', function (Builder $hasMany) use ($flag) {
                 return $hasMany->when($flag, function (Builder $builder) {
                     return $builder->after(now());
@@ -105,6 +109,12 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
                     return $builder->before(now());
                 });
             }, '>=', \DB::raw('"count"'));
+    }
+
+    public function scopeBound(Builder $builder, $flag)
+    {
+        return $builder->whereHas('payment')
+            ->whereHas('events', null, $flag ? '>=' : '<', \DB::raw('"count"'));
     }
 
     public function client()
