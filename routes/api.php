@@ -41,6 +41,8 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
         $api->post('/', 'App\Http\Controllers\TrainerController@post');
         $api->patch('/{uuid}', 'App\Http\Controllers\TrainerController@patch');
         $api->delete('/{uuid}', 'App\Http\Controllers\TrainerController@delete');
+
+        $api->get('/{uuid}/events', 'App\Http\Controllers\TrainerController@events');
     });
 
     /*

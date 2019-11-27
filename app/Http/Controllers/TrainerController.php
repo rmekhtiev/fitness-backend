@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseModel;
+use App\Transformers\BaseTransformer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Trainer;
 
@@ -21,4 +24,26 @@ class TrainerController extends Controller
      * @var null|BaseTransformer The transformer this controller should use, if overriding the model & default
      */
     public static $transformer = null;
+
+    public function events($uuid)
+    {
+        /** @var Trainer $model */
+        $model = new static::$model;
+
+        $resource = $model::with($model::getItemWith())->withCount($model::getItemWithCount())->where($model->getKeyName(), '=', $uuid)->first();
+
+        $fromDate = ($start_date = request()->query('start_date'))
+            ? Carbon::parse($start_date)->subDay()
+            : now();
+
+        $toDate = ($end_date = request()->query('end_date'))
+            ? Carbon::parse($end_date)->addDay()
+            : now();
+
+        $limit = request()->query('limit') ?? 200;
+
+        $resources = $resource->getUpcomingEvents($fromDate, $toDate, $limit);
+
+        return $this->response->collection($resources, $this->getTransformer());
+    }
 }

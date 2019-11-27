@@ -25,8 +25,8 @@ abstract class RecurringEventModel extends EventModel implements RecurrentEventI
     ];
 
     protected $casts = [
-        'start_date' => 'datetime:Y-m-d H:m',
-        'end_date' => 'datetime:Y-m-d H:m',
+        'start_date' => 'datetime:Y-m-d H:i:s',
+        'end_date' => 'datetime:Y-m-d H:i:s',
     ];
 
     /**

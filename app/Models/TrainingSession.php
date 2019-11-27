@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Plummer\Calendarful\Event\EventRegistryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -52,7 +52,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
 
     protected $appends = [
         'sold',
-        'pastEventsCount'
+        'pastEventsCount',
+        'title',
     ];
 
     public static $allowedSorts = [
@@ -79,11 +80,31 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     {
         return [
             AllowedFilter::exact('training_session_id'),
+            AllowedFilter::exact('id', 'training_session_id'),
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('trainer_id'),
             AllowedFilter::exact('count'),
             AllowedFilter::exact('cost'),
+            AllowedFilter::scope('active'),
         ];
+    }
+
+    /**
+     * @param Builder|self $builder
+     * @param $flag
+     * @return mixed
+     */
+    public function scopeActive(Builder $builder, $flag)
+    {
+        return $builder->whereHas('payment')
+            ->whereHas('events', null, $flag ? '<' : '>=', \DB::raw('"count"'))
+            ->orWhereHas('events', function (Builder $hasMany) use ($flag) {
+                return $hasMany->when($flag, function (Builder $builder) {
+                    return $builder->after(now());
+                }, function (Builder $builder) {
+                    return $builder->before(now());
+                });
+            }, '>=', \DB::raw('"count"'));
     }
 
     public function client()
@@ -117,6 +138,10 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     public function getPastEventsCountAttribute()
     {
         return $this->pastEvents()->count();
+    }
+
+    public function getTitleAttribute() {
+        return $this->client->name;
     }
 
     public function sell($paymentMethod = PaymentMethod::CASH)
