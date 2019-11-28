@@ -104,7 +104,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      */
     public function scopeAfter(Builder $query, $value)
     {
-        $query->whereDay('date_start', '>=', $value);
+        $query->whereDate('date_start', '<=', $value);
     }
 
     /**
@@ -113,7 +113,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      */
     public function scopeBefore(Builder $query, $value)
     {
-        $query->whereDay('date_end', '<=', $value);
+        $query->whereDate('date_end', '>=', $value);
     }
 
     /**
