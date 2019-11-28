@@ -198,7 +198,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             'cost' => $this->cost,
             'quantity' => 1,
             'method' => $paymentMethod,
-            'hall_id' => $this->client->primary_hall_id,
+            'hall_id' => $this->trainer->associatedEmployee->hall_id,
         ]);
 
         if ($this->update()) {

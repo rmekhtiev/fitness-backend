@@ -159,8 +159,9 @@ class Subscription extends BaseModel
             'cost' => $this->cost,
             'quantity' => 1,
             'method' => $paymentMethod,
-            'hall_id' => $this->client->primary_hall_id,
+            'hall_id' => optional($this->subsriable)->hall_id ?? optional(auth()->user()->associatedEmployee)->hall_id ?? $this->client->primary_hall_id
         ]);
+        var_dump($this->subscriable);
 
         if ($this->update())
         {
