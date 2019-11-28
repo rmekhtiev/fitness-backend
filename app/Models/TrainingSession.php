@@ -90,8 +90,30 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('trainer_id'),
             AllowedFilter::exact('cost'),
+
+            AllowedFilter::scope('after'),
+            AllowedFilter::scope('before'),
+            AllowedFilter::scope('sold'),
             AllowedFilter::scope('active'),
         ];
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeAfter(Builder $query, $value)
+    {
+        $query->whereDay('date_start', '>=', $value);
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeBefore(Builder $query, $value)
+    {
+        $query->whereDay('date_end', '<=', $value);
     }
 
     /**
@@ -99,9 +121,27 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      * @param $flag
      * @return mixed
      */
-    public function scopeActive(Builder $builder, $flag)
+    public function scopeActive(Builder $builder, $flag = true)
     {
-        return $builder->whereDay('date_end', '>=', now());
+        return $builder->when($flag, function (Builder $builder, $flag) {
+            return $builder->whereDay('date_end', '>=', now());
+        }, function (Builder $builder, $flag) {
+            return $builder->whereDay('date_end', '<=', now());
+        });
+    }
+
+    /**
+     * @param Builder|self $builder
+     * @param $flag
+     * @return mixed
+     */
+    public function scopeSold(Builder $builder, $flag = true)
+    {
+        return $builder->when($flag, function (Builder $builder) {
+            return $builder->whereHas('payment');
+        }, function (Builder $builder) {
+            return $builder->whereDoesntHave('payment');
+        });
     }
 
     public function client()
@@ -137,7 +177,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
         return $this->pastEvents()->count();
     }
 
-    public function getTitleAttribute() {
+    public function getTitleAttribute()
+    {
         return $this->client->name;
     }
 
