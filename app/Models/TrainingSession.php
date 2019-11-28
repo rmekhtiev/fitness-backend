@@ -46,7 +46,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
         'client_id',
         'trainer_id',
         'cost',
-        'count',
+        'date_start',
+        'date_end',
     ];
 
     /**
@@ -76,7 +77,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             'client_id' => 'required|nullable|uuid|exists:clients,client_id',
             'trainer_id' => 'required|nullable|uuid|exists:trainers,trainer_id',
             'cost' => 'required', // todo
-            'count' => 'required|integer', // todo
+            'date_start' => 'required', // todo
+            'date_end' => 'required', // todo
         ];
     }
 
@@ -87,10 +89,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             AllowedFilter::exact('id', 'training_session_id'),
             AllowedFilter::exact('client_id'),
             AllowedFilter::exact('trainer_id'),
-            AllowedFilter::exact('count'),
             AllowedFilter::exact('cost'),
             AllowedFilter::scope('active'),
-            AllowedFilter::scope('bound'),
         ];
     }
 
@@ -101,20 +101,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
      */
     public function scopeActive(Builder $builder, $flag)
     {
-        return $builder->bound(!$flag)
-            ->orWhereHas('events', function (Builder $hasMany) use ($flag) {
-                return $hasMany->when($flag, function (Builder $builder) {
-                    return $builder->after(now());
-                }, function (Builder $builder) {
-                    return $builder->before(now());
-                });
-            }, '>=', \DB::raw('"count"'));
-    }
-
-    public function scopeBound(Builder $builder, $flag)
-    {
-        return $builder->whereHas('payment')
-            ->whereHas('events', null, $flag ? '>=' : '<', \DB::raw('"count"'));
+        return $builder->whereDay('date_end', '>=', now());
     }
 
     public function client()
