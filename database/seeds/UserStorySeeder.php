@@ -48,4 +48,15 @@ class UserStorySeeder extends BaseSeeder
             }
         }
     }
+
+    public function runProduction()
+    {
+        $roles = Role::all();
+        
+        factory(App\Models\User::class)->create([
+            'name'         => 'Owner',
+            'email'        => static::OWNER_CREDENTIALS[0],
+            'primary_role_id' => $roles->where('name', Role::ROLE_OWNER)->first()->role_id,
+        ]);
+    }
 }
