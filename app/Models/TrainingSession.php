@@ -95,6 +95,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             AllowedFilter::scope('before'),
             AllowedFilter::scope('sold'),
             AllowedFilter::scope('active'),
+            AllowedFilter::scope('hall_id'),
         ];
     }
 
@@ -127,6 +128,15 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             return $builder->whereDay('date_end', '>=', now());
         }, function (Builder $builder, $flag) {
             return $builder->whereDay('date_end', '<=', now());
+        });
+    }
+
+    public function scopeHallId(Builder $builder, $hall_id)
+    {
+        return $builder->whereHas('trainer', function (Builder $builder) use ($hall_id) {
+            return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id){
+                return $builder->where('hall_id', $hall_id);
+            });
         });
     }
 
@@ -188,7 +198,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             'cost' => $this->cost,
             'quantity' => 1,
             'method' => $paymentMethod,
-            'hall_id' => $this->client->primary_hall_id,
+            'hall_id' => $this->trainer->associatedEmployee->hall_id,
         ]);
 
         if ($this->update()) {
