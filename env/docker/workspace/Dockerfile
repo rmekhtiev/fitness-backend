@@ -27,6 +27,8 @@ RUN apt-get update \
     ruby-bundler \
     ssh-client \
     iputils-ping \
+    libpng-dev \
+    zlib1g-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # Install Laravel required extensions
@@ -34,6 +36,7 @@ RUN docker-php-ext-install json && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install xml && \
     docker-php-ext-install ctype && \
+    docker-php-ext-install gd && \
     docker-php-ext-install tokenizer && \
     docker-php-ext-install pdo_pgsql && \
     docker-php-ext-install opcache && \
