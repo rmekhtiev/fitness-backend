@@ -27,6 +27,7 @@
         "laravel/tinker": "^1.0",
         "plummer/calendarful": "^0.2.1",
         "predis/predis": "^1.1",
+        "sentry/sentry-laravel": "1.5.0",
         "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-activitylog": "^3.8",
         "spatie/laravel-query-builder": "^2.0",

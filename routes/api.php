@@ -26,6 +26,11 @@ Route::get('/', function () {
 });
 
 Route::post('webhook', 'RequestsController@store');
+
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
+
 /**
  * @var $api \Dingo\Api\Routing\Router
  */
