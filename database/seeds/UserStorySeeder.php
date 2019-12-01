@@ -52,7 +52,7 @@ class UserStorySeeder extends BaseSeeder
     public function runProduction()
     {
         $roles = Role::all();
-        
+
         factory(App\Models\User::class)->create([
             'name'         => 'Owner',
             'email'        => static::OWNER_CREDENTIALS[0],
