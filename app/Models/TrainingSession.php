@@ -48,6 +48,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
         'cost',
         'date_start',
         'date_end',
+        'comment',
     ];
 
     /**
@@ -79,6 +80,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
             'cost' => 'required', // todo
             'date_start' => 'required', // todo
             'date_end' => 'required', // todo
+            'comment' => 'max:255'
         ];
     }
 
