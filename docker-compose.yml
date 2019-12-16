@@ -80,6 +80,19 @@ services:
       networks:
         - your_project_network
 
+    adminer:
+      image: $IMAGE
+      depends_on:
+        - postgres
+      environment:
+        - ADMINER_DEFAULT_DB_DRIVER=postgres
+        - ADMINER_DEFAULT_DB_HOST=postgres
+        - ADMINER_DEFAULT_DB_NAME=${POSTGRES_DB}
+        - ADMINER_DESIGN=nette
+        - ADMINER_PLUGINS=tables-filter tinymce
+      ports:
+        - 8080:9000
+
 # Volumes configuration
 volumes:
   postgres:
