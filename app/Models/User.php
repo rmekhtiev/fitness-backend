@@ -76,7 +76,7 @@ class User extends BaseModel implements
     public function getValidationRules()
     {
         return [
-            'name' => 'min:3',
+            'name' => 'min:3|nullable',
             'password' => 'required|min:6',
             'email' => [
                 'required',
