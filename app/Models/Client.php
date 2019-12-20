@@ -139,7 +139,7 @@ class Client extends BaseModel
                 new EnumValue(Gender::class, true),
             ],
 
-            'primary_hall_id' => 'sometimes|nullable|uuid|exists:halls,hall_id',
+            'primary_hall_id' => 'required|uuid|exists:halls,hall_id',
         ];
     }
 

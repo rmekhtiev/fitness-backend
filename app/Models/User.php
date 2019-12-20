@@ -35,7 +35,7 @@ class User extends BaseModel implements
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'primary_role_id',
+        'name', 'email', 'password', 'primary_role_id', 'employee_id'
     ];
 
     /**
@@ -76,7 +76,7 @@ class User extends BaseModel implements
     public function getValidationRules()
     {
         return [
-            'name' => 'required|min:3',
+            'name' => 'min:3|nullable',
             'password' => 'required|min:6',
             'email' => [
                 'required',
@@ -88,7 +88,7 @@ class User extends BaseModel implements
     public function getValidationRulesUpdating()
     {
         return [
-            'name' => 'sometimes|required|min:3',
+            'name' => 'min:3',
             'password' => 'sometimes|required|min:6',
             'email' => [
                 'required',
