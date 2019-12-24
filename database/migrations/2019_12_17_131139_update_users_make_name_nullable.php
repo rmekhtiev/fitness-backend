@@ -15,7 +15,7 @@ class UpdateUsersMakeNameNullable extends Migration
      */
     public function up()
     {
-        Schema::create(static::TABLE_NAME, function (Blueprint $table) {
+        Schema::table(static::TABLE_NAME, function (Blueprint $table) {
             $table->string('name')->nullable();
         });
     }
