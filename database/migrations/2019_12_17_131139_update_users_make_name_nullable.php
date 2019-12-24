@@ -16,7 +16,7 @@ class UpdateUsersMakeNameNullable extends Migration
     public function up()
     {
         Schema::table(static::TABLE_NAME, function (Blueprint $table) {
-            $table->string('name')->nullable();
+            $table->string('name')->nullable()->change();
         });
     }
 
@@ -28,7 +28,7 @@ class UpdateUsersMakeNameNullable extends Migration
     public function down()
     {
         Schema::table(static::TABLE_NAME, function (Blueprint $table) {
-            $table->string('name');
+            $table->string('name')->change();
         });
     }
 }
