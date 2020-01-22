@@ -7,7 +7,9 @@ use App\Enums\ClientStatus;
 use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
+use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Illuminate\Validation\Rule;
@@ -20,6 +22,11 @@ class Client extends BaseModel
     use Notifiable;
     use EloquentJoin;
     use LogsActivity;
+    use SoftDeletes, CascadeSoftDeletes;
+
+    protected $cascadeDeletes = ['visitHistoryRecords', 'lastVisitHistoryRecord', 'sessions'];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * @var string UUID key of the resource
