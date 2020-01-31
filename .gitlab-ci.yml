@@ -3,6 +3,7 @@ stages:
   - test
   - build
   - release
+  - security
 
 variables: &global-variables
   DOCKER_DRIVER: overlay2
@@ -16,6 +17,10 @@ variables: &global-variables
   POSTGRES_ENABLED: "true"
 
 include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: License-Management.gitlab-ci.yml
+  - template: Container-Scanning.gitlab-ci.yml
+
   - project: 'internal/templates/instance-template-repository'
     ref: master
     file: '/gitlab-ci/PHPUnit.yml'
@@ -101,3 +106,22 @@ build:container:
   stage: build
   dependencies:
     - install:composer
+
+dependency_scanning:
+  stage: security
+
+container_scanning:
+  stage: security
+  needs:
+    - build:container
+
+# Release docker image
+release:container:latest:
+  stage: release
+  needs:
+    - build:container
+
+release:container:tags:
+  stage: release
+  needs:
+    - build:container
