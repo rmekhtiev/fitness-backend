@@ -1,0 +1,58 @@
+stages:
+  - prepare
+  - test
+  - build
+  - release
+
+variables: &global-variables
+  DOCKER_DRIVER: overlay2
+
+  CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
+  CI_APPLICATION_TAG: $CI_COMMIT_SHA
+
+include:
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/PHPUnit.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/Docker.yml'
+
+before_script:
+  - touch database/database.sqlite
+
+# Install dependencies
+install:composer:
+  image: lorisleiva/laravel-docker:7.2
+  stage: prepare
+  script:
+    - php -v
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+    - cp .env.example .env
+    - php artisan key:generate
+  artifacts:
+    paths:
+      - vendor/
+      - .env
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - vendor/
+  only:
+    - branches
+    - tags
+
+# Run Tests/QA
+test:phpunit:
+  stage: test
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+# Build docker image
+build:container:
+  stage: build
+  dependencies:
+    - install:composer
