@@ -3,7 +3,6 @@
 
 namespace App\Models;
 
-
 use Plummer\Calendarful\Event\RecurrentEventInterface;
 
 /**

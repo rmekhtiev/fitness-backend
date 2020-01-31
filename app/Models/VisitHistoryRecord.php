@@ -85,5 +85,4 @@ class VisitHistoryRecord extends BaseModel
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
-
 }

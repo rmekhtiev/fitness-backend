@@ -85,8 +85,8 @@ class IssueDiscussion extends BaseModel
         return $this->belongsTo(Issue::class, 'issue_id');
     }
 
-    public function getUserNameAttribute() {
+    public function getUserNameAttribute()
+    {
         return $this->user->name;
     }
-
 }

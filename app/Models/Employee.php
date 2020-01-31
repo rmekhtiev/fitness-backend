@@ -127,7 +127,8 @@ class Employee extends BaseModel
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
     }
 
-    public function scopeTrainer(Builder $builder, $has) {
+    public function scopeTrainer(Builder $builder, $has)
+    {
         return $has ? $builder->whereHas('associatedTrainer') : $builder->whereDoesntHave('associatedTrainer');
     }
 
@@ -137,7 +138,8 @@ class Employee extends BaseModel
             ->orWhere('middle_name', 'ILIKE', "%{$search}%")
             ->orWhere('last_name', 'ILIKE', "%{$search}%");
     }
-    public function scopeUser(Builder $builder, $has) {
+    public function scopeUser(Builder $builder, $has)
+    {
         return $has ? $builder->whereHas('associatedUser') : $builder->whereDoesntHave('associatedUser');
     }
 }

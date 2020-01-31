@@ -75,6 +75,4 @@ abstract class Controller extends BaseController
 
         return $this->response->item($resource, $this->getTransformer());
     }
-
-
 }

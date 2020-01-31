@@ -77,7 +77,7 @@ class Hall extends BaseModel
 
     public function visitHistoryRecords()
     {
-        return $this->hasMany( VisitHistoryRecord::class, 'hall_id');
+        return $this->hasMany(VisitHistoryRecord::class, 'hall_id');
     }
 
     public function employees()
@@ -111,7 +111,7 @@ class Hall extends BaseModel
 
     public function getClientsCountNewAttribute()
     {
-        if(!$this->relationLoaded('clients')) {
+        if (!$this->relationLoaded('clients')) {
             return $this->clients()->whereDate('created_at', '>=', now()->subMonth())->count();
         } else {
             return $this->clients->filter(function (Client $client) {

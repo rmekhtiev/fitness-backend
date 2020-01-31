@@ -73,7 +73,8 @@ class TrainerPolicy extends BasePolicy
      * @param  \App\Models\Trainer  $trainer
      * @return mixed
      */
-    public function own(User $user, Trainer $trainer) {
+    public function own(User $user, Trainer $trainer)
+    {
         return $user->isHallAdmin() && !empty($user->associatedEmployee) && $user->associatedEmployee->hall_id == $trainer->hall_id;
     }
 

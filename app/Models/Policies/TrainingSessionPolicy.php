@@ -74,7 +74,8 @@ class TrainingSessionPolicy extends BasePolicy
      * @param  \App\Models\TrainingSession  $trainingSession
      * @return mixed
      */
-    public function own(User $user, TrainingSession $trainingSession) {
+    public function own(User $user, TrainingSession $trainingSession)
+    {
         // @todo
         return true;
     }

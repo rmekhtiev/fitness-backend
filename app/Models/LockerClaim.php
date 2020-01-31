@@ -143,7 +143,8 @@ class LockerClaim extends BaseModel
         return $this->belongsTo(Locker::class, 'locker_id');
     }
 
-    public function getDurationAttribute() {
+    public function getDurationAttribute()
+    {
         return $this->claim_end->diffInDays($this->claim_start);
     }
 }

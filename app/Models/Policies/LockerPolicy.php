@@ -73,7 +73,8 @@ class LockerPolicy extends BasePolicy
      * @param  \App\Models\Locker  $locker
      * @return mixed
      */
-    public function own(User $user, Locker $locker) {
+    public function own(User $user, Locker $locker)
+    {
         return $user->isOwner()
             || ($user->isHallAdmin() && !empty($user->associatedEmployee) && $locker->hall_id == $user->associatedEmployee->hall_id);
     }

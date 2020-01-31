@@ -219,7 +219,8 @@ class User extends BaseModel implements
         return $this->getKeyName();
     }
 
-    public function getNameAttribute() {
+    public function getNameAttribute()
+    {
         return $this->associatedEmployee ? $this->associatedEmployee->name : $this->attributes['name'];
     }
 }

@@ -74,7 +74,8 @@ class GroupPolicy extends BasePolicy
      * @param  \App\Models\Group  $group
      * @return mixed
      */
-    public function own(User $user, Group $group) {
+    public function own(User $user, Group $group)
+    {
         // @todo
         return true;
     }

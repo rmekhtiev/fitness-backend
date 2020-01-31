@@ -107,8 +107,6 @@ class Client extends BaseModel
     public static function boot()
     {
         parent::boot();
-
-
     }
 
 
@@ -185,20 +183,20 @@ class Client extends BaseModel
             $builder->whereHas('activeSubscriptions', function (Builder $builder) {
                 return $builder->frozen();
             });
-        })->when($status === ClientStatus::NOT_ACTIVATED, function (Builder $builder){
-            $builder->whereHas('inactiveSubscriptions', function (Builder $builder){
+        })->when($status === ClientStatus::NOT_ACTIVATED, function (Builder $builder) {
+            $builder->whereHas('inactiveSubscriptions', function (Builder $builder) {
                 return $builder->inactive();
             });
-        })->when( $status === ClientStatus::EXPIRED, function (Builder $builder){
-            $builder->whereHas('subscriptions', function (Builder $builder){
+        })->when($status === ClientStatus::EXPIRED, function (Builder $builder) {
+            $builder->whereHas('subscriptions', function (Builder $builder) {
                 return $builder->expired();
             });
-        })->when( $status === ClientStatus::ACTIVE, function (Builder $builder){
-        $builder->whereHas('activeSubscriptions', function (Builder $builder){
-            return $builder->active();
+        })->when($status === ClientStatus::ACTIVE, function (Builder $builder) {
+            $builder->whereHas('activeSubscriptions', function (Builder $builder) {
+                return $builder->active();
             });
-        })->when( $status === ClientStatus::NO_SUBSCRIPTION, function (Builder $builder){
-            $builder->whereDoesntHave('subscriptions', function (Builder $builder){
+        })->when($status === ClientStatus::NO_SUBSCRIPTION, function (Builder $builder) {
+            $builder->whereDoesntHave('subscriptions', function (Builder $builder) {
                 return $builder;
             });
         });
@@ -292,11 +290,11 @@ class Client extends BaseModel
     {
         if ($this->activeSubscriptions()->value('frozen_till') >= (today()->modify('-1 day'))) {
             return ClientStatus::FROZEN;
-        } else if ($this->activeSubscriptions()->value('valid_till') >= today() & $this->activeSubscriptions()->value('issue_date') <= today()) {
+        } elseif ($this->activeSubscriptions()->value('valid_till') >= today() & $this->activeSubscriptions()->value('issue_date') <= today()) {
             return ClientStatus::ACTIVE;
-        } else if ($this->inactiveSubscriptions()->value('issue_date') > today()) {
+        } elseif ($this->inactiveSubscriptions()->value('issue_date') > today()) {
             return ClientStatus::NOT_ACTIVATED;
-        } else if ($this->subscriptions()->count() > 0) {
+        } elseif ($this->subscriptions()->count() > 0) {
             return ClientStatus::EXPIRED;
         }
         return ClientStatus::NO_SUBSCRIPTION;

@@ -74,7 +74,8 @@ class LockerClaimPolicy extends BasePolicy
      * @param  \App\Models\LockerClaim  $lockerBooking
      * @return mixed
      */
-    public function own(User $user, LockerClaim $lockerBooking) {
+    public function own(User $user, LockerClaim $lockerBooking)
+    {
         // @todo
         return true;
     }

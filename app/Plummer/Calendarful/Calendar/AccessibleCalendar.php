@@ -3,7 +3,6 @@
 
 namespace App\Plummer\Calendarful\Calendar;
 
-
 use Plummer\Calendarful\Calendar\Calendar;
 
 class AccessibleCalendar extends Calendar

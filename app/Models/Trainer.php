@@ -105,7 +105,7 @@ class Trainer extends BaseModel implements EventRegistryInterface
             return $query->where('first_name', 'ILIKE', "%{$search}%")
                 ->orWhere('middle_name', 'ILIKE', "%{$search}%")
                 ->orWhere('last_name', 'ILIKE', "%{$search}%");
-                });
+        });
     }
 
     public function associatedEmployee()

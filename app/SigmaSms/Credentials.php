@@ -3,7 +3,6 @@
 
 namespace App\SigmaSms;
 
-
 use Lcobucci\JWT\Token;
 use Tymon\JWTAuth\JWT;
 
@@ -43,7 +42,7 @@ class Credentials
 
         $token = $this->readToken();
 
-        if($this->isExpired($this->readToken())) {
+        if ($this->isExpired($this->readToken())) {
             return $this->refreshToken();
         }
 

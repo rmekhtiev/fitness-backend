@@ -49,5 +49,4 @@ class Requests extends BaseModel
     {
         return [];
     }
-
 }

@@ -73,7 +73,8 @@ class IssuePolicy extends BasePolicy
      * @param  \App\Models\Issue  $issue
      * @return mixed
      */
-    public function own(User $user, Issue $issue) {
+    public function own(User $user, Issue $issue)
+    {
         return $user->isHallAdmin() && !empty($user->associatedEmployee) && $user->associatedEmployee->hall_id == $issue->hall_id;
     }
 

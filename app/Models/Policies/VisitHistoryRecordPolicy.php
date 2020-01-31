@@ -74,7 +74,8 @@ class VisitHistoryRecordPolicy extends BasePolicy
      * @param  \App\Models\VisitHistoryRecord  $visitHistory
      * @return mixed
      */
-    public function own(User $user, VisitHistoryRecord $visitHistory) {
+    public function own(User $user, VisitHistoryRecord $visitHistory)
+    {
         // @todo
         return true;
     }

@@ -75,7 +75,8 @@ class UserPolicy extends BasePolicy
      * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function own(User $user, User $model) {
+    public function own(User $user, User $model)
+    {
         // @todo
         return true;
     }
