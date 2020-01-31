@@ -21,6 +21,15 @@ include:
     file: '/gitlab-ci/PHPUnit.yml'
   - project: 'internal/templates/instance-template-repository'
     ref: master
+    file: '/gitlab-ci/PHP_CodeSniffer.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/PHPStan.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/phpcs-security-audit.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
     file: '/gitlab-ci/Docker.yml'
 
 before_script:
@@ -61,6 +70,27 @@ test:phpunit:
     DB_DATABASE: $POSTGRES_DB
     DB_USERNAME: $POSTGRES_USER
     DB_PASSWORD: $POSTGRES_PASSWORD
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+code_quality:phpcs:
+  stage: test
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+code_quality:phpstan:
+  stage: test
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+sast:phpcs-secutity-audit:
+  stage: test
   dependencies:
     - install:composer
   needs:
