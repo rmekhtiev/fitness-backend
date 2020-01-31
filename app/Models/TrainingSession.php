@@ -136,7 +136,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     public function scopeHallId(Builder $builder, $hall_id)
     {
         return $builder->whereHas('trainer', function (Builder $builder) use ($hall_id) {
-            return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id){
+            return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id) {
                 return $builder->where('hall_id', $hall_id);
             });
         });

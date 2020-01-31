@@ -72,7 +72,8 @@ class IdentifierPolicy extends BasePolicy
      * @param  \App\Models\Identifier  $identifier
      * @return mixed
      */
-    public function own(User $user, Identifier $identifier) {
+    public function own(User $user, Identifier $identifier)
+    {
         return $user->isOwner() || $user->isHallAdmin();
     }
 

@@ -3,7 +3,6 @@
 
 namespace App\Models;
 
-
 use App\Plummer\Calendarful\Calendar\AccessibleCalendar;
 use Plummer\Calendarful\Event\EventInterface;
 use Plummer\Calendarful\Recurrence\RecurrenceFactory;

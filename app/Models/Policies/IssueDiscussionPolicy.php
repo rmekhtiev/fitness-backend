@@ -72,7 +72,8 @@ class IssueDiscussionPolicy extends BasePolicy
      * @param  \App\Models\IssueDiscussion  $issueDiscussion
      * @return mixed
      */
-    public function own(User $user, IssueDiscussion $issueDiscussion) {
+    public function own(User $user, IssueDiscussion $issueDiscussion)
+    {
         return $user->isHallAdmin();
     }
 

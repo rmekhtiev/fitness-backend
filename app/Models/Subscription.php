@@ -163,15 +163,11 @@ class Subscription extends BaseModel
         ]);
         var_dump($this->subscriable);
 
-        if ($this->update())
-        {
+        if ($this->update()) {
             return $payment->resolve();
         } else {
             $payment->fail();
         }
         return false;
     }
-
-
-
 }

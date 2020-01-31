@@ -73,7 +73,8 @@ class EmployeePolicy extends BasePolicy
      * @param  \App\Models\Employee  $employee
      * @return mixed
      */
-    public function own(User $user, Employee $employee) {
+    public function own(User $user, Employee $employee)
+    {
         // @todo
         return $user->isHallAdmin() && !empty($user->associatedEmployee) && $user->associatedEmployee->hall_id == $employee->hall_id;
     }

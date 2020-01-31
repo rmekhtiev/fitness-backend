@@ -3,7 +3,6 @@
 
 namespace App\FakerRestaurant\Restaurant\ru_RU;
 
-
 class Restaurant extends \FakerRestaurant\Provider\en_US\Restaurant
 {
     protected static $foodNames = [

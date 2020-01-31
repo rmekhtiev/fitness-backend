@@ -66,7 +66,7 @@ class Issue extends BaseModel
     {
         parent::boot();
 
-        self::creating(function(self $issue) {
+        self::creating(function (self $issue) {
             $issue->user()->associate(auth()->user()) ;
         });
     }

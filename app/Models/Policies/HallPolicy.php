@@ -74,7 +74,8 @@ class HallPolicy extends BasePolicy
      * @param  \App\Models\Hall  $hall
      * @return mixed
      */
-    public function own(User $user, Hall $hall) {
+    public function own(User $user, Hall $hall)
+    {
         // @todo
         return true;
     }

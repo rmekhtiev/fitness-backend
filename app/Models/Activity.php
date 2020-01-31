@@ -130,5 +130,4 @@ class Activity extends BaseModel implements ActivityContract
     {
         return [];
     }
-
 }

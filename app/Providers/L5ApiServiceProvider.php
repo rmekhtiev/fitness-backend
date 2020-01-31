@@ -3,7 +3,6 @@
 
 namespace App\Providers;
 
-
 use App\Serializers\ReststateSerializer;
 use Dingo\Api\Facade\API;
 use Dingo\Api\Facade\Route;

@@ -72,7 +72,8 @@ class RequestsPolicy extends BasePolicy
      * @param  \App\Models\Requests  $requests
      * @return mixed
      */
-    public function own(User $user, Requests $requests) {
+    public function own(User $user, Requests $requests)
+    {
         return $user->isOwner() || $user->isHallAdmin();
     }
 

@@ -74,7 +74,8 @@ class BarItemPolicy extends BasePolicy
      * @param  \App\Models\BarItem  $barItem
      * @return mixed
      */
-    public function own(User $user, BarItem $barItem) {
+    public function own(User $user, BarItem $barItem)
+    {
         // @todo
         return true;
     }

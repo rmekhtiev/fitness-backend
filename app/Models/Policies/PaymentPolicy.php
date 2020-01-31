@@ -74,7 +74,8 @@ class PaymentPolicy extends BasePolicy
      * @param  \App\Models\Payment  $payment
      * @return mixed
      */
-    public function own(User $user, Payment $payment) {
+    public function own(User $user, Payment $payment)
+    {
         // @todo
         return true;
     }

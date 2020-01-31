@@ -22,7 +22,7 @@ class RequestsController extends Controller
      */
     public static $transformer = null;
 
-    public function store( Request $request )
+    public function store(Request $request)
     {
         $kek = new Requests();
         $kek->name = $request[0][env('FORM_NAME')];

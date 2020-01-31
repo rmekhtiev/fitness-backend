@@ -47,5 +47,4 @@ class ClientGroup extends BaseModel
     {
         return $this->belongsTo(Group::class, 'group_id');
     }
-
 }

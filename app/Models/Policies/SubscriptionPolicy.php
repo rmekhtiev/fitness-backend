@@ -73,7 +73,8 @@ class SubscriptionPolicy extends BasePolicy
      * @param  \App\Models\Subscription  $subscription
      * @return mixed
      */
-    public function own(User $user, Subscription $subscription) {
+    public function own(User $user, Subscription $subscription)
+    {
         // @todo
         return true;
     }

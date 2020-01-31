@@ -16,5 +16,4 @@ final class ClientStatus extends Enum
     const NOT_ACTIVATED = 'not_activated';
     const EXPIRED = 'expired';
     const NO_SUBSCRIPTION = 'no_subscription';
-
 }

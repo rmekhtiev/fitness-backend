@@ -57,5 +57,4 @@ class ClientController extends Controller
 
         return view('clients.print', ['client' => $resource]);
     }
-
 }
