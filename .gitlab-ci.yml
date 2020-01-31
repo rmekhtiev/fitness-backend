@@ -10,6 +10,11 @@ variables: &global-variables
   CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
   CI_APPLICATION_TAG: $CI_COMMIT_SHA
 
+  POSTGRES_DB: $CI_ENVIRONMENT_SLUG
+  POSTGRES_USER: user
+  POSTGRES_PASSWORD: testing-password
+  POSTGRES_ENABLED: "true"
+
 include:
   - project: 'internal/templates/instance-template-repository'
     ref: master
@@ -46,6 +51,16 @@ install:composer:
 # Run Tests/QA
 test:phpunit:
   stage: test
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: phpunit
+    POSTGRES_USER: user
+    POSTGRES_PASSWORD: testing-password
+    DB_HOST: postgres
+    DB_DATABASE: $POSTGRES_DB
+    DB_USERNAME: $POSTGRES_USER
+    DB_PASSWORD: $POSTGRES_PASSWORD
   dependencies:
     - install:composer
   needs:
