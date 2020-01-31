@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.7'
 
 networks:
   backend:
@@ -6,15 +6,16 @@ networks:
 
 volumes:
   home:
-  mosquitto:
+  postgres:
+    driver: "local"
 
 services:
   app: &app-service
-    image: registry.gitlab.explabs.ru:5005/web-development/pacsman/pacsman-backend:${CURRENT_IMAGES_TAG:-master}
+    image: registry.gitlab.explabs.ru:5005/web-development/fitness/fitness-backend:${CURRENT_IMAGES_TAG:-master}
     build:
       context: .
       dockerfile: Dockerfile
-    restart: on-failure
+    restart: always
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -30,6 +31,9 @@ services:
       - "APP_ENV=local"
       - "APP_DEBUG=true"
       - "APP_LOG_LEVEL=debug"
+      - DB_DATABASE=${POSTGRES_DB}
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - '4001:80'
       - '4002:443'
@@ -44,4 +48,28 @@ services:
       STARTUP_DELAY: 5
     command: 'php /app/artisan queue:work --memory=64'
     ports: []
+
+  postgres:
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - ./db/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - ADMINER_DEFAULT_DB_DRIVER=postgres
+      - ADMINER_DEFAULT_DB_HOST=postgres
+      - ADMINER_DEFAULT_DB_NAME=${POSTGRES_DB}
+      - ADMINER_DESIGN=nette
+      - ADMINER_PLUGINS=tables-filter tinymce
+    ports:
+      - 8080:9000
 
