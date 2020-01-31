@@ -23,14 +23,20 @@ ENV PHPIZE_DEPS \
     file \
     re2c \
     g++ \
-    gcc
+    gcc \
+    freetype-dev \
+    libpng-dev \
+    libjpeg-turbo-dev
 
 # repmanent deps
 ENV PERMANENT_DEPS \
     postgresql-dev \
     gettext-dev \
     icu-dev \
-    libintl
+    libintl \
+    freetype \
+    libpng \
+    libjpeg-turbo
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=roadrunner /usr/bin/rr /usr/bin/rr
@@ -44,6 +50,7 @@ RUN set -xe \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-configure pdo_pgsql \
     && docker-php-ext-configure bcmath --enable-bcmath \
+    && docker-php-ext-configure gd --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir \
     && docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-install -j$(nproc) \
@@ -53,6 +60,7 @@ RUN set -xe \
         gettext \
         opcache \
         bcmath \
+        gd \
         pcntl \
         intl \
     && ( mkdir -p ${OWN_SSL_CERT_DIR} \
