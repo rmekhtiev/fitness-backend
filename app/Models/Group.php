@@ -161,6 +161,6 @@ class Group extends BaseModel implements EventRegistryInterface
 
     public function getUpcomingEventsAttribute()
     {
-        return $this->getUpcomingEvents(now(), now()->addMonth(2));
+        return $this->getUpcomingEvents(now(), now()->addMonths(2));
     }
 }

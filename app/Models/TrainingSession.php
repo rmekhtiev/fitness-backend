@@ -123,7 +123,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
 
     /**
      * @param Builder|self $builder
-     * @param $flag
+     * @param bool $flag
      * @return mixed
      */
     public function scopeActive(Builder $builder, $flag = true)
