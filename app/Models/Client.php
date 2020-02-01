@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use App\Enums\Gender;
 use App\Enums\ClientStatus;
+use App\Enums\Gender;
 use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
+use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Illuminate\Validation\Rule;
 use QrCode;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -48,7 +48,9 @@ class Client extends BaseModel
     ];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = [
@@ -290,7 +292,7 @@ class Client extends BaseModel
     {
         if ($this->activeSubscriptions()->value('frozen_till') >= (today()->modify('-1 day'))) {
             return ClientStatus::FROZEN;
-        } elseif ($this->activeSubscriptions()->value('valid_till') >= today() & $this->activeSubscriptions()->value('issue_date') <= today()) {
+        } elseif ($this->activeSubscriptions()->value('valid_till') >= today() && $this->activeSubscriptions()->value('issue_date') <= today()) { // phpcs:ignore
             return ClientStatus::ACTIVE;
         } elseif ($this->inactiveSubscriptions()->value('issue_date') > today()) {
             return ClientStatus::NOT_ACTIVATED;

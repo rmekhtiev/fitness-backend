@@ -33,7 +33,9 @@ class Group extends BaseModel implements EventRegistryInterface
     ];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -139,8 +141,12 @@ class Group extends BaseModel implements EventRegistryInterface
         return $this->schedules->all();
     }
 
-    public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())
-    {
+    public function getUpcomingEvents(
+        \DateTime $fromDate,
+        \DateTime $toDate,
+        $limit = 200,
+        array $extraFilters = array()
+    ) {
         $recurrenceFactory = new RecurrenceFactory(); // todo
         $recurrenceFactory->addRecurrenceType('daily', Daily::class);
         $recurrenceFactory->addRecurrenceType('weekly', Weekly::class);

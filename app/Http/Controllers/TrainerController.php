@@ -30,7 +30,10 @@ class TrainerController extends Controller
         /** @var Trainer $model */
         $model = new static::$model;
 
-        $resource = $model::with($model::getItemWith())->withCount($model::getItemWithCount())->where($model->getKeyName(), '=', $uuid)->first();
+        $resource = $model::with($model::getItemWith())
+            ->withCount($model::getItemWithCount())
+            ->where($model->getKeyName(), '=', $uuid)
+            ->first();
 
         $fromDate = ($start_date = request()->query('start_date'))
             ? Carbon::parse($start_date)->subDay()

@@ -22,7 +22,9 @@ class Subscription extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -118,7 +120,10 @@ class Subscription extends BaseModel
 
     public function scopeActive(Builder $query)
     {
-        return $query->where('issue_date', '<', today())->where('valid_till', '>', today())->where('frozen_till', '<=', today())->orWhereNull('frozen_till');
+        return $query->where('issue_date', '<', today())
+            ->where('valid_till', '>', today())
+            ->where('frozen_till', '<=', today())
+            ->orWhereNull('frozen_till');
     }
 
     public function scopeExpired(Builder $query)
@@ -159,7 +164,9 @@ class Subscription extends BaseModel
             'cost' => $this->cost,
             'quantity' => 1,
             'method' => $paymentMethod,
-            'hall_id' => optional($this->subscriable)->hall_id ?? optional(auth()->user()->associatedEmployee)->hall_id ?? $this->client->primary_hall_id
+            'hall_id' => optional($this->subscriable)->hall_id
+                ?? optional(auth()->user()->associatedEmployee)->hall_id
+                ?? $this->client->primary_hall_id
         ]);
         var_dump($this->subscriable);
 

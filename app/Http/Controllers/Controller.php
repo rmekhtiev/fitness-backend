@@ -65,10 +65,15 @@ abstract class Controller extends BaseController
         /** @var BaseModel $model */
         $model = new static::$model;
 
-        $resource = $model::with($model::getItemWith())->withCount($model::getItemWithCount())->where($model->getKeyName(), '=', $uuid)->first();
+        $resource = $model::with($model::getItemWith())
+            ->withCount($model::getItemWithCount())
+            ->where($model->getKeyName(), '=', $uuid)
+            ->first();
 
         if (! $resource) {
-            throw new NotFoundHttpException('Resource \'' . class_basename(static::$model) . '\' with given UUID ' . $uuid . ' not found');
+            throw new NotFoundHttpException(
+                'Resource \'' . class_basename(static::$model) . '\' with given UUID ' . $uuid . ' not found'
+            );
         }
 
         $this->authorizeUserAction('view', $resource);
