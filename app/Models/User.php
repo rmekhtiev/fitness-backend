@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -25,7 +26,7 @@ class User extends BaseModel implements
     use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**
-     * @var int Auto increments integer key
+     * @var string Auto increments integer key
      */
     public $primaryKey = 'user_id';
 
@@ -105,14 +106,14 @@ class User extends BaseModel implements
         ];
     }
 
-    /**
-     * User's primary role
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
-     */
     public function primaryRole()
     {
         return $this->belongsTo(Role::class, 'primary_role_id');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
     }
 
     public function associatedEmployee()
@@ -128,16 +129,6 @@ class User extends BaseModel implements
     public function issueDiscussions()
     {
         return $this->hasMany(IssueDiscussion::class);
-    }
-
-    /**
-     * User's secondary roles
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
-     */
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
     }
 
     /**

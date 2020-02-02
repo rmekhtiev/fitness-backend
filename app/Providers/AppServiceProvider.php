@@ -65,7 +65,11 @@ class AppServiceProvider extends ServiceProvider
     protected function registerExceptionHandler()
     {
         $this->app->singleton('api.exception', function ($app) {
-            return new ApiExceptionHandler($app['Illuminate\Contracts\Debug\ExceptionHandler'], Config('api.errorFormat'), Config('api.debug'));
+            return new ApiExceptionHandler(
+                $app['Illuminate\Contracts\Debug\ExceptionHandler'],
+                Config('api.errorFormat'),
+                Config('api.debug')
+            );
         });
     }
 

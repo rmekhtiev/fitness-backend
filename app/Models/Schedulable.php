@@ -54,8 +54,12 @@ trait Schedulable
         return $this->recurringEvents()->get();
     }
 
-    public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())
-    {
+    public function getUpcomingEvents(
+        \DateTime $fromDate,
+        \DateTime $toDate,
+        $limit = 200,
+        array $extraFilters = array()
+    ) {
         $recurrenceFactory = new RecurrenceFactory(); // todo
         $recurrenceFactory->addRecurrenceType('daily', Daily::class);
         $recurrenceFactory->addRecurrenceType('weekly', Weekly::class);
@@ -70,6 +74,6 @@ trait Schedulable
 
     public function getUpcomingEventsAttribute()
     {
-        return $this->getUpcomingEvents(now(), now()->addMonth(2));
+        return $this->getUpcomingEvents(now(), now()->addMonths(2));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models\Policies;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Specialtactics\L5Api\Policies\RestfulModelPolicy;
 
 class BasePolicy extends RestfulModelPolicy
@@ -10,8 +11,8 @@ class BasePolicy extends RestfulModelPolicy
     /**
      * Process 'global' authorisation rules
      *
-     * @param $user
-     * @param $ability
+     * @param Model|User $user
+     * @param string $ability
      * @return bool
      */
     public function before(User $user, $ability)

@@ -59,7 +59,7 @@ class Credentials
     }
 
     /**
-     * @param $token
+     * @param string $token
      * @return object
      */
     protected function decodeToken($token)

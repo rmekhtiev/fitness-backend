@@ -22,7 +22,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  * Welcome route - link to any public API documentation here
  */
 Route::get('/', function () {
-    echo 'Welcome to our API';
+    return 'Welcome to our API';
 });
 
 Route::post('webhook', 'RequestsController@store');

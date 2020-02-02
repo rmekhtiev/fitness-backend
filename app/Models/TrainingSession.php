@@ -25,7 +25,9 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     ];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -121,7 +123,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
 
     /**
      * @param Builder|self $builder
-     * @param $flag
+     * @param bool $flag
      * @return mixed
      */
     public function scopeActive(Builder $builder, $flag = true)
