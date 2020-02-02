@@ -16,6 +16,12 @@ variables: &global-variables
   POSTGRES_PASSWORD: testing-password
   POSTGRES_ENABLED: "true"
 
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - vendor/
+    - public/
+
 include:
   - template: Dependency-Scanning.gitlab-ci.yml
   - template: License-Management.gitlab-ci.yml

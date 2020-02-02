@@ -3,21 +3,19 @@
 /public/storage
 /storage/*.key
 /vendor
-/.idea
-/.vscode
-/.vagrant
-
+.env
+.env.backup
+.phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
 
-.env
-composer.lock
+.idea/
 
-.phpstorm*
-_ide_helper.php
-_ide_helper_**.php
+/_ide_*.php
+/.*.meta.php
 
-# mac os
-.DS_Store
+/gl-*-report.json
+
+/rr

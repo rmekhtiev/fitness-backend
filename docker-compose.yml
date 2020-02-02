@@ -11,7 +11,7 @@ volumes:
 
 services:
   app: &app-service
-    image: registry.gitlab.explabs.ru:5005/web-development/fitness/fitness-backend:${CURRENT_IMAGES_TAG:-master}
+    image: registry.gitlab.explabs.ru:5005/web-development/fitness/fitness-backend:${CURRENT_IMAGES_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile
@@ -31,6 +31,8 @@ services:
       - "APP_ENV=local"
       - "APP_DEBUG=true"
       - "APP_LOG_LEVEL=debug"
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
       - DB_DATABASE=${POSTGRES_DB}
       - DB_USERNAME=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
@@ -58,6 +60,10 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+    - 54320:5432
+    networks:
+      - backend
 
   adminer:
     image: adminer:latest
@@ -72,4 +78,6 @@ services:
       - ADMINER_PLUGINS=tables-filter tinymce
     ports:
       - 8080:9000
+    networks:
+      - backend
 
