@@ -42,6 +42,9 @@ include:
   - project: 'internal/templates/instance-template-repository'
     ref: master
     file: '/gitlab-ci/Docker.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/Sentry.yml'
 
 before_script:
   - touch database/database.sqlite
@@ -113,14 +116,6 @@ build:container:
   dependencies:
     - install:composer
 
-dependency_scanning:
-  stage: security
-
-container_scanning:
-  stage: security
-  needs:
-    - build:container
-
 # Release docker image
 release:container:latest:
   stage: release
@@ -131,3 +126,16 @@ release:container:tags:
   stage: release
   needs:
     - build:container
+
+container_scanning:
+  stage: security
+  needs:
+    - build:container
+
+dependency_scanning:
+  stage: security
+
+release:sentry:
+  stage: release
+  variables:
+    VERSION: $CI_COMMIT_TAG
