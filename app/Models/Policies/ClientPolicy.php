@@ -61,6 +61,7 @@ class ClientPolicy extends BasePolicy
      * @param Client $client
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Client $client)
     {
         return $user->isOwner();

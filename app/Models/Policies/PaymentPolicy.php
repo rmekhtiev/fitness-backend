@@ -63,6 +63,7 @@ class PaymentPolicy extends BasePolicy
      * @param Payment $payment
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Payment $payment)
     {
         return $this->own($user, $payment);

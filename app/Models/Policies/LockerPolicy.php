@@ -61,6 +61,7 @@ class LockerPolicy extends BasePolicy
      * @param Locker $locker
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Locker $locker)
     {
         return $this->own($user, $locker);

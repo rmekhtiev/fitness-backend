@@ -63,6 +63,7 @@ class VisitHistoryRecordPolicy extends BasePolicy
      * @param VisitHistoryRecord $visitHistory
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, VisitHistoryRecord $visitHistory)
     {
         return $this->own($user, $visitHistory);

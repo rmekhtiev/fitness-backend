@@ -61,6 +61,7 @@ class IdentifierPolicy extends BasePolicy
      * @param Identifier $identifier
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Identifier $identifier)
     {
         return $this->own($user, $identifier);

@@ -61,6 +61,7 @@ class RequestsPolicy extends BasePolicy
      * @param Requests $requests
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Requests $requests)
     {
         return $this->own($user, $requests);

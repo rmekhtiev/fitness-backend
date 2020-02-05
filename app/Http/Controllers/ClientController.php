@@ -11,29 +11,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClientController extends Controller
 {
-    /**
-     * @var BaseModel The primary model associated with this controller
-     */
+    /** @var string $model */
     public static $model = Client::class;
 
-    /**
-     * @var BaseModel The parent model of the model, in the case of a child rest controller
-     */
     public static $parentModel = null;
 
-    /**
-     * @var null|BaseTransformer The transformer this controller should use, if overriding the model & default
-     */
     public static $transformer = null;
 
     public function qrcode($uuid)
     {
-        /** @var BaseModel $model */
-        $model = new static::$model;
+        $modelInstance = new static::$model;
 
-        $resource = $model::with($model::getItemWith())
-            ->withCount($model::getItemWithCount())
-            ->where($model->getKeyName(), '=', $uuid)
+        /** @var BaseModel $modelInstance */
+        $resource = $modelInstance::with($modelInstance::getItemWith())
+            ->withCount($modelInstance::getItemWithCount())
+            ->where($modelInstance->getKeyName(), '=', $uuid)
             ->first();
 
         if (!$resource) {
@@ -49,12 +41,12 @@ class ClientController extends Controller
 
     public function printCard($uuid)
     {
-        /** @var BaseModel $model */
-        $model = new static::$model;
+        $modelInstance = new static::$model;
 
-        $resource = $model::with($model::getItemWith())
-            ->withCount($model::getItemWithCount())
-            ->where($model->getKeyName(), '=', $uuid)
+        /** @var BaseModel $modelInstance */
+        $resource = $modelInstance::with($modelInstance::getItemWith())
+            ->withCount($modelInstance::getItemWithCount())
+            ->where($modelInstance->getKeyName(), '=', $uuid)
             ->first();
 
         if (!$resource) {

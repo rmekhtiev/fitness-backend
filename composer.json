@@ -104,9 +104,8 @@
             "@phpstan"
         ],
         "lintfix": "./vendor/bin/phpcbf",
-        "phpcs-security-audit": "./vendor/bin/phpcs --standard=phpcs-security-audit.xml ",
+        "phpcs-security-audit": "./vendor/bin/phpcs --standard=phpcs-security-audit.xml",
         "audit": [
-            "@phpstan",
             "@phpcs-security-audit"
         ],
         "test": [

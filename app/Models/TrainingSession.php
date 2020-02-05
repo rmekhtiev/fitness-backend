@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Plummer\Calendarful\Event\EventRegistryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -105,7 +107,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
 
     /**
      * @param Builder $query
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      */
     public function scopeAfter(Builder $query, $value)
     {
@@ -114,7 +116,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
 
     /**
      * @param Builder $query
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      */
     public function scopeBefore(Builder $query, $value)
     {
@@ -122,7 +124,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     }
 
     /**
-     * @param Builder|self $builder
+     * @param Builder $builder
      * @param bool $flag
      * @return mixed
      */
@@ -145,8 +147,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     }
 
     /**
-     * @param Builder|self $builder
-     * @param $flag
+     * @param Builder $builder
+     * @param bool $flag
      * @return mixed
      */
     public function scopeSold(Builder $builder, $flag = true)
@@ -174,7 +176,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     }
 
     /**
-     * @return Builder
+     * @return MorphMany
      */
     public function pastEvents()
     {

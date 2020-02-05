@@ -61,6 +61,7 @@ class EmployeePolicy extends BasePolicy
      * @param Employee $employee
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Employee $employee)
     {
         return $user->isOwner();

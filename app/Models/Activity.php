@@ -6,6 +6,7 @@ use App\Transformers\BaseTransformer;
 use Arr;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
 use Spatie\Activitylog\Contracts\Activity as ActivityContract;
@@ -70,10 +71,6 @@ class Activity extends BaseModel implements ActivityContract
 
     public function subject(): MorphTo
     {
-        if (config('activitylog.subject_returns_soft_deleted_models')) {
-            return $this->morphTo()->withTrashed();
-        }
-
         return $this->morphTo();
     }
 

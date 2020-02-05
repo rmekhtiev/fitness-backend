@@ -11,7 +11,7 @@ class BasePolicy extends RestfulModelPolicy
     /**
      * Process 'global' authorisation rules
      *
-     * @param Model|User $user
+     * @param User $user
      * @param string $ability
      * @return bool
      */

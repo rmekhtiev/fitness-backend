@@ -63,6 +63,7 @@ class GroupPolicy extends BasePolicy
      * @param Group $group
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Group $group)
     {
         return $this->own($user, $group);
