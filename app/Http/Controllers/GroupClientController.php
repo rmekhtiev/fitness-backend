@@ -31,7 +31,9 @@ class GroupClientController extends Controller
         /** @var Group $resource */
         $resource = $parentModelInstance->where($parentModelInstance->getKeyName(), '=', $uuid)->firstOrFail();
 
-        $query = $resource->clients()->with($modelInstance::getCollectionWith())->withCount($modelInstance::getCollectionWithCount());
+        $query = $resource->clients()
+            ->with($modelInstance::getCollectionWith())
+            ->withCount($modelInstance::getCollectionWithCount());
 
         $this->qualifyCollectionQuery($query);
 
