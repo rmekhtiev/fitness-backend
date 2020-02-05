@@ -33,9 +33,9 @@ abstract class Controller extends BaseController
     {
         $this->authorizeUserAction('viewAll');
 
-        /** @var BaseModel $modelInstance */
         $modelInstance = new static::$model;
 
+        /** @var BaseModel $modelInstance */
         $query = $modelInstance::with($modelInstance::getCollectionWith())
             ->withCount($modelInstance::getCollectionWithCount());
 
@@ -71,9 +71,9 @@ abstract class Controller extends BaseController
      */
     public function get($uuid)
     {
-        /** @var BaseModel $model */
         $model = new static::$model;
 
+        /** @var BaseModel $model */
         $resource = $model::with($model::getItemWith())
             ->withCount($model::getItemWithCount())
             ->where($model->getKeyName(), '=', $uuid)

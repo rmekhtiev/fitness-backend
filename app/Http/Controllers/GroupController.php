@@ -16,9 +16,9 @@ class GroupController extends Controller
 
     public function events($uuid)
     {
-        /** @var Group $modelInstance */
         $modelInstance = new static::$model;
 
+        /** @var Group $modelInstance */
         $resource = $modelInstance::with($modelInstance::getItemWith())
             ->withCount($modelInstance::getItemWithCount())
             ->where($modelInstance->getKeyName(), '=', $uuid)

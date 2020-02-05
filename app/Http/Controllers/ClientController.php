@@ -20,9 +20,9 @@ class ClientController extends Controller
 
     public function qrcode($uuid)
     {
-        /** @var BaseModel $modelInstance */
         $modelInstance = new static::$model;
 
+        /** @var BaseModel $modelInstance */
         $resource = $modelInstance::with($modelInstance::getItemWith())
             ->withCount($modelInstance::getItemWithCount())
             ->where($modelInstance->getKeyName(), '=', $uuid)
@@ -41,9 +41,9 @@ class ClientController extends Controller
 
     public function printCard($uuid)
     {
-        /** @var BaseModel $modelInstance */
         $modelInstance = new static::$model;
 
+        /** @var BaseModel $modelInstance */
         $resource = $modelInstance::with($modelInstance::getItemWith())
             ->withCount($modelInstance::getItemWithCount())
             ->where($modelInstance->getKeyName(), '=', $uuid)
