@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -16,6 +17,14 @@ abstract class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
+     * Specify the model that you want to be associated with this controller. This is the primary model that
+     * the controller deals with
+     *
+     * @var string $model
+     */
+    public static $model = null;
+
+    /**
      * Request to retrieve a collection of all items of this resource
      *
      * @return \Dingo\Api\Http\Response
@@ -24,23 +33,24 @@ abstract class Controller extends BaseController
     {
         $this->authorizeUserAction('viewAll');
 
-        /** @var BaseModel $model */
-        $model = new static::$model;
+        /** @var BaseModel $modelInstance */
+        $modelInstance = new static::$model;
 
-        $query = $model::with($model::getCollectionWith())->withCount($model::getCollectionWithCount());
+        $query = $modelInstance::with($modelInstance::getCollectionWith())
+            ->withCount($modelInstance::getCollectionWithCount());
 
         $this->qualifyCollectionQuery($query);
 
         $query = QueryBuilder::for($query)
-            ->defaultSort($model::getDefaultSorts())
-            ->allowedSorts($model::getAllowedSorts())
-            ->allowedAppends($model::getAllowedAppends())
-            ->allowedFields($model::getAllowedFields())
-            ->allowedIncludes($model::getAllowedIncludes())
-            ->allowedFilters($model::getAllowedFilters());
+            ->defaultSort($modelInstance::getDefaultSorts())
+            ->allowedSorts($modelInstance::getAllowedSorts())
+            ->allowedAppends($modelInstance::getAllowedAppends())
+            ->allowedFields($modelInstance::getAllowedFields())
+            ->allowedIncludes($modelInstance::getAllowedIncludes())
+            ->allowedFilters($modelInstance::getAllowedFilters());
 
         // Handle pagination, if applicable
-        $perPage = request('per_page') ?? $model->getPerPage();
+        $perPage = request('per_page') ?? $modelInstance->getPerPage();
         if ($perPage) {
             $paginator = $query->paginate($perPage);
 
@@ -61,7 +71,6 @@ abstract class Controller extends BaseController
      */
     public function get($uuid)
     {
-
         /** @var BaseModel $model */
         $model = new static::$model;
 

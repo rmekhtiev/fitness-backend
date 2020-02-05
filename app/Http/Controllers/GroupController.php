@@ -8,29 +8,20 @@ use App\Models\Group;
 
 class GroupController extends Controller
 {
-    /**
-     * @var BaseModel The primary model associated with this controller
-     */
     public static $model = Group::class;
 
-    /**
-     * @var BaseModel The parent model of the model, in the case of a child rest controller
-     */
     public static $parentModel = null;
 
-    /**
-     * @var null|BaseTransformer The transformer this controller should use, if overriding the model & default
-     */
     public static $transformer = null;
 
     public function events($uuid)
     {
-        /** @var Group $model */
-        $model = new static::$model;
+        /** @var Group $modelInstance */
+        $modelInstance = new static::$model;
 
-        $resource = $model::with($model::getItemWith())
-            ->withCount($model::getItemWithCount())
-            ->where($model->getKeyName(), '=', $uuid)
+        $resource = $modelInstance::with($modelInstance::getItemWith())
+            ->withCount($modelInstance::getItemWithCount())
+            ->where($modelInstance->getKeyName(), '=', $uuid)
             ->first();
 
         $fromDate = ($start_date = request()->query('start_date'))

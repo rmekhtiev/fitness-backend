@@ -2,8 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Specialtactics\L5Api\Models\RestfulModel;
 
+/**
+ * @mixin \Eloquent
+ * @mixin Builder
+ */
 class BaseModel extends RestfulModel
 {
     /**
@@ -53,11 +58,7 @@ class BaseModel extends RestfulModel
      */
     public static function getItemWithCount()
     {
-        if (is_null(static::$localWithCount)) {
-            return static::$itemWithCount;
-        } else {
-            return static::$localWithCount;
-        }
+        return static::$itemWithCount;
     }
 
     /**
@@ -69,14 +70,10 @@ class BaseModel extends RestfulModel
      */
     public static function getCollectionWithCount()
     {
-        if (is_null(static::$localWithCount)) {
-            if (!is_null(static::$collectionWithCount)) {
-                return static::$collectionWithCount;
-            } else {
-                return static::$itemWithCount;
-            }
+        if (!is_null(static::$collectionWithCount)) {
+            return static::$collectionWithCount;
         } else {
-            return static::$localWithCount;
+            return static::$itemWithCount;
         }
     }
 

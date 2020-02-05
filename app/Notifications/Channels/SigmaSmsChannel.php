@@ -28,7 +28,7 @@ class SigmaSmsChannel
      * Send the given notification.
      *
      * @param mixed $notifiable
-     * @param \Illuminate\Notifications\Notification $notification
+     * @param Notification $notification
      */
     public function send($notifiable, Notification $notification)
     {
