@@ -63,6 +63,7 @@ class BarItemPolicy extends BasePolicy
      * @param BarItem $barItem
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, BarItem $barItem)
     {
         return $this->own($user, $barItem);

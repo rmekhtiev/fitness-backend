@@ -63,7 +63,7 @@ class HallPolicy extends BasePolicy
      * @param Hall $hall
      * @return mixed
      */
-    public function delete(User $user, Hall $hall)
+    public function delete(User $user, Hall $hall) // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     {
         return $this->own($user, $hall);
     }

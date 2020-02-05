@@ -74,7 +74,7 @@ class GroupClientController extends Controller
         return $this->response->collection($group->clients, $this->getTransformer());
     }
 
-    public function delete($parentUuid)
+    public function delete($parentUuid) // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     {
         $args = func_get_args();
 

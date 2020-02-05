@@ -61,6 +61,7 @@ class TrainerPolicy extends BasePolicy
      * @param Trainer $trainer
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Trainer $trainer)
     {
         return $user->isOwner();

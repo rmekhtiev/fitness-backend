@@ -61,6 +61,7 @@ class IssueDiscussionPolicy extends BasePolicy
      * @param IssueDiscussion $issueDiscussion
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, IssueDiscussion $issueDiscussion)
     {
         return $user->isOwner();

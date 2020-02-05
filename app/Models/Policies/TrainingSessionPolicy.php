@@ -62,6 +62,7 @@ class TrainingSessionPolicy extends BasePolicy
      * @param  \App\Models\TrainingSession  $trainingSession
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, TrainingSession $trainingSession)
     {
         return $this->own($user, $trainingSession);

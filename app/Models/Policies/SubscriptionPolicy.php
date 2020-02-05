@@ -62,6 +62,7 @@ class SubscriptionPolicy extends BasePolicy
      * @param Subscription $subscription
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, Subscription $subscription)
     {
         return $user->isOwner() || $user->isHallAdmin();

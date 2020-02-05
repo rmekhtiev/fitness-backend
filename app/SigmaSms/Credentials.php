@@ -36,7 +36,7 @@ class Credentials
      */
     public function token()
     {
-        if (!file_exists($this->jwtFilename)) {
+        if (!file_exists($this->jwtFilename)) { // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
             return $this->refreshToken();
         }
 
@@ -75,6 +75,7 @@ class Credentials
 
     protected function readToken()
     {
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
         return file_get_contents($this->jwtFilename, true);
     }
 
@@ -97,6 +98,7 @@ class Credentials
         $token = $response->token;
 
         if ($persist) {
+            // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
             file_put_contents($this->jwtFilename, $token);
         }
 

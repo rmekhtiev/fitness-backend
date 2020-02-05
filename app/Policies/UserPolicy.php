@@ -62,7 +62,7 @@ class UserPolicy extends BasePolicy
      * @param User $model
      * @return mixed
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user, User $model) // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     {
         return $this->own($user, $model);
     }
