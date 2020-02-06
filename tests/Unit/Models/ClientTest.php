@@ -4,10 +4,12 @@ namespace Tests\Unit\Models;
 
 use App\Enums\ClientStatus;
 use App\Models\Client;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
+    use RefreshDatabase;
     use CreatesClients;
 
     public function testClientWithFrozenSubscriptionsStatus()
