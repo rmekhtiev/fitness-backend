@@ -292,7 +292,8 @@ class Client extends BaseModel
     {
         if ($this->activeSubscriptions()->value('frozen_till') >= (today()->modify('-1 day'))) {
             return ClientStatus::FROZEN;
-        } elseif ($this->activeSubscriptions()->value('valid_till') >= today() && $this->activeSubscriptions()->value('issue_date') <= today()) { // phpcs:ignore
+        } elseif ($this->activeSubscriptions()->value('valid_till') >= today()
+            && $this->activeSubscriptions()->value('issue_date') <= today()) {
             return ClientStatus::ACTIVE;
         } elseif ($this->inactiveSubscriptions()->value('issue_date') > today()) {
             return ClientStatus::NOT_ACTIVATED;
