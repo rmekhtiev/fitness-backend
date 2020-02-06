@@ -9,7 +9,6 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <!--
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
@@ -17,7 +16,6 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
-        -->
 
         <testsuite name="API">
             <directory suffix="Test.php">./tests/Api</directory>
