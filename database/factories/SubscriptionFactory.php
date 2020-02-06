@@ -28,3 +28,10 @@ $factory->state(Subscription::class, 'not_activated', function (Faker $faker) {
         'valid_till' => $faker->dateTimeBetween('+25 days', '+45 days'),
     ];
 });
+
+$factory->state(Subscription::class, 'expired', function (Faker $faker) {
+    return [
+        'issue_date' => $faker->dateTimeBetween('-50 days', '-20 days'),
+        'valid_till' => $faker->dateTimeBetween('-15 days', '-5 days'),
+    ];
+});

@@ -22,6 +22,17 @@ trait CreatesClients
      * @param int $num Desired amount of items
      * @return Collection
      */
+    public function createActiveClients($num = 1) {
+        return $this->createClient($num)
+            ->each(function (Client $client) {
+                $client->subscriptions()->save(factory(Subscription::class)->make());
+            });
+    }
+
+    /**
+     * @param int $num Desired amount of items
+     * @return Collection
+     */
     public function createFrozenClients($num = 1) {
         return $this->createClient($num)
             ->each(function (Client $client) {
@@ -37,6 +48,17 @@ trait CreatesClients
         return $this->createClient($num)
             ->each(function (Client $client) {
                 $client->subscriptions()->save(factory(Subscription::class)->states('not_activated')->make());
+            });
+    }
+
+    /**
+     * @param int $num Desired amount of items
+     * @return Collection
+     */
+    public function createExpiredClients($num = 1) {
+        return $this->createClient($num)
+            ->each(function (Client $client) {
+                $client->subscriptions()->save(factory(Subscription::class)->states('expired')->make());
             });
     }
 }
