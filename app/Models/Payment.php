@@ -56,7 +56,9 @@ class Payment extends BaseModel
      *
      * @return array Rules
      */
-    protected $appends = [];
+    protected $appends = [
+        'total',
+    ];
 
     public function getValidationRules()
     {
@@ -103,6 +105,11 @@ class Payment extends BaseModel
         return $this->morphTo();
     }
 
+    public function hall()
+    {
+        return $this->belongsTo(Hall::class, 'hall_id', 'hall_id');
+    }
+
     public function resolve($status = PaymentStatus::SUCCESS)
     {
         $this->status = $status;
@@ -113,5 +120,9 @@ class Payment extends BaseModel
     public function fail()
     {
         return $this->resolve(PaymentStatus::FAILED);
+    }
+
+    public function getTotalAttribute() {
+        return ($this->quantity * $this->cost) - $this->discount;
     }
 }

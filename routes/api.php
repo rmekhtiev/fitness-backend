@@ -125,6 +125,8 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\HallController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\HallController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\HallController@delete');
+
+            $api->get('/{uuid}/stats', 'App\Http\Controllers\HallStatisticsController@get');
         });
 
         /*

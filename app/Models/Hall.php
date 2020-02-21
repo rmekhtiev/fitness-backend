@@ -102,6 +102,11 @@ class Hall extends BaseModel
         return $this->hasMany(Issue::class, 'hall_id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'hall_id');
+    }
+
     public function getLockersCountFreeAttribute()
     {
         $this->loadMissing('lockers');
