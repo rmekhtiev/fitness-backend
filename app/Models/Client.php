@@ -257,6 +257,21 @@ class Client extends BaseModel
         return $this->belongsTo(TrainingSession::class, 'client_id', 'client_id');
     }
 
+    public function getFirstNameAttribute()
+    {
+        return mb_convert_case($this->attributes['first_name'], MB_CASE_TITLE);
+    }
+
+    public function getMiddleNameAttribute()
+    {
+        return mb_convert_case($this->attributes['middle_name'], MB_CASE_TITLE);
+    }
+
+    public function getLastNameAttribute()
+    {
+        return mb_convert_case($this->attributes['last_name'], MB_CASE_TITLE);
+    }
+
     /**
      * @return mixed|string
      */

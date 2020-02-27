@@ -29,12 +29,14 @@ class HallStatisticsTransformer extends BaseTransformer
                             return $carry + $payment->total;
                         });
                     });
-            })
-            ->transform(function (Collection $collection) {
-                return $collection->put('total', $collection->sum());
             });
 
-        $response->payments->put('total', collect(PaymentMethod::getValues())->push('total')->mapWithKeys(function($type) use ($response) {
+        $response->payments = $response->payments->transform(function (Collection $collection) {
+            return $collection->put('total', $collection->sum());
+        });
+
+        $allPaymentMethods = collect(PaymentMethod::getValues())->push('total');
+        $response->payments->put('total', $allPaymentMethods->mapWithKeys(function ($type) use ($response) {
             return [$type => $response->payments->sum($type)];
         }));
 
