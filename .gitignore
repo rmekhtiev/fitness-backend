@@ -19,3 +19,6 @@ yarn-error.log
 /gl-*-report.json
 
 /rr
+
+/db
+dump-*.sql
