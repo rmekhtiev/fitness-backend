@@ -31,6 +31,7 @@
         "sentry/sentry-laravel": "1.5.0",
         "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-activitylog": "^3.8",
+        "spatie/laravel-collection-macros": "^6.0",
         "spatie/laravel-query-builder": "^2.0",
         "specialtactics/l5-api": "~1"
     },

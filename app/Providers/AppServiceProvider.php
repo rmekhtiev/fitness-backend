@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Exceptions\ApiExceptionHandler;
 use App\Models\BarItem;
 use App\Models\Client;
 use App\Models\Employee;
@@ -16,9 +17,8 @@ use App\Models\Subscription;
 use App\Models\TrainingSession;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
-use App\Exceptions\ApiExceptionHandler;
-use Config;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +44,16 @@ class AppServiceProvider extends ServiceProvider
             'subscriptions' => Subscription::class,
             'training-sessions' => TrainingSession::class,
         ]);
+
+        Collection::macro('ksort', function () {
+            //macros callbacks are bound to collection so we can safely access
+            // protected Collection::items
+            ksort($this->items);
+
+            return $this;
+            //to return a new instance
+            //return collect($this->items);
+        });
     }
 
     /**
