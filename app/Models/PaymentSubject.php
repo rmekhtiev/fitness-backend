@@ -3,7 +3,6 @@
 
 namespace App\Models;
 
-
 use App\Enums\PaymentMethod;
 
 interface PaymentSubject

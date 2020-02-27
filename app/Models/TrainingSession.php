@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Enums\PaymentMethod;
 use App\Transformers\BaseTransformer;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Plummer\Calendarful\Event\EventRegistryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -25,7 +27,9 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     ];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -103,7 +107,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
 
     /**
      * @param Builder $query
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      */
     public function scopeAfter(Builder $query, $value)
     {
@@ -112,7 +116,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
 
     /**
      * @param Builder $query
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      */
     public function scopeBefore(Builder $query, $value)
     {
@@ -120,8 +124,8 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     }
 
     /**
-     * @param Builder|self $builder
-     * @param $flag
+     * @param Builder $builder
+     * @param bool $flag
      * @return mixed
      */
     public function scopeActive(Builder $builder, $flag = true)
@@ -136,15 +140,15 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     public function scopeHallId(Builder $builder, $hall_id)
     {
         return $builder->whereHas('trainer', function (Builder $builder) use ($hall_id) {
-            return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id){
+            return $builder->whereHas('associatedEmployee', function (Builder $builder) use ($hall_id) {
                 return $builder->where('hall_id', $hall_id);
             });
         });
     }
 
     /**
-     * @param Builder|self $builder
-     * @param $flag
+     * @param Builder $builder
+     * @param bool $flag
      * @return mixed
      */
     public function scopeSold(Builder $builder, $flag = true)
@@ -172,7 +176,7 @@ class TrainingSession extends BaseModel implements EventRegistryInterface
     }
 
     /**
-     * @return Builder
+     * @return MorphMany
      */
     public function pastEvents()
     {

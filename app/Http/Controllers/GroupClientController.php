@@ -10,19 +10,10 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GroupClientController extends Controller
 {
-    /**
-     * @var BaseModel The primary model associated with this controller
-     */
     public static $model = Client::class;
 
-    /**
-     * @var BaseModel The parent model of the model, in the case of a child rest controller
-     */
     public static $parentModel = Group::class;
 
-    /**
-     * @var null|BaseTransformer The transformer this controller should use, if overriding the model & default
-     */
     public static $transformer = null;
 
     public function getAll()
@@ -31,21 +22,23 @@ class GroupClientController extends Controller
 
         $this->authorizeUserAction('viewAll');
 
-        /** @var BaseModel|Client $model */
-        $model = new static::$model;
+        /** @var BaseModel|Client $modelInstance */
+        $modelInstance = new static::$model;
 
-        /** @var BaseModel|Group $parentModel */
-        $parentModel = new static::$parentModel;
+        /** @var BaseModel|Group $parentModelInstance */
+        $parentModelInstance = new static::$parentModel;
 
         /** @var Group $resource */
-        $resource = $parentModel->where($parentModel->getKeyName(), '=', $uuid)->firstOrFail();
+        $resource = $parentModelInstance->where($parentModelInstance->getKeyName(), '=', $uuid)->firstOrFail();
 
-        $query = $resource->clients()->with($model::getCollectionWith())->withCount($model::getCollectionWithCount());
+        $query = $resource->clients()
+            ->with($modelInstance::getCollectionWith())
+            ->withCount($modelInstance::getCollectionWithCount());
 
         $this->qualifyCollectionQuery($query);
 
         // Handle pagination, if applicable
-        $perPage = $model->getPerPage();
+        $perPage = $modelInstance->getPerPage();
         if ($perPage) {
             $paginator = $query->paginate($perPage);
 
@@ -63,42 +56,42 @@ class GroupClientController extends Controller
 
         $uuid = $args[2]; // todo: лучше, чем было, но все равно костыль
 
-        /** @var BaseModel|Client $model */
-        $model = new static::$model;
+        /** @var BaseModel|Client $modelInstance */
+        $modelInstance = new static::$model;
 
-        /** @var BaseModel|Group $parentModel */
-        $parentModel = new static::$parentModel;
+        /** @var BaseModel|Group $parentModelInstance */
+        $parentModelInstance = new static::$parentModel;
 
         /** @var Group $group */
-        $group = $parentModel->where($parentModel->getKeyName(), '=', $parentUuid)->firstOrFail();
+        $group = $parentModelInstance->where($parentModelInstance->getKeyName(), '=', $parentUuid)->firstOrFail();
 
         $this->authorizeUserAction('update', $group);
 
-        $client = $model->findOrFail($uuid);
+        $client = $modelInstance->findOrFail($uuid);
 
         $group->clients()->attach($client);
 
         return $this->response->collection($group->clients, $this->getTransformer());
     }
 
-    public function delete($parentUuid)
+    public function delete($parentUuid) // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     {
         $args = func_get_args();
 
         $uuid = $args[1]; // todo: лучше, чем было, но все равно костыль
 
-        /** @var BaseModel|Client $model */
-        $model = new static::$model;
+        /** @var BaseModel|Client $modelInstance */
+        $modelInstance = new static::$model;
 
-        /** @var BaseModel|Group $parentModel */
-        $parentModel = new static::$parentModel;
+        /** @var BaseModel|Group $parentModelInstance */
+        $parentModelInstance = new static::$parentModel;
 
         /** @var Group $group */
-        $group = $parentModel->where($parentModel->getKeyName(), '=', $parentUuid)->firstOrFail();
+        $group = $parentModelInstance->where($parentModelInstance->getKeyName(), '=', $parentUuid)->firstOrFail();
 
         $this->authorizeUserAction('update', $group);
 
-        $client = $model->findOrFail($uuid);
+        $client = $modelInstance->findOrFail($uuid);
 
         $group->clients()->detach($client);
 

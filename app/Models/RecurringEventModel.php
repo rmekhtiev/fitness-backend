@@ -3,12 +3,11 @@
 
 namespace App\Models;
 
-
 use Plummer\Calendarful\Event\RecurrentEventInterface;
 
 /**
- * @property mixed recurrence_type
- * @property mixed recurrence_until
+ * @property mixed $recurrence_type
+ * @property mixed $recurrence_until
  */
 abstract class RecurringEventModel extends EventModel implements RecurrentEventInterface
 {

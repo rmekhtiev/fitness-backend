@@ -25,7 +25,9 @@ class LockerClaim extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -143,7 +145,8 @@ class LockerClaim extends BaseModel
         return $this->belongsTo(Locker::class, 'locker_id');
     }
 
-    public function getDurationAttribute() {
+    public function getDurationAttribute()
+    {
         return $this->claim_end->diffInDays($this->claim_start);
     }
 }

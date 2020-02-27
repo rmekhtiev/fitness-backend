@@ -3,12 +3,11 @@
 
 namespace App\Models;
 
-
 use Plummer\Calendarful\Event\EventInterface;
 
 /**
- * @property \DateTime start_date
- * @property \DateTime end_date
+ * @property \DateTime $start_date
+ * @property \DateTime $end_date
  */
 abstract class EventModel extends BaseModel implements EventInterface
 {
@@ -94,7 +93,7 @@ abstract class EventModel extends BaseModel implements EventInterface
      * place. When the start date of the parent recurring event is updated, the occurrence
      * date of the overriding event should also be updated.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getOccurrenceDate()
     {

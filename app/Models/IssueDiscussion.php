@@ -19,7 +19,9 @@ class IssueDiscussion extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -85,8 +87,8 @@ class IssueDiscussion extends BaseModel
         return $this->belongsTo(Issue::class, 'issue_id');
     }
 
-    public function getUserNameAttribute() {
+    public function getUserNameAttribute()
+    {
         return $this->user->name;
     }
-
 }

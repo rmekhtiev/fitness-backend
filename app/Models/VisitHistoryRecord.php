@@ -19,7 +19,9 @@ class VisitHistoryRecord extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -85,5 +87,4 @@ class VisitHistoryRecord extends BaseModel
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
-
 }

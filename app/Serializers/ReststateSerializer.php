@@ -3,7 +3,6 @@
 
 namespace App\Serializers;
 
-
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\Serializer;

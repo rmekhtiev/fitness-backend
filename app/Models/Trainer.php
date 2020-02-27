@@ -28,7 +28,9 @@ class Trainer extends BaseModel implements EventRegistryInterface
     ];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -105,7 +107,7 @@ class Trainer extends BaseModel implements EventRegistryInterface
             return $query->where('first_name', 'ILIKE', "%{$search}%")
                 ->orWhere('middle_name', 'ILIKE', "%{$search}%")
                 ->orWhere('last_name', 'ILIKE', "%{$search}%");
-                });
+        });
     }
 
     public function associatedEmployee()
@@ -152,8 +154,12 @@ class Trainer extends BaseModel implements EventRegistryInterface
         return $this->recurringEvents->all();
     }
 
-    public function getUpcomingEvents(\DateTime $fromDate, \DateTime $toDate, $limit = 200, array $extraFilters = array())
-    {
+    public function getUpcomingEvents(
+        \DateTime $fromDate,
+        \DateTime $toDate,
+        $limit = 200,
+        array $extraFilters = array()
+    ) {
         $recurrenceFactory = new RecurrenceFactory(); // todo
         $recurrenceFactory->addRecurrenceType('daily', Daily::class);
         $recurrenceFactory->addRecurrenceType('weekly', Weekly::class);
@@ -191,8 +197,9 @@ class Trainer extends BaseModel implements EventRegistryInterface
      */
     public function getFullNameAttribute()
     {
-        // phpcs:ignore
         $associatedEmployee = $this->associatedEmployee;
+
+        // phpcs:ignore
         return $associatedEmployee->last_name ? $associatedEmployee->last_name . ($associatedEmployee->first_name ? (' ' . $associatedEmployee->first_name) : '') . ($associatedEmployee->middle_name ? (' ' . $associatedEmployee->middle_name) : '') : $associatedEmployee->first_name;
     }
 }

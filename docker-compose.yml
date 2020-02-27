@@ -1,104 +1,83 @@
 version: '3.7'
 
-services:
+networks:
+  backend:
+    driver: bridge
 
-# Workspace Container
-    workspace:
-      container_name: your_project_workspace
-      build:
-        context: ./env/docker/workspace
-        args:
-          - PHP_VERSION=${PHP_VERSION}
-          - PHP_XDEBUG_ENABLE=${PHP_XDEBUG_ENABLE}
-          - PHP_XDEBUG_VERSION=${PHP_XDEBUG_VERSION}
-          - PHP_XDEBUG_REMOTE_CONNECT_BACK=${PHP_XDEBUG_REMOTE_CONNECT_BACK}
-          - COMPOSER_PROCESS_TIMEOUT=${COMPOSER_PROCESS_TIMEOUT}
-      volumes:
-        - ./:/var/www:cached
-        - ~/.ssh:/home/laradock/.ssh
-        - ~/.gitconfig:/home/laradock/.gitconfig
-        - ~/.config/composer:/home/laradock/.config/composer
-        - ~/.aws:/home/laradock/.aws
-      tty: true
-      networks:
-        - your_project_network
-
-# PHP-FPM
-    php-fpm:
-      container_name: your_project_php_fpm
-      build:
-        context: ./env/docker/php-fpm
-        args:
-          - PHP_VERSION=${PHP_VERSION}
-          - PHP_XDEBUG_ENABLE=${PHP_XDEBUG_ENABLE}
-          - PHP_XDEBUG_VERSION=${PHP_XDEBUG_VERSION}
-          - PHP_XDEBUG_REMOTE_CONNECT_BACK=${PHP_XDEBUG_REMOTE_CONNECT_BACK}
-      volumes:
-        - ./:/var/www:cached
-      depends_on:
-        - workspace
-      networks:
-        - your_project_network
-
-# NGINX
-    nginx:
-      container_name: your_project_nginx
-      build:
-        context: ./env/docker/nginx
-      volumes:
-        - ./:/var/www:cached
-        - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
-      depends_on:
-        - php-fpm
-        - postgres
-      environment:
-        - HTTPS_METHOD=${HTTPS_METHOD}
-      ports:
-        - 80:80
-      networks:
-        - your_project_network
-
-# PostgreSQL
-    postgres:
-      container_name: your_project_postgres
-      build:
-        context: ./env/docker/postgres
-      volumes:
-        - ./db/:/var/lib/postgresql/data
-      environment:
-        - POSTGRES_DB=${POSTGRES_DB}
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      networks:
-        - your_project_network
-
-# Redis
-    redis:
-      container_name: your_project_redis
-      image: "redis"
-      hostname: your_project_redis
-      networks:
-        - your_project_network
-
-    adminer:
-      image: $IMAGE
-      depends_on:
-        - postgres
-      environment:
-        - ADMINER_DEFAULT_DB_DRIVER=postgres
-        - ADMINER_DEFAULT_DB_HOST=postgres
-        - ADMINER_DEFAULT_DB_NAME=${POSTGRES_DB}
-        - ADMINER_DESIGN=nette
-        - ADMINER_PLUGINS=tables-filter tinymce
-      ports:
-        - 8080:9000
-
-# Volumes configuration
 volumes:
+  home:
   postgres:
     driver: "local"
 
-# Network configuration
-networks:
-  your_project_network:
-    name: your_project_network
+services:
+  app: &app-service
+    image: registry.gitlab.explabs.ru:5005/web-development/fitness/fitness-backend:${CURRENT_IMAGES_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ./.docker/app/app-entrypoint.sh:/app-entrypoint.sh:ro
+      - ./:/app:cached
+      - home:/home/user:cached
+    env_file:
+      - ./.env.docker
+    environment:
+      - "HOME=/home/user"
+      - "APP_FORCE_HTTPS=true"
+      - "STARTUP_WAIT_FOR_SERVICES=true"
+      - "APP_ENV=local"
+      - "APP_DEBUG=true"
+      - "APP_LOG_LEVEL=debug"
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_DATABASE=${POSTGRES_DB}
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '4001:80'
+      - '4002:443'
+    command: 'rr serve -v -d -c /app/.rr.local.yml'
+    networks:
+      - backend
+
+  queue:
+    <<: *app-service
+    user: "${CURRENT_USER:-0:0}"
+    environment:
+      STARTUP_DELAY: 5
+    command: 'php /app/artisan queue:work --memory=64'
+    ports: []
+
+  postgres:
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - ./db/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+    - 54320:5432
+    networks:
+      - backend
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - ADMINER_DEFAULT_DB_DRIVER=postgres
+      - ADMINER_DEFAULT_DB_HOST=postgres
+      - ADMINER_DEFAULT_DB_NAME=${POSTGRES_DB}
+      - ADMINER_DESIGN=nette
+      - ADMINER_PLUGINS=tables-filter tinymce
+    ports:
+      - '127.0.0.1:8080:9000'
+    networks:
+      - backend
+

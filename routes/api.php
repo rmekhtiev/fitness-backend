@@ -22,7 +22,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  * Welcome route - link to any public API documentation here
  */
 Route::get('/', function () {
-    echo 'Welcome to our API';
+    return 'Welcome to our API';
 });
 
 Route::post('webhook', 'RequestsController@store');
@@ -125,6 +125,8 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\HallController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\HallController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\HallController@delete');
+
+            $api->get('/{uuid}/stats', 'App\Http\Controllers\HallStatisticsController@get');
         });
 
         /*

@@ -28,7 +28,9 @@ class Employee extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -127,8 +129,11 @@ class Employee extends BaseModel
         return $this->last_name ? $this->last_name . ($this->first_name ? (' ' . $this->first_name) : '') . ($this->middle_name ? (' ' . $this->middle_name) : '') : $this->first_name;
     }
 
-    public function scopeTrainer(Builder $builder, $has) {
-        return $has ? $builder->whereHas('associatedTrainer') : $builder->whereDoesntHave('associatedTrainer');
+    public function scopeTrainer(Builder $builder, $has)
+    {
+        return $has
+            ? $builder->whereHas('associatedTrainer')
+            : $builder->whereDoesntHave('associatedTrainer');
     }
 
     public function scopeSearch(Builder $query, $search)
@@ -137,7 +142,8 @@ class Employee extends BaseModel
             ->orWhere('middle_name', 'ILIKE', "%{$search}%")
             ->orWhere('last_name', 'ILIKE', "%{$search}%");
     }
-    public function scopeUser(Builder $builder, $has) {
+    public function scopeUser(Builder $builder, $has)
+    {
         return $has ? $builder->whereHas('associatedUser') : $builder->whereDoesntHave('associatedUser');
     }
 }

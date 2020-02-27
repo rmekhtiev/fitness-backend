@@ -20,7 +20,9 @@ class Hall extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -77,7 +79,7 @@ class Hall extends BaseModel
 
     public function visitHistoryRecords()
     {
-        return $this->hasMany( VisitHistoryRecord::class, 'hall_id');
+        return $this->hasMany(VisitHistoryRecord::class, 'hall_id');
     }
 
     public function employees()
@@ -100,6 +102,11 @@ class Hall extends BaseModel
         return $this->hasMany(Issue::class, 'hall_id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'hall_id');
+    }
+
     public function getLockersCountFreeAttribute()
     {
         $this->loadMissing('lockers');
@@ -111,7 +118,7 @@ class Hall extends BaseModel
 
     public function getClientsCountNewAttribute()
     {
-        if(!$this->relationLoaded('clients')) {
+        if (!$this->relationLoaded('clients')) {
             return $this->clients()->whereDate('created_at', '>=', now()->subMonth())->count();
         } else {
             return $this->clients->filter(function (Client $client) {

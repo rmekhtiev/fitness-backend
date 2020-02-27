@@ -27,7 +27,7 @@ class SubscriptionGained extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param Notifiable|Client $notifiable
+     * @param Client $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -38,7 +38,7 @@ class SubscriptionGained extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param Notifiable|Client $notifiable
+     * @param Client $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -52,7 +52,7 @@ class SubscriptionGained extends Notification implements ShouldQueue
     /**
      * Get the SigmaSMS representation of the notification.
      *
-     * @param Notifiable|Client $notifiable
+     * @param Client $notifiable
      * @return SmsMessage
      */
     public function toSigmaSms($notifiable)

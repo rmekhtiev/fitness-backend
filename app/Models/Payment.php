@@ -23,7 +23,9 @@ class Payment extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -54,7 +56,9 @@ class Payment extends BaseModel
      *
      * @return array Rules
      */
-    protected $appends = [];
+    protected $appends = [
+        'total',
+    ];
 
     public function getValidationRules()
     {
@@ -101,6 +105,11 @@ class Payment extends BaseModel
         return $this->morphTo();
     }
 
+    public function hall()
+    {
+        return $this->belongsTo(Hall::class, 'hall_id', 'hall_id');
+    }
+
     public function resolve($status = PaymentStatus::SUCCESS)
     {
         $this->status = $status;
@@ -111,5 +120,9 @@ class Payment extends BaseModel
     public function fail()
     {
         return $this->resolve(PaymentStatus::FAILED);
+    }
+
+    public function getTotalAttribute() {
+        return ($this->quantity * $this->cost) - $this->discount;
     }
 }

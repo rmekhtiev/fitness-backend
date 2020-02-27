@@ -12,7 +12,7 @@ class Role extends BaseModel
     public const ROLE_CONCIERGE = 'concierge';
 
     /**
-     * @var int Auto increments integer key
+     * @var string Auto increments integer key
      */
     public $primaryKey = 'role_id';
 

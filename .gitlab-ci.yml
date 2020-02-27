@@ -1,0 +1,141 @@
+stages:
+  - prepare
+  - test
+  - build
+  - release
+  - security
+
+variables: &global-variables
+  DOCKER_DRIVER: overlay2
+
+  CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
+  CI_APPLICATION_TAG: $CI_COMMIT_SHA
+
+  POSTGRES_DB: $CI_ENVIRONMENT_SLUG
+  POSTGRES_USER: user
+  POSTGRES_PASSWORD: testing-password
+  POSTGRES_ENABLED: "true"
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - vendor/
+    - public/
+
+include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: License-Management.gitlab-ci.yml
+  - template: Container-Scanning.gitlab-ci.yml
+
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/PHPUnit.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/PHP_CodeSniffer.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/PHPStan.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/phpcs-security-audit.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/Docker.yml'
+  - project: 'internal/templates/instance-template-repository'
+    ref: master
+    file: '/gitlab-ci/Sentry.yml'
+
+before_script:
+  - touch database/database.sqlite
+
+# Install dependencies
+install:composer:
+  image: lorisleiva/laravel-docker:7.2
+  stage: prepare
+  script:
+    - php -v
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+    - cp .env.example .env
+    - php artisan key:generate
+  artifacts:
+    paths:
+      - vendor/
+      - .env
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - vendor/
+  only:
+    - branches
+    - tags
+
+# Run Tests/QA
+test:phpunit:
+  stage: test
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: phpunit
+    POSTGRES_USER: user
+    POSTGRES_PASSWORD: testing-password
+    DB_HOST: postgres
+    DB_DATABASE: $POSTGRES_DB
+    DB_USERNAME: $POSTGRES_USER
+    DB_PASSWORD: $POSTGRES_PASSWORD
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+code_quality:phpcs:
+  stage: test
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+code_quality:phpstan:
+  stage: test
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+sast:phpcs-secutity-audit:
+  stage: test
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+# Build docker image
+build:container:
+  stage: build
+  dependencies:
+    - install:composer
+
+# Release docker image
+release:container:latest:
+  stage: release
+  needs:
+    - build:container
+
+release:container:tags:
+  stage: release
+  needs:
+    - build:container
+
+container_scanning:
+  stage: security
+  needs:
+    - build:container
+
+dependency_scanning:
+  stage: security
+
+release:sentry:
+  stage: release
+  variables:
+    VERSION: $CI_COMMIT_TAG

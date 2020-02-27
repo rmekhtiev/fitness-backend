@@ -23,7 +23,9 @@ class Issue extends BaseModel
     public static $itemWith = [];
 
     /**
-     * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
+     * @var null|array What relations should a collection of models of this entity be returned with,
+     * from a relevant controller
+     *
      * If left null, then $itemWith will be used
      */
     public static $collectionWith = null;
@@ -66,7 +68,7 @@ class Issue extends BaseModel
     {
         parent::boot();
 
-        self::creating(function(self $issue) {
+        self::creating(function (self $issue) {
             $issue->user()->associate(auth()->user()) ;
         });
     }

@@ -62,6 +62,7 @@ class TrainingSessionPolicy extends BasePolicy
      * @param  \App\Models\TrainingSession  $trainingSession
      * @return mixed
      */
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions
     public function delete(User $user, TrainingSession $trainingSession)
     {
         return $this->own($user, $trainingSession);
@@ -74,7 +75,8 @@ class TrainingSessionPolicy extends BasePolicy
      * @param  \App\Models\TrainingSession  $trainingSession
      * @return mixed
      */
-    public function own(User $user, TrainingSession $trainingSession) {
+    public function own(User $user, TrainingSession $trainingSession)
+    {
         // @todo
         return true;
     }
@@ -83,7 +85,8 @@ class TrainingSessionPolicy extends BasePolicy
      * This function can be used to add conditions to the query builder,
      * which will specify the user's ownership of the model for the get collection query of this model
      *
-     * @param \App\Models\User $user A user object against which to construct the query. By default, the currently logged in user is used.
+     * @param \App\Models\User $user A user object against which to construct the query.
+     *                               By default, the currently logged in user is used.
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder|null
      */

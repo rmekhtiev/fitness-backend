@@ -14,6 +14,7 @@
         "php": "^7.1.3",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "avto-dev/roadrunner-laravel": "^3.0",
         "barryvdh/laravel-cors": "^0.11.4",
         "bensampo/laravel-enum": "^1.26",
         "doctrine/dbal": "^2.9",
@@ -30,6 +31,7 @@
         "sentry/sentry-laravel": "1.5.0",
         "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-activitylog": "^3.8",
+        "spatie/laravel-collection-macros": "^6.0",
         "spatie/laravel-query-builder": "^2.0",
         "specialtactics/l5-api": "~1"
     },
@@ -41,7 +43,11 @@
         "laravel/telescope": "~2.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^7.5"
+        "nunomaduro/larastan": "^0.4",
+        "pheromone/phpcs-security-audit": "^2.0",
+        "phpunit/phpunit": "^7.5",
+        "satesh/phpcs-gitlab-report": "dev-master",
+        "squizlabs/php_codesniffer": "^3.5"
     },
     "config": {
         "optimize-autoloader": true,
@@ -72,6 +78,12 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/leon0399/phpcs-gitlab-report.git"
+        }
+    ],
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -84,11 +96,36 @@
             "@php artisan key:generate --ansi",
             "@php artisan jwt:secret"
         ],
-        "test": "./vendor/bin/phpunit --colors=always -v --testdox",
-        "lint": "./vendor/bin/phpcs",
+        "phpunit": "./vendor/bin/phpunit --colors=always -v --testdox --no-coverage",
+        "phpunit-cover": "./vendor/bin/phpunit --colors=always -v --testdox",
+        "phpcs": "./vendor/bin/phpcs",
+        "phpstan": "./vendor/bin/phpstan analyse",
+        "lint": [
+            "@phpcs",
+            "@phpstan"
+        ],
+        "lintfix": "./vendor/bin/phpcbf",
+        "phpcs-security-audit": "./vendor/bin/phpcs --standard=phpcs-security-audit.xml",
+        "audit": [
+            "@phpcs-security-audit"
+        ],
+        "test": [
+            "@lint",
+            "@phpunit",
+            "@audit"
+        ],
+        "clear": [
+            "@php artisan config:clear -n --ansi",
+            "@php artisan cache:clear -n --ansi",
+            "@php artisan route:clear -n --ansi",
+            "@php artisan view:clear -n --ansi",
+            "@php artisan clear-compiled -n --ansi",
+            "@php artisan optimize:clear -n --ansi",
+            "@php -r \"is_file(\\$f = getcwd().'/storage/logs/laravel.log') && file_put_contents(\\$f, null);\"",
+            "@composer dump-autoload -n --ansi"
+        ],
         "docs": [
             "@php artisan ide-helper:generate --no-interaction"
-        ],
-        "build": "./env/build.sh"
+        ]
     }
 }

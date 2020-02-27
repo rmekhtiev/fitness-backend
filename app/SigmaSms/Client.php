@@ -3,7 +3,6 @@
 
 namespace App\SigmaSms;
 
-
 class Client
 {
     const API_URL = 'https://online.sigmasms.ru/api/';
@@ -32,6 +31,4 @@ class Client
             'form_params' => $array,
         ]);
     }
-
-
 }
