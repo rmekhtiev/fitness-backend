@@ -35,7 +35,7 @@ class GroupClientController extends Controller
             ->with($modelInstance::getCollectionWith())
             ->withCount($modelInstance::getCollectionWithCount());
 
-        $this->qualifyCollectionQuery($query);
+//         $this->qualifyCollectionQuery($query);
 
         // Handle pagination, if applicable
         $perPage = $modelInstance->getPerPage();
