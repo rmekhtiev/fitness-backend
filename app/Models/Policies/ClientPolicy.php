@@ -90,6 +90,6 @@ class ClientPolicy extends BasePolicy
      */
     public function qualifyCollectionQueryWithUser(User $user, $query)
     {
-//        return $query->orderByJoin('activeSubscription.valid_till');
+         return $query->orderByJoin('activeSubscriptions.valid_till', 'asc');
     }
 }
