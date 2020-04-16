@@ -12,6 +12,7 @@ $factory->define(Client::class, function (Faker $faker) {
     return [
         'first_name' => $faker->firstName($gender),
         'last_name' => $faker->lastName,
+        'birth_date' => $faker->date(),
         'gender' => $gender,
 
         'phone_number' => $faker->unique()->phoneNumber,

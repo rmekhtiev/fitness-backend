@@ -7,6 +7,7 @@ use App\Enums\Gender;
 use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
+use Carbon\Carbon;
 use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,6 +78,7 @@ class Client extends BaseModel
         'first_name',
         'middle_name',
         'last_name',
+        'birth_date',
         'phone_number',
         'instagram',
         'whats_app_number',
@@ -147,6 +149,7 @@ class Client extends BaseModel
             ],
 
             'primary_hall_id' => 'required|uuid|exists:halls,hall_id',
+            //'birth_date' => 'required',
         ];
     }
 
@@ -159,6 +162,7 @@ class Client extends BaseModel
             AllowedFilter::scope('search'),
             AllowedFilter::scope('status'),
             AllowedFilter::scope('subscriable'),
+            AllowedFilter::scope('birthday'),
         ];
     }
 
@@ -204,6 +208,15 @@ class Client extends BaseModel
                 return $builder;
             });
         });
+    }
+
+    public function scopeBirthday(Builder $query, $value)
+    {
+        if ($value){
+            return $query->whereDay('birth_date', '<=', today())
+                ->whereDay('birth_date', '>=', today()->addDays(-7))
+                ->whereMonth('birth_date', today());
+        }
     }
 
 
