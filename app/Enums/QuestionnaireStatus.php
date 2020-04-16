@@ -11,6 +11,6 @@ use BenSampo\Enum\Enum;
  */
 final class QuestionnaireStatus extends Enum
 {
-    const FILLED =   "filled";
-    const UNFILLED =   "unfilled";
+    const FILLED = "filled";
+    const UNFILLED = "unfilled";
 }
