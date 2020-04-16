@@ -84,6 +84,7 @@ class Client extends BaseModel
         'instagram',
         'whats_app_number',
         'questionnaire_status',
+        'avatar',
 
         'primary_hall_id',
     ];
