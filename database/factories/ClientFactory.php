@@ -18,5 +18,6 @@ $factory->define(Client::class, function (Faker $faker) {
         'phone_number' => $faker->unique()->phoneNumber,
         'whats_app_number' => $faker->unique()->phoneNumber,
         'instagram' => $faker->unique()->userName,
+        'questionnaire_status' => "unfilled",
     ];
 });

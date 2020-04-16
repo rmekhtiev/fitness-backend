@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ClientStatus;
 use App\Enums\Gender;
+use App\Enums\QuestionnaireStatus;
 use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
@@ -149,6 +150,7 @@ class Client extends BaseModel
             ],
 
             'primary_hall_id' => 'required|uuid|exists:halls,hall_id',
+            'questionnaire_status' => ['required', new EnumValue(QuestionnaireStatus::class)],
             //'birth_date' => 'required',
         ];
     }
