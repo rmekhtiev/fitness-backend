@@ -85,6 +85,7 @@ class Client extends BaseModel
         'whats_app_number',
         'questionnaire_status',
         'avatar',
+        'comment',
 
         'primary_hall_id',
     ];
@@ -153,6 +154,7 @@ class Client extends BaseModel
 
             'primary_hall_id' => 'required|uuid|exists:halls,hall_id',
             'questionnaire_status' => ['required', new EnumValue(QuestionnaireStatus::class)],
+            'comment' => 'max:255',
             //'birth_date' => 'required',
         ];
     }
