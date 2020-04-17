@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use QrCode;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
 {
@@ -17,6 +18,29 @@ class ClientController extends Controller
     public static $parentModel = null;
 
     public static $transformer = null;
+
+
+
+    public function avatar($uuid, Request $request) {
+
+        $data = $request->avatar;
+
+        list($type, $data) = explode(';', $data);
+        list(, $data)      = explode(',', $data);
+        $data = base64_decode($data);
+        $imageName = $uuid.'-'.rand(1,100).'.jpg';
+
+        $client = Client::find($uuid);
+        $delImg = str_replace('http://fitness.test/storage/', '', $client->avatar); //КОСТЫЛЬ
+
+        Storage::disk('public')->delete($delImg);
+        Storage::disk('public')->put($imageName, $data);
+        $url = Storage::url($imageName);
+
+        $client->avatar = $url;
+        $client->save();
+        return response($delImg);
+    }
 
     public function qrcode($uuid)
     {

@@ -170,6 +170,7 @@ class Client extends BaseModel
         ];
     }
 
+
     public function scopeSearch(Builder $query, $search)
     {
         return $query->where('first_name', 'ILIKE', "%{$search}%")
@@ -335,5 +336,9 @@ class Client extends BaseModel
             return ClientStatus::EXPIRED;
         }
         return ClientStatus::NO_SUBSCRIPTION;
+    }
+
+    public function getAvatarAttribute() {
+        return $this->attributes['avatar'] ? asset($this->attributes['avatar']) : null;
     }
 }

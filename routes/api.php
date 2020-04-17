@@ -114,6 +114,7 @@ $api->version('v1', ['middleware' => ['api']], function (Dingo\Api\Routing\Route
             $api->post('/', 'App\Http\Controllers\ClientController@post');
             $api->patch('/{uuid}', 'App\Http\Controllers\ClientController@patch');
             $api->delete('/{uuid}', 'App\Http\Controllers\ClientController@delete');
+            $api->post('/{uuid}/avatar', 'App\Http\Controllers\ClientController@avatar');
         });
 
         /**
