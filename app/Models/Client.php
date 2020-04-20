@@ -91,6 +91,8 @@ class Client extends BaseModel
         'avatar',
         'comment',
         'prefers',
+        'free_training_use_date',
+        'free_training_expiration_date',
 
         'primary_hall_id',
     ];
@@ -160,6 +162,8 @@ class Client extends BaseModel
             'primary_hall_id' => 'required|uuid|exists:halls,hall_id',
             'questionnaire_status' => ['required', new EnumValue(QuestionnaireStatus::class)],
             'comment' => 'max:255',
+            'free_training_use_date' => 'sometimes|nullable|date',
+            'free_training_expiration_date' => 'sometimes|nullable|date'
 //            'prefers' => 'array',
             //'birth_date' => 'required',
         ];
