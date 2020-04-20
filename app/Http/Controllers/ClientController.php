@@ -39,7 +39,7 @@ class ClientController extends Controller
 
         $client->avatar = $url;
         $client->save();
-        return response($delImg);
+        return response($client->client_id);
     }
 
     public function qrcode($uuid)

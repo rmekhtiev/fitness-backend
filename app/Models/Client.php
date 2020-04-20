@@ -35,6 +35,10 @@ class Client extends BaseModel
      */
     public $primaryKey = 'client_id';
 
+    protected $casts = [
+        'prefers' => 'array',
+    ];
+
     protected $perPage = 15;
 
     /**
@@ -86,6 +90,7 @@ class Client extends BaseModel
         'questionnaire_status',
         'avatar',
         'comment',
+        'prefers',
 
         'primary_hall_id',
     ];
@@ -155,6 +160,7 @@ class Client extends BaseModel
             'primary_hall_id' => 'required|uuid|exists:halls,hall_id',
             'questionnaire_status' => ['required', new EnumValue(QuestionnaireStatus::class)],
             'comment' => 'max:255',
+//            'prefers' => 'array',
             //'birth_date' => 'required',
         ];
     }
