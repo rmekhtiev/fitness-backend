@@ -179,6 +179,7 @@ class Client extends BaseModel
             AllowedFilter::scope('status'),
             AllowedFilter::scope('subscriable'),
             AllowedFilter::scope('birthday'),
+            AllowedFilter::scope('prefers'),
         ];
     }
 
@@ -234,6 +235,12 @@ class Client extends BaseModel
                 ->whereDay('birth_date', '>=', today()->addDays(-7))
                 ->whereMonth('birth_date', today());
         }
+    }
+
+    public function scopePrefers(Builder $query, $value)
+    {
+            return $query->whereJsonContains('prefers', $value);
+
     }
 
 
