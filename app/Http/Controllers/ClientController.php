@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
-use Carbon\Traits\Boundaries;
-use Illuminate\Http\Request;
 use App\Models\Client;
-use QrCode;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClientController extends Controller
 {
@@ -19,27 +17,26 @@ class ClientController extends Controller
 
     public static $transformer = null;
 
+    public function avatar($uuid, Request $request)
+    {
+        $modelInstance = new static::$model;
 
+        /** @var BaseModel $modelInstance */
+        $resource = $modelInstance::with($modelInstance::getItemWith())
+            ->withCount($modelInstance::getItemWithCount())
+            ->where($modelInstance->getKeyName(), '=', $uuid)
+            ->first();
 
-    public function avatar($uuid, Request $request) {
+        if (!$resource) {
+            throw new NotFoundHttpException(
+                'Resource \'' . class_basename(static::$model) . '\' with given UUID ' . $uuid . ' not found'
+            );
+        }
 
-        $data = $request->avatar;
+        $this->authorizeUserAction('update', $resource);
 
-        list($type, $data) = explode(';', $data);
-        list(, $data)      = explode(',', $data);
-        $data = base64_decode($data);
-        $imageName = $uuid.'-'.rand(1,100).'.jpg';
-
-        $client = Client::find($uuid);
-        $delImg = str_replace('http://fitness.test/storage/', '', $client->avatar); //КОСТЫЛЬ
-
-        Storage::disk('public')->delete($delImg);
-        Storage::disk('public')->put($imageName, $data);
-        $url = Storage::url($imageName);
-
-        $client->avatar = $url;
-        $client->save();
-        return response($client->client_id);
+        $resource->avatar = $request->file('avatar')->storeAs('avatars',  $uuid, 'public');
+        $resource->save();
     }
 
     public function qrcode($uuid)
