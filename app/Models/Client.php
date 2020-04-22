@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ClientStatus;
+use App\Enums\FreeTrainingStatus;
 use App\Enums\Gender;
 use App\Enums\QuestionnaireStatus;
 use App\Models\Pivot\ClientGroup;
@@ -106,6 +107,7 @@ class Client extends BaseModel
         'name',
         'full_name',
         'status',
+        'free_training_status'
     ];
 
     protected static $recordEvents = [
@@ -355,6 +357,20 @@ class Client extends BaseModel
             return ClientStatus::EXPIRED;
         }
         return ClientStatus::NO_SUBSCRIPTION;
+    }
+
+    public function getFreeTrainingStatusAttribute()
+    {
+        // phpcs:ignore
+        if (!is_null($this->free_training_use_date)) {
+            return FreeTrainingStatus::USED;
+        } elseif (empty($this->free_training_expiration_date)) {
+            return FreeTrainingStatus::NOTSCHEDULED;
+        } elseif ($this->free_training_expiration_date >= (today()->modify('-1 day'))) {
+            return FreeTrainingStatus::AVAILABLE;
+        } elseif ($this->free_training_expiration_date < today()) {
+            return FreeTrainingStatus::EXPIRED;
+        }
     }
 
     public function getAvatarAttribute() {
