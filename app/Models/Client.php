@@ -19,6 +19,7 @@ use Illuminate\Validation\Rule;
 use QrCode;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\QueryBuilder\AllowedFilter;
+use Storage;
 
 class Client extends BaseModel
 {
@@ -374,6 +375,6 @@ class Client extends BaseModel
     }
 
     public function getAvatarAttribute() {
-        return $this->attributes['avatar'] ? asset($this->attributes['avatar']) : null;
+        return $this->attributes['avatar'] ? Storage::disk('avatars')->url($this->attributes['avatar']) : null;
     }
 }

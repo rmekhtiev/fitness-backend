@@ -35,8 +35,12 @@ class ClientController extends Controller
 
         $this->authorizeUserAction('update', $resource);
 
-        $resource->avatar = $request->file('avatar')->storeAs('avatars',  $uuid, 'public');
+        $resource->avatar = Storage::disk('avatars')->putFileAs(
+            'clients', $request->file('avatar'), $uuid
+        );
         $resource->save();
+
+        return $this->response->item($resource, $this->getTransformer());
     }
 
     public function qrcode($uuid)
