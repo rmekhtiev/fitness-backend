@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Enums\ClientStatus;
+use App\Enums\FreeTrainingStatus;
 use App\Enums\Gender;
+use App\Enums\QuestionnaireStatus;
 use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
+use Carbon\Carbon;
 use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +35,10 @@ class Client extends BaseModel
      * @var string UUID key of the resource
      */
     public $primaryKey = 'client_id';
+
+    protected $casts = [
+        'prefers' => 'array',
+    ];
 
     protected $perPage = 15;
 
@@ -77,9 +84,16 @@ class Client extends BaseModel
         'first_name',
         'middle_name',
         'last_name',
+        'birth_date',
         'phone_number',
         'instagram',
         'whats_app_number',
+        'questionnaire_status',
+        'avatar',
+        'comment',
+        'prefers',
+        'free_training_use_date',
+        'free_training_expiration_date',
 
         'primary_hall_id',
     ];
@@ -93,6 +107,7 @@ class Client extends BaseModel
         'name',
         'full_name',
         'status',
+        'free_training_status'
     ];
 
     protected static $recordEvents = [
@@ -147,6 +162,12 @@ class Client extends BaseModel
             ],
 
             'primary_hall_id' => 'required|uuid|exists:halls,hall_id',
+            'questionnaire_status' => ['required', new EnumValue(QuestionnaireStatus::class)],
+            'comment' => 'max:255',
+            'free_training_use_date' => 'sometimes|nullable|date',
+            'free_training_expiration_date' => 'sometimes|nullable|date'
+//            'prefers' => 'array',
+            //'birth_date' => 'required',
         ];
     }
 
@@ -159,8 +180,11 @@ class Client extends BaseModel
             AllowedFilter::scope('search'),
             AllowedFilter::scope('status'),
             AllowedFilter::scope('subscriable'),
+            AllowedFilter::scope('birthday'),
+            AllowedFilter::scope('prefers'),
         ];
     }
+
 
     public function scopeSearch(Builder $query, $search)
     {
@@ -204,6 +228,21 @@ class Client extends BaseModel
                 return $builder;
             });
         });
+    }
+
+    public function scopeBirthday(Builder $query, $value)
+    {
+        if ($value){
+            return $query->whereDay('birth_date', '<=', today())
+                ->whereDay('birth_date', '>=', today()->addDays(-7))
+                ->whereMonth('birth_date', today());
+        }
+    }
+
+    public function scopePrefers(Builder $query, $value)
+    {
+            return $query->whereJsonContains('prefers', $value);
+
     }
 
 
@@ -318,5 +357,23 @@ class Client extends BaseModel
             return ClientStatus::EXPIRED;
         }
         return ClientStatus::NO_SUBSCRIPTION;
+    }
+
+    public function getFreeTrainingStatusAttribute()
+    {
+        // phpcs:ignore
+        if (!is_null($this->free_training_use_date)) {
+            return FreeTrainingStatus::USED;
+        } elseif (empty($this->free_training_expiration_date)) {
+            return FreeTrainingStatus::NOTSCHEDULED;
+        } elseif ($this->free_training_expiration_date >= (today()->modify('-1 day'))) {
+            return FreeTrainingStatus::AVAILABLE;
+        } elseif ($this->free_training_expiration_date < today()) {
+            return FreeTrainingStatus::EXPIRED;
+        }
+    }
+
+    public function getAvatarAttribute() {
+        return $this->attributes['avatar'] ? asset($this->attributes['avatar']) : null;
     }
 }
