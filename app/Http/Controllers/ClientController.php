@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
-use Carbon\Traits\Boundaries;
-use Illuminate\Http\Request;
 use App\Models\Client;
-use QrCode;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClientController extends Controller
@@ -17,6 +16,28 @@ class ClientController extends Controller
     public static $parentModel = null;
 
     public static $transformer = null;
+
+    public function avatar($uuid, Request $request)
+    {
+        $modelInstance = new static::$model;
+
+        /** @var BaseModel $modelInstance */
+        $resource = $modelInstance::with($modelInstance::getItemWith())
+            ->withCount($modelInstance::getItemWithCount())
+            ->where($modelInstance->getKeyName(), '=', $uuid)
+            ->first();
+
+        if (!$resource) {
+            throw new NotFoundHttpException(
+                'Resource \'' . class_basename(static::$model) . '\' with given UUID ' . $uuid . ' not found'
+            );
+        }
+
+        $this->authorizeUserAction('update', $resource);
+
+        $resource->avatar = $request->file('avatar')->storeAs('avatars',  $uuid, 'public');
+        $resource->save();
+    }
 
     public function qrcode($uuid)
     {
