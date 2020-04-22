@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\QuestionnaireStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -14,7 +15,7 @@ class UpdateClientsTableAddQuestionnaireStatus extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->string('questionnaire_status');
+            $table->string('questionnaire_status')->default(QuestionnaireStatus::UNFILLED);
         });
     }
 

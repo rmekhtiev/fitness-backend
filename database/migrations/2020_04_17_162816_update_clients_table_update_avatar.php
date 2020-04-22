@@ -14,7 +14,7 @@ class UpdateClientsTableUpdateAvatar extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->string('avatar')->nullable()->change();
+            $table->string('avatar')->change();
         });
     }
 
@@ -26,7 +26,7 @@ class UpdateClientsTableUpdateAvatar extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->text('avatar')->nullable()->change();
+            $table->text('avatar')->change();
         });
     }
 }
