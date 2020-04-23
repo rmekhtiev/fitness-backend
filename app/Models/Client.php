@@ -90,7 +90,6 @@ class Client extends BaseModel
         'instagram',
         'whats_app_number',
         'questionnaire_status',
-        'avatar',
         'comment',
         'prefers',
         'free_training_use_date',
@@ -167,8 +166,6 @@ class Client extends BaseModel
             'comment' => 'max:255',
             'free_training_use_date' => 'sometimes|nullable|date',
             'free_training_expiration_date' => 'sometimes|nullable|date'
-//            'prefers' => 'array',
-            //'birth_date' => 'required',
         ];
     }
 
