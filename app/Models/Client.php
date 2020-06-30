@@ -10,6 +10,7 @@ use App\Models\Pivot\ClientGroup;
 use App\Transformers\BaseTransformer;
 use BenSampo\Enum\Rules\EnumValue;
 use Carbon\Carbon;
+use DateTime;
 use Fico7489\Laravel\EloquentJoin\Traits\EloquentJoin;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
@@ -86,6 +87,7 @@ class Client extends BaseModel
         'middle_name',
         'last_name',
         'birth_date',
+        'gender',
         'phone_number',
         'instagram',
         'whats_app_number',
@@ -231,9 +233,9 @@ class Client extends BaseModel
     public function scopeBirthday(Builder $query, $value)
     {
         if ($value){
-            return $query->whereDay('birth_date', '<=', today())
-                ->whereDay('birth_date', '>=', today()->addDays(-7))
-                ->whereMonth('birth_date', today());
+            $today = today()->dayOfYear;
+            $sevenDaysAfter = today()->addDays(6)->dayOfYear;
+            return $query->whereRaw("extract(doy from birth_date) BETWEEN $today AND $sevenDaysAfter")->get();
         }
     }
 
