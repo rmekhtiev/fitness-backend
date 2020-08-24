@@ -1,75 +1,76 @@
-version: '3.7'
 
-networks:
-  backend:
-    driver: bridge
-
-volumes:
-  home:
-  postgres:
-    driver: "local"
+version: "3.8"
 
 services:
   app: &app-service
-    image: registry.gitlab.explabs.ru:5005/web-development/fitness/fitness-backend:${CURRENT_IMAGES_TAG:-latest}
     build:
-      context: .
+      args:
+        user: devolt
+        uid: 1000
+      context: ./
       dockerfile: Dockerfile
+    image: registry.gitlab.explabs.ru:5005/web-development/fitness/fitness-backend:${CURRENT_IMAGES_TAG:-latest}
     restart: always
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - ./.docker/app/app-entrypoint.sh:/app-entrypoint.sh:ro
-      - ./:/app:cached
-      - home:/home/user:cached
+    tty: true
+    working_dir: /var/www/html
     env_file:
-      - ./.env.docker
+      - ./.env
     environment:
-      - "HOME=/home/user"
-      - "APP_FORCE_HTTPS=true"
-      - "STARTUP_WAIT_FOR_SERVICES=true"
-      - "APP_ENV=local"
-      - "APP_DEBUG=true"
-      - "APP_LOG_LEVEL=debug"
-      - DB_CONNECTION=pgsql
-      - DB_HOST=postgres
-      - DB_DATABASE=${POSTGRES_DB}
-      - DB_USERNAME=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - "APP_ENV=production"
+      - "APP_DEBUG=false"
+      - "APP_LOG_LEVEL=info"
+      - "DB_CONNECTION=pgsql"
+      - "DB_HOST=postgres"
+      - "DB_DATABASE=${POSTGRES_DB}"
+      - "DB_USERNAME=${POSTGRES_USER}"
+      - "DB_PASSWORD=${POSTGRES_PASSWORD}"
+      - "QUEUE_CONNECTION=redis"
+      - "REDIS_HOST=redis"
     ports:
-      - '80:80'
-      - '443:443'
-    command: 'rr serve -v -d -c /app/.rr.yml'
+      - 8000:5000
+    depends_on:
+      - postgres
+      - redis
     networks:
       - backend
 
-  queue:
+  # queue:
+  #   <<: *app-service
+  #   user: "${CURRENT_USER:-0:0}"
+  #   command: 'php artisan horizon'
+  #   ports: []
+  #   depends_on:
+  #     - app
+
+  schedule:
     <<: *app-service
     user: "${CURRENT_USER:-0:0}"
-    environment:
-      STARTUP_DELAY: 5
-    command: 'php /app/artisan queue:work --memory=64'
+    command: './schedule.sh'
     ports: []
+    depends_on:
+      - app
 
   postgres:
-    image: postgres:alpine
+    image: postgres:11-alpine
     restart: always
+    tty: true
     volumes:
-      - ./db/:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-    - 54320:5432
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine
     networks:
       - backend
 
   adminer:
     image: adminer:latest
     restart: always
-    depends_on:
-      - postgres
     environment:
       - ADMINER_DEFAULT_DB_DRIVER=postgres
       - ADMINER_DEFAULT_DB_HOST=postgres
@@ -77,7 +78,18 @@ services:
       - ADMINER_DESIGN=nette
       - ADMINER_PLUGINS=tables-filter tinymce
     ports:
-      - 8080:localhost:9000
+      - '127.0.0.1:8080:8080'
+    depends_on:
+      - postgres
     networks:
       - backend
+
+volumes:
+  home:
+  dbdata:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge
 
