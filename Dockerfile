@@ -1,111 +1,91 @@
-FROM composer:1.8.6 AS composer
-FROM 512k/roadrunner:1.4.6 AS roadrunner
-
-FROM php:7.3-alpine
+FROM php:7.4-apache
+LABEL maintainer="dev@devolt.one"
 
 ENV \
     COMPOSER_ALLOW_SUPERUSER="1" \
     COMPOSER_HOME="/tmp/composer" \
-    OWN_SSL_CERT_DIR="/ssl-cert" \
-    OWN_SSL_CERT_LIFETIME=1095 \
     PS1='\[\033[1;32m\]\[\033[1;36m\][\u@\h] \[\033[1;34m\]\w\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]'
 
-# persistent / runtime deps
-ENV PHPIZE_DEPS \
-    build-base \
-    autoconf \
-    libc-dev \
-    pcre-dev \
-    openssl \
-    pkgconf \
-    cmake \
-    make \
-    file \
-    re2c \
-    g++ \
-    gcc \
-    freetype-dev \
+# Install packages
+RUN apt-get update && apt-get install -y \
+    bc \
+    git \
+    zip \
+    curl \
+    sudo \
+    unzip \
+    libpq-dev \
+    libicu-dev \
+    libbz2-dev \
     libpng-dev \
-    libjpeg-turbo-dev
+    libjpeg-dev \
+    libxml2-dev \
+    libmcrypt-dev \
+    libreadline-dev \
+    libfreetype6-dev \
+    g++
 
-# repmanent deps
-ENV PERMANENT_DEPS \
-    postgresql-dev \
-    gettext-dev \
-    icu-dev \
-    libintl \
-    freetype \
-    libpng \
-    libjpeg-turbo
+RUN pecl install -o -f redis \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable \
+       redis
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-COPY --from=roadrunner /usr/bin/rr /usr/bin/rr
+RUN docker-php-ext-configure \
+    pgsql -with-pgsql=/usr/local/pgsql
 
-RUN set -xe \
-    && apk add --no-cache ${PERMANENT_DEPS} \
-    && apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} \
-    # https://github.com/docker-library/php/issues/240
-    && apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community gnu-libiconv \
-    && docker-php-ext-configure mbstring --enable-mbstring \
-    && docker-php-ext-configure opcache --enable-opcache \
-    && docker-php-ext-configure pdo_pgsql \
-    && docker-php-ext-configure bcmath --enable-bcmath \
-    && docker-php-ext-configure gd --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir \
-    && docker-php-ext-configure pcntl --enable-pcntl \
-    && docker-php-ext-configure intl --enable-intl \
-    && docker-php-ext-install -j$(nproc) \
-        pdo_pgsql \
-        mbstring \
-        sockets \
-        gettext \
-        opcache \
-        bcmath \
-        gd \
-        pcntl \
-        intl \
-    && ( mkdir -p ${OWN_SSL_CERT_DIR} \
-        && cd ${OWN_SSL_CERT_DIR} \
-        && openssl genrsa -passout pass:x -out self-signed.key 2048 \
-        && cp self-signed.key self-signed.key.orig \
-        && openssl rsa -passin pass:x -in self-signed.key.orig -out self-signed.key \
-        && openssl req -new -key self-signed.key -out cert.csr \
-            -subj "/C=RU/ST=RU/L=Somewhere/O=SomeOrg/OU=IT Department/CN=example.com" \
-        && openssl x509 -req -days ${OWN_SSL_CERT_LIFETIME} -in cert.csr -signkey self-signed.key -out self-signed.crt \
-        && ls -lh ) \
-    && apk del .build-deps \
-    && rm -rf /app /home/user ${COMPOSER_HOME} /var/cache/apk/* \
-    && mkdir /app /home/user ${COMPOSER_HOME} \
-    && composer global require 'hirak/prestissimo' --no-interaction --no-suggest --prefer-dist \
-    && ln -s /usr/bin/composer /usr/bin/c
+# Common PHP Extensions
+RUN docker-php-ext-install \
+    bz2 \
+    xml \
+    intl \
+    iconv \
+    pcntl \
+    bcmath \
+    opcache \
+    calendar \
+    tokenizer \
+    pdo_pgsql \
+    gd
 
-COPY ./.docker/app/etc/php/php.ini /usr/local/etc/php/php.ini
-COPY ./.docker/app/etc/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-COPY ./.docker/app/app-entrypoint.sh /app-entrypoint.sh
+# Apache configuration
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-WORKDIR /app
+ARG ARG_APACHE_LISTEN_PORT=5000
+ENV APACHE_LISTEN_PORT=${ARG_APACHE_LISTEN_PORT}
+RUN sed -i "s/80/${APACHE_LISTEN_PORT}/g" /etc/apache2/sites-available/*.conf /etc/apache2/ports.conf
+RUN a2enmod rewrite headers
 
-COPY ./composer.* /app/
+# Ensure PHP logs are captured by the container
+ENV LOG_CHANNEL=stderr
 
-RUN set -xe \
-    && composer install --no-interaction --no-ansi --no-suggest --prefer-dist  --no-autoloader --no-scripts \
-    && composer install --no-dev --no-interaction --no-ansi --no-suggest --prefer-dist  --no-autoloader --no-scripts \
-    && chmod -R 777 /home/user ${COMPOSER_HOME}
+# Set a volume mount point for your code
+# VOLUME /var/www/html
+WORKDIR /var/www/html
 
-COPY . /app
+# Copy code and run composer
+COPY --from=composer:1.10.8 /usr/bin/composer /usr/bin/composer
+RUN composer global require hirak/prestissimo
 
-RUN set -xe \
-    && chmod +x /app-entrypoint.sh \
-    && composer --version \
-    && php -v \
-    && php -m \
-    && rr -h \
-    && composer dump
+# Ensure file ownership for source code files
+COPY . /var/www/html
+RUN composer install --optimize-autoloader --prefer-dist --no-dev --no-interaction --no-ansi --no-suggest
 
-EXPOSE 80
-EXPOSE 443
-EXPOSE 2112
-VOLUME ["/app"]
+RUN chown -R www-data:www-data \
+    /var/www/html/storage \
+    /var/www/html/bootstrap/cache
+RUN mkdir -p /tmp/storage/bootstrap/cache \
+    && chmod 777 -R /tmp/storage/bootstrap/cache
 
-# DO NOT OVERRIDE ENTRYPOINT IF YOU CAN AVOID IT! @see <https://github.com/docker/docker.github.io/issues/6142>
-ENTRYPOINT ["/app-entrypoint.sh"]
-CMD ["rr", "serve", "-c", "/app/.rr.yml"]
+RUN php artisan storage:link
+
+# RUN php artisan optimize
+
+# Application port
+EXPOSE ${APACHE_LISTEN_PORT}
+
+# USER www-data
+
+# The default apache run command
+CMD ["apache2-foreground"]

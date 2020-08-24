@@ -188,12 +188,24 @@ class Client extends BaseModel
 
     public function scopeSearch(Builder $query, $search)
     {
-        return $query->where('first_name', 'ILIKE', "%{$search}%")
-            ->orWhere('middle_name', 'ILIKE', "%{$search}%")
-            ->orWhere('last_name', 'ILIKE', "%{$search}%")
-            ->orWhere('phone_number', 'ILIKE', "%{$search}%")
-            ->orWhere('instagram', 'ILIKE', "%{$search}%")
-            ->orWhere('whats_app_number', 'ILIKE', "%{$search}%");
+        $searchableColumns = [
+            'first_name',
+            'last_name',
+            'middle_name',
+            'phone_number',
+            'whats_app_number',
+        ];
+        $terms = explode(' ', $search);
+
+        return $query->where(function($query) use ($terms, $searchableColumns){
+            foreach ($terms as $term) {
+                $query->where(function($query) use ($term, $searchableColumns){
+                    foreach ($searchableColumns as $column) {
+                        $query->orWhere($column, 'ILIKE', '%'.$term.'%');
+                    }
+                });
+            }
+        });
     }
 
     public function scopeSubscriable(Builder $query, $search)
