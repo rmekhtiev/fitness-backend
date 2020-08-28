@@ -74,7 +74,35 @@ class VisitHistoryRecord extends BaseModel
         return [
             AllowedFilter::exact('id', 'record_id'),
             AllowedFilter::exact('client_id', 'client_id'),
+            AllowedFilter::scope('start'),
+            AllowedFilter::scope('end'),
+            AllowedFilter::scope('hall'),
         ];
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeStart(Builder $query, $value)
+    {
+        $query->whereDate('created_at', '>=', $value);
+    }
+
+    /**
+     * @param Builder $query
+     * @param \DateTimeInterface|string|null $value
+     */
+    public function scopeEnd(Builder $query, $value)
+    {
+        $query->whereDate('created_at', '<=', $value);
+    }
+
+    public function scopeHall(Builder $builder, $hall_id)
+    {
+        return $builder->whereHas('client', function (Builder $builder) use ($hall_id) {
+            return $builder->where('primary_hall_id', $hall_id);
+        });
     }
 
 
