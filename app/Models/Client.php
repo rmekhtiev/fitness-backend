@@ -360,7 +360,7 @@ class Client extends BaseModel
     {
         if ($this->activeSubscriptions()->value('frozen_till') >= (today()->modify('-1 day'))) {
             return ClientStatus::FROZEN;
-        } elseif ($this->activeSubscriptions()->value('valid_till') >= today()
+        } elseif ($this->activeSubscriptions()->value('valid_till') >= (today()->modify('-1 day'))
             && $this->activeSubscriptions()->value('issue_date') <= today()) {
             return ClientStatus::ACTIVE;
         } elseif ($this->inactiveSubscriptions()->value('issue_date') > today()) {
